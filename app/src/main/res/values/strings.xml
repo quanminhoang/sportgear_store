@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SportShop</string>
+<<<<<<< HEAD
+=======
+    <string name="default_web_client_id">150943428622-p236vnkiijbin14nol551cchj220cqbf.apps.googleusercontent.com</string>
+>>>>>>> 305dbd2 (Update Profile)
 </resources>

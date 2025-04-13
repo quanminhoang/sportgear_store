@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "150943428622",
+    "project_id": "sport-shop-cn2",
+    "storage_bucket": "sport-shop-cn2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:150943428622:android:97913e908a65ef65dccc5f",
+        "android_client_info": {
+          "package_name": "com.example.sportshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "150943428622-rg3eha3ohsdcgfsfgen6ngdau7bgkt6n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sportshop",
+            "certificate_hash": "3d3b59c982b289bf70f113ed4b8352bb56b1624b"
+          }
+        },
+        {
+          "client_id": "150943428622-p236vnkiijbin14nol551cchj220cqbf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjhNZHa-t1NMdzsSCECashTvHqVDiQbaY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "150943428622-p236vnkiijbin14nol551cchj220cqbf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

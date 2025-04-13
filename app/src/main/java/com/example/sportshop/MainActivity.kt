@@ -29,35 +29,178 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
+<<<<<<< HEAD
+=======
+// all import profile (firebase,...)
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import androidx.compose.ui.platform.LocalContext
+import android.widget.Toast
+import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.FirebaseException
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import androidx.navigation.navArgument
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.storage.FirebaseStorage
+import coil.compose.AsyncImage
+import android.net.Uri
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.util.Locale
+
+
+class ThemeManager(context: Context) {
+    private val sharedPreferences = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE)
+    private val themeState = mutableStateOf(sharedPreferences.getString("theme", "Light") ?: "Light")
+
+    val currentTheme: String
+        get() = themeState.value
+
+    fun setTheme(theme: String) {
+        themeState.value = theme
+        sharedPreferences.edit().putString("theme", theme).apply()
+    }
+}
+
+@Composable
+fun rememberThemeManager(): ThemeManager {
+    val context = LocalContext.current
+    return remember { ThemeManager(context) }
+}
+>>>>>>> 305dbd2 (Update Profile)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+<<<<<<< HEAD
         setContent {
             SportsShopTheme {
                 MyApp()
+=======
+
+        // Cập nhật ngôn ngữ khi khởi động ứng dụng
+        val sharedPreferences = getSharedPreferences("user_settings", MODE_PRIVATE)
+        val language = sharedPreferences.getString("language", "Eng") ?: "Eng"
+        val locale = if (language == "Eng") Locale("en") else Locale("vi")
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
+
+        setContent {
+            val themeManager = rememberThemeManager()
+            // Áp dụng theme cho toàn bộ ứng dụng
+            SportsShopTheme(themeManager.currentTheme) {
+                MyApp(themeManager)
+>>>>>>> 305dbd2 (Update Profile)
             }
         }
     }
 }
 
+<<<<<<< HEAD
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp() {
+=======
+@Composable
+fun SportsShopTheme(theme: String, content: @Composable () -> Unit) {
+    val colorScheme = if (theme == "Light") lightColorScheme() else darkColorScheme()
+    MaterialTheme(colorScheme = colorScheme, content = content)
+}
+
+fun Context.getActivity(): Activity? {
+    var currentContext = this
+    while (currentContext is ContextWrapper) {
+        if (currentContext is Activity) {
+            return currentContext
+        }
+        currentContext = currentContext.baseContext
+    }
+    return null
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MyApp(themeManager: ThemeManager) {
+>>>>>>> 305dbd2 (Update Profile)
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") { SplashScreen(navController) }
+<<<<<<< HEAD
         composable("home") { HomeScreen() }
+=======
+        composable("home") { HomeScreen(navController) }
+        composable("welcome") { WelcomeScreen(navController) }
+
+        composable("main_profile") { MainProfileMenu(navController, themeManager) }
+        composable("profile") { ProfileScreen(navController) }
+        composable("login_google") { GoogleLoginScreen(navController) }
+        composable("register_info") { RegisterInfoScreen(navController) }
+        composable(
+            "register_credential?name={name}&dob={dob}&phone={phone}&email={email}&address={address}",
+            arguments = listOf(
+                navArgument("name") { defaultValue = "" },
+                navArgument("dob") { defaultValue = "" },
+                navArgument("phone") { defaultValue = "" },
+                navArgument("email") { defaultValue = "" },
+                navArgument("address") { defaultValue = "" }
+            )
+        ) { backStackEntry ->
+            RegisterCredentialScreen(
+                navController,
+                name = backStackEntry.arguments?.getString("name") ?: "",
+                dob = backStackEntry.arguments?.getString("dob") ?: "",
+                phone = backStackEntry.arguments?.getString("phone") ?: "",
+                email = backStackEntry.arguments?.getString("email") ?: "",
+                address = backStackEntry.arguments?.getString("address") ?: ""
+            )
+        }
+>>>>>>> 305dbd2 (Update Profile)
     }
 }
 
 @Composable
 fun SplashScreen(navController: NavController) {
+<<<<<<< HEAD
     LaunchedEffect(Unit) {
         delay(2000)
         navController.navigate("home") {
             popUpTo("splash") { inclusive = true }
+=======
+    val user = FirebaseAuth.getInstance().currentUser
+    val auth = FirebaseAuth.getInstance()
+
+    LaunchedEffect(Unit) {
+        delay(2000)
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            navController.navigate("home") {
+                popUpTo("splash") { inclusive = true }
+            }
+        } else {
+            navController.navigate("welcome") {
+                popUpTo("splash") { inclusive = true }
+            }
+>>>>>>> 305dbd2 (Update Profile)
         }
     }
 
@@ -85,7 +228,11 @@ fun SplashScreen(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+<<<<<<< HEAD
 fun HomeScreen() {
+=======
+fun HomeScreen(navController: NavController) {
+>>>>>>> 305dbd2 (Update Profile)
     val scrollState = rememberScrollState()
 
     Scaffold(
@@ -118,13 +265,25 @@ fun HomeScreen() {
                     icon = { Icon(Icons.Default.Favorite, contentDescription = "Wishlist") },
                     label = { Text("Wishlist") },
                     selected = false,
+<<<<<<< HEAD
                     onClick = {}
+=======
+                    onClick = {
+                    }
+>>>>>>> 305dbd2 (Update Profile)
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
                     label = { Text("Thông tin") },
+<<<<<<< HEAD
                     selected = false,
                     onClick = {}
+=======
+                    selected = true,
+                    onClick = {
+                        navController.navigate("main_profile")
+                    }
+>>>>>>> 305dbd2 (Update Profile)
                 )
             }
         }
@@ -399,4 +558,637 @@ fun SportsShopTheme(content: @Composable () -> Unit) {
         ),
         content = content
     )
+<<<<<<< HEAD
+=======
+}
+
+@Composable
+fun WelcomeScreen(navController: NavController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Chào mừng đến Sports Shop!", style = MaterialTheme.typography.headlineSmall)
+        Spacer(modifier = Modifier.height(32.dp))
+        Button(
+            onClick = { navController.navigate("login_google") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Đăng nhập bằng Google")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = { navController.navigate("register_info") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Đăng ký bằng Email")
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainProfileMenu(navController: NavController, themeManager: ThemeManager) {
+    val user = FirebaseAuth.getInstance().currentUser
+    val email = user?.email ?: "yourname@gmail.com"
+    val name = user?.displayName ?: "Your name"
+    val photoUrl = user?.photoUrl?.toString()
+
+    // Lấy SharedPreferences để lưu cài đặt
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE)
+
+    // Đọc language đã lưu
+    val currentLanguage = sharedPreferences.getString("language", "Eng") ?: "Eng"
+
+    var notificationSetting by remember { mutableStateOf("Allow") }
+    var showSettingsSheet by remember { mutableStateOf(false) }
+    var theme by remember { mutableStateOf(themeManager.currentTheme) }
+    var language by remember { mutableStateOf(currentLanguage) }
+
+    // Hàm lưu cài đặt
+    val onSaveSettings: () -> Unit = {
+        // Lưu theme qua ThemeManager
+        themeManager.setTheme(theme)
+        // Lưu language
+        sharedPreferences.edit().apply {
+            putString("language", language)
+            apply()
+        }
+        // Thay đổi ngôn ngữ và làm mới hoạt động
+        val locale = if (language == "Eng") Locale("en") else Locale("vi")
+        val config = context.resources.configuration
+        config.setLocale(locale)
+        context.resources.updateConfiguration(config, context.resources.displayMetrics)
+        // Làm mới activity để áp dụng ngôn ngữ
+        context.getActivity()?.recreate()
+    }
+
+    // Giao diện chính (Card hiển thị thông tin người dùng)
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(6.dp)
+    ) {
+        Column(modifier = Modifier.padding(24.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                AsyncImage(
+                    model = photoUrl,
+                    contentDescription = "Avatar",
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(CircleShape)
+                        .background(Color.LightGray)
+                )
+                Spacer(Modifier.width(16.dp))
+                Column {
+                    Text(name, style = MaterialTheme.typography.titleMedium)
+                    Text(email, style = MaterialTheme.typography.bodySmall)
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+            Divider()
+
+            ProfileMenuItem(Icons.Default.Person, "My Profile") {
+                navController.navigate("profile")
+            }
+
+            ProfileMenuItem(Icons.Default.Settings, "Settings") {
+                showSettingsSheet = true
+            }
+
+            ProfileMenuItem(Icons.Default.Notifications, "Notification") {
+                notificationSetting = if (notificationSetting == "Allow") "Mute" else "Allow"
+            }
+
+            ProfileMenuItem(Icons.Default.Logout, "Log Out") {
+                FirebaseAuth.getInstance().signOut()
+                navController.navigate("login") {
+                    popUpTo("home") { inclusive = true }
+                }
+            }
+
+            if (notificationSetting.isNotEmpty()) {
+                Text(
+                    "Notification: $notificationSetting",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.align(Alignment.End)
+                )
+            }
+        }
+    }
+
+    // Modal Settings để người dùng chọn theme và ngôn ngữ
+    if (showSettingsSheet) {
+        ModalBottomSheet(onDismissRequest = { showSettingsSheet = false }) {
+            Column(Modifier.padding(16.dp)) {
+                Text("Settings", style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(8.dp))
+
+                // Hiển thị theme hiện tại
+                Text("Theme: $theme", modifier = Modifier.fillMaxWidth())
+                Spacer(Modifier.height(8.dp))
+
+                // Hiển thị ngôn ngữ hiện tại
+                Text(
+                    "Language: ${if (language == "Eng") "English" else "Vietnamese"}",
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                // Chọn theme
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = theme == "Light",
+                        onClick = {
+                            theme = "Light"
+                            onSaveSettings() // Lưu và áp dụng ngay
+                        }
+                    )
+                    Text("Light", modifier = Modifier.clickable {
+                        theme = "Light"
+                        onSaveSettings()
+                    })
+                    Spacer(Modifier.width(16.dp))
+                    RadioButton(
+                        selected = theme == "Dark",
+                        onClick = {
+                            theme = "Dark"
+                            onSaveSettings() // Lưu và áp dụng ngay
+                        }
+                    )
+                    Text("Dark", modifier = Modifier.clickable {
+                        theme = "Dark"
+                        onSaveSettings()
+                    })
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                // Chọn ngôn ngữ
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = language == "Eng",
+                        onClick = {
+                            language = "Eng"
+                            onSaveSettings() // Lưu và áp dụng ngay
+                        }
+                    )
+                    Text("English", modifier = Modifier.clickable {
+                        language = "Eng"
+                        onSaveSettings()
+                    })
+                    Spacer(Modifier.width(16.dp))
+                    RadioButton(
+                        selected = language == "Viet",
+                        onClick = {
+                            language = "Viet"
+                            onSaveSettings() // Lưu và áp dụng ngay
+                        }
+                    )
+                    Text("Vietnamese", modifier = Modifier.clickable {
+                        language = "Viet"
+                        onSaveSettings()
+                    })
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ProfileMenuItem(icon: ImageVector, title: String, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(icon, contentDescription = null, modifier = Modifier.size(20.dp))
+        Spacer(Modifier.width(16.dp))
+        Text(title, style = MaterialTheme.typography.bodyMedium)
+        Spacer(Modifier.weight(1f))
+        Icon(Icons.Default.ArrowForwardIos, contentDescription = null, modifier = Modifier.size(16.dp))
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ProfileScreen(navController: NavController) {
+    val context = LocalContext.current
+    val user = FirebaseAuth.getInstance().currentUser
+    val firestore = FirebaseFirestore.getInstance()
+    val storage = FirebaseStorage.getInstance()
+
+    var name by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
+    var address by remember { mutableStateOf("") }
+    var avatarUrl by remember { mutableStateOf(user?.photoUrl?.toString() ?: "") }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    // Bottom Sheet state
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    var showSheet by remember { mutableStateOf(false) }
+
+    // Dialog confirm sign out
+    var showSignOutDialog by remember { mutableStateOf(false) }
+
+    // Image picker
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) {
+            selectedImageUri = uri
+            val ref = storage.reference.child("avatars/${user?.uid}.jpg")
+            scope.launch {
+                showSheet = true
+                try {
+                    ref.putFile(uri).await()
+                    val downloadUri = ref.downloadUrl.await()
+                    avatarUrl = downloadUri.toString()
+
+                    firestore.collection("users").document(user!!.uid)
+                        .update("avatar", avatarUrl)
+                } catch (e: Exception) {
+                    Toast.makeText(context, "Upload thất bại: ${e.message}", Toast.LENGTH_SHORT).show()
+                } finally {
+                    showSheet = false
+                }
+            }
+        }
+    }
+
+    // Load Firestore data
+    LaunchedEffect(user) {
+        user?.uid?.let { uid ->
+            firestore.collection("users").document(uid).get().addOnSuccessListener { doc ->
+                name = doc.getString("name") ?: ""
+                phone = doc.getString("phone") ?: ""
+                address = doc.getString("address") ?: ""
+                avatarUrl = doc.getString("avatar") ?: user.photoUrl?.toString() ?: ""
+            }
+        }
+    }
+
+    Scaffold {
+        Box(modifier = Modifier
+            .padding(it)
+            .fillMaxSize()) {
+
+            Column(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(contentAlignment = Alignment.BottomEnd) {
+                    AsyncImage(
+                        model = selectedImageUri ?: avatarUrl,
+                        contentDescription = "Avatar",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)
+                            .background(Color.LightGray)
+                    )
+                    IconButton(
+                        onClick = { launcher.launch("image/*") },
+                        modifier = Modifier
+                            .offset(x = (-4).dp, y = (-4).dp)
+                            .size(24.dp)
+                            .clip(CircleShape)
+                            .background(Color.White)
+                            .border(1.dp, Color.Gray, CircleShape)
+                    ) {
+                        Icon(Icons.Default.Edit, contentDescription = "Edit Avatar", tint = Color.Black, modifier = Modifier.size(16.dp))
+                    }
+                }
+
+                Spacer(Modifier.height(8.dp))
+                Text(user?.email ?: "yourname@gmail.com", style = MaterialTheme.typography.bodyMedium)
+
+                Spacer(Modifier.height(24.dp))
+                OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Name") }, modifier = Modifier.fillMaxWidth())
+                OutlinedTextField(value = phone, onValueChange = { phone = it }, label = { Text("Mobile number") }, modifier = Modifier.fillMaxWidth())
+                OutlinedTextField(value = address, onValueChange = { address = it }, label = { Text("Location") }, modifier = Modifier.fillMaxWidth())
+
+                Spacer(Modifier.height(24.dp))
+
+                Button(
+                    onClick = {
+                        val uid = user?.uid ?: return@Button
+                        val data = mapOf("name" to name, "phone" to phone, "address" to address, "avatar" to avatarUrl)
+
+                        scope.launch {
+                            showSheet = true
+                            try {
+                                firestore.collection("users").document(uid).update(data).await()
+                                Toast.makeText(context, "Đã lưu thông tin!", Toast.LENGTH_SHORT).show()
+                                navController.navigate("home") {
+                                    popUpTo("profile") { inclusive = true }
+                                }
+                            } catch (e: Exception) {
+                                Toast.makeText(context, "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
+                            } finally {
+                                showSheet = false
+                            }
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Save Change")
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                TextButton(
+                    onClick = { showSignOutDialog = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Đăng xuất", color = Color.Red)
+                }
+            }
+
+            if (showSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = { showSheet = false },
+                    sheetState = sheetState
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                        Spacer(Modifier.width(12.dp))
+                        Text("Đang lưu thay đổi...")
+                    }
+                }
+            }
+
+            if (showSignOutDialog) {
+                AlertDialog(
+                    onDismissRequest = { showSignOutDialog = false },
+                    title = { Text("Xác nhận") },
+                    text = { Text("Bạn có chắc chắn muốn đăng xuất?") },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            FirebaseAuth.getInstance().signOut()
+                            navController.navigate("login") {
+                                popUpTo("home") { inclusive = true }
+                            }
+                            showSignOutDialog = false
+                        }) {
+                            Text("Đăng xuất")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showSignOutDialog = false }) {
+                            Text("Hủy")
+                        }
+                    }
+                )
+            }
+        }
+    }
+}
+
+
+
+
+@Composable
+fun RegisterInfoScreen(navController: NavController) {
+    var name by remember { mutableStateOf("") }
+    var dob by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var address by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp)
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Thông tin cá nhân",
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
+
+        OutlinedTextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Họ tên") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp)
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = dob,
+            onValueChange = { dob = it },
+            label = { Text("Ngày sinh") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp)
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = phone,
+            onValueChange = { phone = it },
+            label = { Text("Số điện thoại") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp)
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp)
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = address,
+            onValueChange = { address = it },
+            label = { Text("Địa chỉ nhận hàng") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp)
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = {
+                navController.navigate(
+                    "register_credential?name=${name}&dob=${dob}&phone=${phone}&email=${email}&address=${address}"
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text("Tiếp tục")
+        }
+    }
+}
+
+@Composable
+fun RegisterCredentialScreen(
+    navController: NavController,
+    name: String,
+    dob: String,
+    phone: String,
+    email: String,
+    address: String
+) {
+    val context = LocalContext.current
+    val auth = FirebaseAuth.getInstance()
+    val firestore = FirebaseFirestore.getInstance()
+
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Tạo mật khẩu", style = MaterialTheme.typography.headlineSmall)
+        Spacer(Modifier.height(16.dp))
+
+        OutlinedTextField(value = email, onValueChange = {}, label = { Text("Email") }, enabled = false, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = password, onValueChange = { password = it }, label = { Text("Mật khẩu") }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = confirmPassword, onValueChange = { confirmPassword = it }, label = { Text("Xác nhận mật khẩu") }, modifier = Modifier.fillMaxWidth())
+
+        Spacer(Modifier.height(20.dp))
+        Button(onClick = {
+            if (password != confirmPassword) {
+                Toast.makeText(context, "Mật khẩu không khớp", Toast.LENGTH_SHORT).show()
+                return@Button
+            }
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener { result ->
+                    val uid = result.user?.uid ?: return@addOnSuccessListener
+                    val data = mapOf(
+                        "name" to name,
+                        "dob" to dob,
+                        "phone" to phone,
+                        "email" to email,
+                        "address" to address
+                    )
+
+                    firestore.collection("users").document(uid).set(data)
+                        .addOnSuccessListener {
+                            Toast.makeText(context, "Tài khoản đã được tạo, bạn có thể bắt đầu mua sắm rồi!", Toast.LENGTH_SHORT).show()
+                            navController.navigate("home") {
+                                popUpTo("register_credential") { inclusive = true }
+                            }
+                        }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(context, "Đăng ký thất bại: ${it.message}", Toast.LENGTH_SHORT).show()
+                }
+        }) {
+            Text("Hoàn tất đăng ký")
+        }
+    }
+}
+
+@Composable
+fun GoogleLoginScreen(navController: NavController) {
+    val context = LocalContext.current
+    val auth = FirebaseAuth.getInstance()
+    val firestore = FirebaseFirestore.getInstance()
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+
+            auth.signInWithCredential(credential)
+                .addOnSuccessListener { result ->
+                    val user = result.user ?: return@addOnSuccessListener
+                    val uid = user.uid
+                    val userRef = firestore.collection("users").document(uid)
+
+                    userRef.get().addOnSuccessListener { doc ->
+                        if (!doc.exists()) {
+                            // Thêm user mới nếu chưa có
+                            val newUser = mapOf(
+                                "email" to user.email,
+                                "name" to "",
+                                "dob" to "",
+                                "phone" to "",
+                                "address" to ""
+                            )
+                            userRef.set(newUser)
+                        }
+
+                        Toast.makeText(context, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
+                        navController.navigate("home") {
+                            popUpTo("login_google") { inclusive = true }
+                        }
+                    }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(context, "Đăng nhập thất bại: ${it.message}", Toast.LENGTH_SHORT).show()
+                }
+
+        } catch (e: ApiException) {
+            Toast.makeText(context, "Lỗi đăng nhập: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    val signInClient = remember {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(context.getString(R.string.default_web_client_id)) // Đảm bảo đúng ID trong google-services.json
+            .requestEmail()
+            .build()
+        GoogleSignIn.getClient(context, gso)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(onClick = {
+            // Luôn sign out để buộc hiện danh sách tài khoản mỗi lần
+            signInClient.signOut().addOnCompleteListener {
+                val signInIntent = signInClient.signInIntent
+                launcher.launch(signInIntent)
+            }
+        }) {
+            Text("Đăng nhập bằng Google")
+        }
+    }
+>>>>>>> 305dbd2 (Update Profile)
 }

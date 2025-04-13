@@ -35,7 +35,6 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun SportShopTheme(
-<<<<<<< HEAD
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
@@ -47,16 +46,6 @@ fun SportShopTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-=======
-    content: @Composable () -> Unit
-) {
-    val context = LocalContext.current
-    val savedTheme = ThemePreferences.getTheme(context)
-    val darkTheme = savedTheme == "Dark"
-
-    // Dynamic color is available on Android 12+
-    val colorScheme = when {
->>>>>>> 305dbd2 (Update Profile)
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }

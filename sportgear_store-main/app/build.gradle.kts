@@ -2,11 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-<<<<<<< HEAD
-=======
-
-    id ("com.google.gms.google-services")
->>>>>>> 305dbd2 (Update Profile)
 }
 
 android {
@@ -62,10 +57,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation ("androidx.activity:activity-compose:1.8.0")
-<<<<<<< HEAD
-=======
-    implementation ("androidx.activity:activity-ktx:1.8.0")
->>>>>>> 305dbd2 (Update Profile)
     implementation ("androidx.compose.ui:ui:1.6.0")
     implementation ("androidx.compose.material3:material3:1.1.2")
     implementation ("androidx.compose.ui:ui-tooling-preview:1.6.0")
@@ -73,25 +64,4 @@ dependencies {
     implementation ("androidx.compose.ui:ui-tooling-preview:1.5.0")
     implementation ("androidx.navigation:navigation-compose:2.5.3")
     implementation ("androidx.compose.runtime:runtime-livedata:1.5.0")
-<<<<<<< HEAD
 }
-=======
-
-    implementation (platform("com.google.firebase:firebase-bom:32.7.0"))
-    implementation ("com.google.firebase:firebase-auth-ktx:22.3.0")
-    implementation ("com.google.firebase:firebase-firestore-ktx")
-    implementation ("com.google.android.gms:play-services-auth:20.7.0") // Gmail login
-    implementation("com.google.android.gms:play-services-auth:21.0.0")
-    implementation("androidx.navigation:navigation-compose:2.5.3")
-    implementation("com.google.accompanist:accompanist-permissions:0.28.0")
-    implementation("io.coil-kt:coil-compose:2.4.0")
-    implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
-    implementation ("androidx.compose.material3:material3:<latest-version>")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
-    implementation ("androidx.compose.material:material-icons-extended")
-
-}
-
-
-
->>>>>>> 305dbd2 (Update Profile)

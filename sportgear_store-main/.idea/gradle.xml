@@ -13,10 +13,6 @@
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
-<<<<<<< HEAD
-=======
-        <option name="resolveExternalAnnotations" value="false" />
->>>>>>> 305dbd2 (Update Profile)
       </GradleProjectSettings>
     </option>
   </component>
