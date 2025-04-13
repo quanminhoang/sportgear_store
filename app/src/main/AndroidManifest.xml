@@ -25,9 +25,8 @@
         </activity>
     </application>
 
-<<<<<<< HEAD
-=======
+
     <uses-permission android:name="android.permission.INTERNET" />
 
->>>>>>> 305dbd2 (Update Profile)
+
 </manifest>

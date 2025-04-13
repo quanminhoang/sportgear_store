@@ -1,8 +1,15 @@
 package com.example.sportshop
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -17,9 +24,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -28,45 +36,21 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.delay
-<<<<<<< HEAD
-=======
-// all import profile (firebase,...)
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import androidx.compose.ui.platform.LocalContext
-import android.widget.Toast
-import androidx.compose.material.icons.filled.ArrowForwardIos
-import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.navigation.navArgument
+import coil.compose.AsyncImage
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.FirebaseException
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
-import androidx.navigation.navArgument
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import coil.compose.AsyncImage
-import android.net.Uri
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.ExperimentalMaterial3Api
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.Locale
 
-
+// Theme Manager để quản lý theme
 class ThemeManager(context: Context) {
     private val sharedPreferences = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE)
     private val themeState = mutableStateOf(sharedPreferences.getString("theme", "Light") ?: "Light")
@@ -85,16 +69,11 @@ fun rememberThemeManager(): ThemeManager {
     val context = LocalContext.current
     return remember { ThemeManager(context) }
 }
->>>>>>> 305dbd2 (Update Profile)
 
+// MainActivity
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-<<<<<<< HEAD
-        setContent {
-            SportsShopTheme {
-                MyApp()
-=======
 
         // Cập nhật ngôn ngữ khi khởi động ứng dụng
         val sharedPreferences = getSharedPreferences("user_settings", MODE_PRIVATE)
@@ -106,26 +85,33 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val themeManager = rememberThemeManager()
-            // Áp dụng theme cho toàn bộ ứng dụng
             SportsShopTheme(themeManager.currentTheme) {
                 MyApp(themeManager)
->>>>>>> 305dbd2 (Update Profile)
             }
         }
     }
 }
 
-<<<<<<< HEAD
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyApp() {
-=======
+// Theme cho ứng dụng
 @Composable
 fun SportsShopTheme(theme: String, content: @Composable () -> Unit) {
-    val colorScheme = if (theme == "Light") lightColorScheme() else darkColorScheme()
+    val colorScheme = if (theme == "Light") {
+        lightColorScheme(
+            primary = Color(0xFF2196F3),
+            secondary = Color(0xFF03DAC6),
+            tertiary = Color(0xFFFFFAFA)
+        )
+    } else {
+        darkColorScheme(
+            primary = Color(0xFF2196F3),
+            secondary = Color(0xFF03DAC6),
+            tertiary = Color(0xFF2E2E2E)
+        )
+    }
     MaterialTheme(colorScheme = colorScheme, content = content)
 }
 
+// Utility để lấy Activity từ Context
 fun Context.getActivity(): Activity? {
     var currentContext = this
     while (currentContext is ContextWrapper) {
@@ -137,20 +123,16 @@ fun Context.getActivity(): Activity? {
     return null
 }
 
+// Ứng dụng chính với Navigation
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp(themeManager: ThemeManager) {
->>>>>>> 305dbd2 (Update Profile)
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") { SplashScreen(navController) }
-<<<<<<< HEAD
-        composable("home") { HomeScreen() }
-=======
         composable("home") { HomeScreen(navController) }
         composable("welcome") { WelcomeScreen(navController) }
-
         composable("main_profile") { MainProfileMenu(navController, themeManager) }
         composable("profile") { ProfileScreen(navController) }
         composable("login_google") { GoogleLoginScreen(navController) }
@@ -174,19 +156,12 @@ fun MyApp(themeManager: ThemeManager) {
                 address = backStackEntry.arguments?.getString("address") ?: ""
             )
         }
->>>>>>> 305dbd2 (Update Profile)
     }
 }
 
+// Splash Screen
 @Composable
 fun SplashScreen(navController: NavController) {
-<<<<<<< HEAD
-    LaunchedEffect(Unit) {
-        delay(2000)
-        navController.navigate("home") {
-            popUpTo("splash") { inclusive = true }
-=======
-    val user = FirebaseAuth.getInstance().currentUser
     val auth = FirebaseAuth.getInstance()
 
     LaunchedEffect(Unit) {
@@ -200,7 +175,6 @@ fun SplashScreen(navController: NavController) {
             navController.navigate("welcome") {
                 popUpTo("splash") { inclusive = true }
             }
->>>>>>> 305dbd2 (Update Profile)
         }
     }
 
@@ -226,13 +200,38 @@ fun SplashScreen(navController: NavController) {
     }
 }
 
+// Welcome Screen
+@Composable
+fun WelcomeScreen(navController: NavController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Chào mừng đến Sports Shop!", style = MaterialTheme.typography.headlineSmall)
+        Spacer(modifier = Modifier.height(32.dp))
+        Button(
+            onClick = { navController.navigate("login_google") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Đăng nhập bằng Google")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = { navController.navigate("register_info") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Đăng ký bằng Email")
+        }
+    }
+}
+
+// Home Screen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-<<<<<<< HEAD
-fun HomeScreen() {
-=======
 fun HomeScreen(navController: NavController) {
->>>>>>> 305dbd2 (Update Profile)
     val scrollState = rememberScrollState()
 
     Scaffold(
@@ -265,25 +264,13 @@ fun HomeScreen(navController: NavController) {
                     icon = { Icon(Icons.Default.Favorite, contentDescription = "Wishlist") },
                     label = { Text("Wishlist") },
                     selected = false,
-<<<<<<< HEAD
-                    onClick = {}
-=======
-                    onClick = {
-                    }
->>>>>>> 305dbd2 (Update Profile)
+                    onClick = { /* TODO: Điều hướng đến Wishlist */ }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
                     label = { Text("Thông tin") },
-<<<<<<< HEAD
                     selected = false,
-                    onClick = {}
-=======
-                    selected = true,
-                    onClick = {
-                        navController.navigate("main_profile")
-                    }
->>>>>>> 305dbd2 (Update Profile)
+                    onClick = { navController.navigate("main_profile") }
                 )
             }
         }
@@ -293,17 +280,10 @@ fun HomeScreen(navController: NavController) {
                 .padding(padding)
                 .verticalScroll(scrollState)
         ) {
-            // Special Offer Section
             SpecialOfferCard()
-
             Spacer(modifier = Modifier.height(24.dp))
-
-            // Categories Section
             TopCategoriesSection()
-
             Spacer(modifier = Modifier.height(24.dp))
-
-            // Trending Products
             Text(
                 text = "Sản Phẩm Nổi Bật",
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
@@ -315,6 +295,7 @@ fun HomeScreen(navController: NavController) {
     }
 }
 
+// Special Offer Card
 @Composable
 fun SpecialOfferCard() {
     Card(
@@ -332,7 +313,6 @@ fun SpecialOfferCard() {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
-
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
@@ -365,6 +345,7 @@ fun SpecialOfferCard() {
     }
 }
 
+// Top Categories Section
 @Composable
 fun TopCategoriesSection() {
     val categories = listOf(
@@ -380,7 +361,6 @@ fun TopCategoriesSection() {
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(bottom = 12.dp)
         )
-
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -388,9 +368,7 @@ fun TopCategoriesSection() {
                 CategoryItem(name, icon)
             }
         }
-
         Spacer(modifier = Modifier.height(12.dp))
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -409,6 +387,7 @@ fun TopCategoriesSection() {
     }
 }
 
+// Category Item
 @Composable
 fun CategoryItem(name: String, iconRes: Int) {
     Column(
@@ -425,7 +404,6 @@ fun CategoryItem(name: String, iconRes: Int) {
                     .size(60.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.tertiary)
-
             ) {
                 Image(
                     painter = painterResource(id = iconRes),
@@ -448,33 +426,14 @@ fun CategoryItem(name: String, iconRes: Int) {
     }
 }
 
+// Product List
 @Composable
 fun ProductList() {
     val products = listOf(
-        Product(
-            "Giày Thể Thao",
-            "5,233,470 VND",
-            "5 WID (%)",
-            R.drawable.nike_shoes
-        ),
-        Product(
-            "Áo thể thao",
-            "1,019,217 VND",
-            "56 WID (23%)",
-            R.drawable.adidas_shirt
-        ),
-        Product(
-            "Quả Bóng Đá",
-            "1,019,217 VND",
-            "56 WID (23%)",
-            R.drawable.puma_ball
-        ),
-        Product(
-            "Quần Jogger",
-            "500,000 VND",
-            "56 WID (23%)",
-            R.drawable.jogger
-        )
+        Product("Giày Thể Thao", "5,233,470 VND", "5 WID (%)", R.drawable.nike_shoes),
+        Product("Áo thể thao", "1,019,217 VND", "56 WID (23%)", R.drawable.adidas_shirt),
+        Product("Quả Bóng Đá", "1,019,217 VND", "56 WID (23%)", R.drawable.puma_ball),
+        Product("Quần Jogger", "500,000 VND", "56 WID (23%)", R.drawable.jogger)
     )
 
     Column(modifier = Modifier.padding(16.dp)) {
@@ -485,6 +444,7 @@ fun ProductList() {
     }
 }
 
+// Product Card
 @Composable
 fun ProductCard(product: Product) {
     Card(
@@ -503,9 +463,7 @@ fun ProductCard(product: Product) {
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop
             )
-
             Spacer(modifier = Modifier.width(12.dp))
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = product.name,
@@ -527,7 +485,6 @@ fun ProductCard(product: Product) {
                     )
                 )
             }
-
             IconButton(
                 onClick = { /* Add to wishlist */ },
                 modifier = Modifier.align(Alignment.Top)
@@ -541,6 +498,7 @@ fun ProductCard(product: Product) {
     }
 }
 
+// Product Data Class
 data class Product(
     val name: String,
     val price: String,
@@ -548,47 +506,7 @@ data class Product(
     val imageRes: Int
 )
 
-@Composable
-fun SportsShopTheme(content: @Composable () -> Unit) {
-    MaterialTheme(
-        colorScheme = lightColorScheme(
-            primary = Color(0xFF2196F3),
-            secondary = Color(0xFF03DAC6),
-            tertiary = Color(0xFFFFFAFA)
-        ),
-        content = content
-    )
-<<<<<<< HEAD
-=======
-}
-
-@Composable
-fun WelcomeScreen(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Chào mừng đến Sports Shop!", style = MaterialTheme.typography.headlineSmall)
-        Spacer(modifier = Modifier.height(32.dp))
-        Button(
-            onClick = { navController.navigate("login_google") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Đăng nhập bằng Google")
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(
-            onClick = { navController.navigate("register_info") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Đăng ký bằng Email")
-        }
-    }
-}
-
+// Main Profile Menu
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainProfileMenu(navController: NavController, themeManager: ThemeManager) {
@@ -597,11 +515,8 @@ fun MainProfileMenu(navController: NavController, themeManager: ThemeManager) {
     val name = user?.displayName ?: "Your name"
     val photoUrl = user?.photoUrl?.toString()
 
-    // Lấy SharedPreferences để lưu cài đặt
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE)
-
-    // Đọc language đã lưu
     val currentLanguage = sharedPreferences.getString("language", "Eng") ?: "Eng"
 
     var notificationSetting by remember { mutableStateOf("Allow") }
@@ -609,25 +524,22 @@ fun MainProfileMenu(navController: NavController, themeManager: ThemeManager) {
     var theme by remember { mutableStateOf(themeManager.currentTheme) }
     var language by remember { mutableStateOf(currentLanguage) }
 
-    // Hàm lưu cài đặt
     val onSaveSettings: () -> Unit = {
-        // Lưu theme qua ThemeManager
         themeManager.setTheme(theme)
-        // Lưu language
         sharedPreferences.edit().apply {
             putString("language", language)
             apply()
         }
-        // Thay đổi ngôn ngữ và làm mới hoạt động
-        val locale = if (language == "Eng") Locale("en") else Locale("vi")
-        val config = context.resources.configuration
-        config.setLocale(locale)
-        context.resources.updateConfiguration(config, context.resources.displayMetrics)
-        // Làm mới activity để áp dụng ngôn ngữ
-        context.getActivity()?.recreate()
+        // Chỉ recreate khi thay đổi ngôn ngữ
+        if (language != currentLanguage) {
+            val locale = if (language == "Eng") Locale("en") else Locale("vi")
+            val config = context.resources.configuration
+            config.setLocale(locale)
+            context.resources.updateConfiguration(config, context.resources.displayMetrics)
+            context.getActivity()?.recreate()
+        }
     }
 
-    // Giao diện chính (Card hiển thị thông tin người dùng)
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -651,29 +563,23 @@ fun MainProfileMenu(navController: NavController, themeManager: ThemeManager) {
                     Text(email, style = MaterialTheme.typography.bodySmall)
                 }
             }
-
             Spacer(Modifier.height(16.dp))
             Divider()
-
             ProfileMenuItem(Icons.Default.Person, "My Profile") {
                 navController.navigate("profile")
             }
-
             ProfileMenuItem(Icons.Default.Settings, "Settings") {
                 showSettingsSheet = true
             }
-
             ProfileMenuItem(Icons.Default.Notifications, "Notification") {
                 notificationSetting = if (notificationSetting == "Allow") "Mute" else "Allow"
             }
-
             ProfileMenuItem(Icons.Default.Logout, "Log Out") {
                 FirebaseAuth.getInstance().signOut()
-                navController.navigate("login") {
+                navController.navigate("welcome") {
                     popUpTo("home") { inclusive = true }
                 }
             }
-
             if (notificationSetting.isNotEmpty()) {
                 Text(
                     "Notification: $notificationSetting",
@@ -684,85 +590,61 @@ fun MainProfileMenu(navController: NavController, themeManager: ThemeManager) {
         }
     }
 
-    // Modal Settings để người dùng chọn theme và ngôn ngữ
     if (showSettingsSheet) {
         ModalBottomSheet(onDismissRequest = { showSettingsSheet = false }) {
             Column(Modifier.padding(16.dp)) {
                 Text("Settings", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
-
-                // Hiển thị theme hiện tại
                 Text("Theme: $theme", modifier = Modifier.fillMaxWidth())
                 Spacer(Modifier.height(8.dp))
-
-                // Hiển thị ngôn ngữ hiện tại
                 Text(
                     "Language: ${if (language == "Eng") "English" else "Vietnamese"}",
                     modifier = Modifier.fillMaxWidth()
                 )
-
                 Spacer(Modifier.height(16.dp))
-
-                // Chọn theme
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
                         selected = theme == "Light",
-                        onClick = {
-                            theme = "Light"
-                            onSaveSettings() // Lưu và áp dụng ngay
-                        }
+                        onClick = { theme = "Light" }
                     )
-                    Text("Light", modifier = Modifier.clickable {
-                        theme = "Light"
-                        onSaveSettings()
-                    })
+                    Text("Light", modifier = Modifier.clickable { theme = "Light" })
                     Spacer(Modifier.width(16.dp))
                     RadioButton(
                         selected = theme == "Dark",
-                        onClick = {
-                            theme = "Dark"
-                            onSaveSettings() // Lưu và áp dụng ngay
-                        }
+                        onClick = { theme = "Dark" }
                     )
-                    Text("Dark", modifier = Modifier.clickable {
-                        theme = "Dark"
-                        onSaveSettings()
-                    })
+                    Text("Dark", modifier = Modifier.clickable { theme = "Dark" })
                 }
-
                 Spacer(Modifier.height(16.dp))
-
-                // Chọn ngôn ngữ
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
                         selected = language == "Eng",
-                        onClick = {
-                            language = "Eng"
-                            onSaveSettings() // Lưu và áp dụng ngay
-                        }
+                        onClick = { language = "Eng" }
                     )
-                    Text("English", modifier = Modifier.clickable {
-                        language = "Eng"
-                        onSaveSettings()
-                    })
+                    Text("English", modifier = Modifier.clickable { language = "Eng" })
                     Spacer(Modifier.width(16.dp))
                     RadioButton(
                         selected = language == "Viet",
-                        onClick = {
-                            language = "Viet"
-                            onSaveSettings() // Lưu và áp dụng ngay
-                        }
+                        onClick = { language = "Viet" }
                     )
-                    Text("Vietnamese", modifier = Modifier.clickable {
-                        language = "Viet"
+                    Text("Vietnamese", modifier = Modifier.clickable { language = "Viet" })
+                }
+                Spacer(Modifier.height(16.dp))
+                Button(
+                    onClick = {
                         onSaveSettings()
-                    })
+                        showSettingsSheet = false
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Save")
                 }
             }
         }
     }
 }
 
+// Profile Menu Item
 @Composable
 fun ProfileMenuItem(icon: ImageVector, title: String, onClick: () -> Unit) {
     Row(
@@ -780,6 +662,7 @@ fun ProfileMenuItem(icon: ImageVector, title: String, onClick: () -> Unit) {
     }
 }
 
+// Profile Screen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController) {
@@ -794,15 +677,11 @@ fun ProfileScreen(navController: NavController) {
     var avatarUrl by remember { mutableStateOf(user?.photoUrl?.toString() ?: "") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-    // Bottom Sheet state
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
     var showSheet by remember { mutableStateOf(false) }
-
-    // Dialog confirm sign out
     var showSignOutDialog by remember { mutableStateOf(false) }
 
-    // Image picker
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             selectedImageUri = uri
@@ -813,7 +692,6 @@ fun ProfileScreen(navController: NavController) {
                     ref.putFile(uri).await()
                     val downloadUri = ref.downloadUrl.await()
                     avatarUrl = downloadUri.toString()
-
                     firestore.collection("users").document(user!!.uid)
                         .update("avatar", avatarUrl)
                 } catch (e: Exception) {
@@ -825,7 +703,6 @@ fun ProfileScreen(navController: NavController) {
         }
     }
 
-    // Load Firestore data
     LaunchedEffect(user) {
         user?.uid?.let { uid ->
             firestore.collection("users").document(uid).get().addOnSuccessListener { doc ->
@@ -838,10 +715,11 @@ fun ProfileScreen(navController: NavController) {
     }
 
     Scaffold {
-        Box(modifier = Modifier
-            .padding(it)
-            .fillMaxSize()) {
-
+        Box(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+        ) {
             Column(
                 modifier = Modifier
                     .padding(24.dp)
@@ -866,25 +744,40 @@ fun ProfileScreen(navController: NavController) {
                             .background(Color.White)
                             .border(1.dp, Color.Gray, CircleShape)
                     ) {
-                        Icon(Icons.Default.Edit, contentDescription = "Edit Avatar", tint = Color.Black, modifier = Modifier.size(16.dp))
+                        Icon(
+                            Icons.Default.Edit,
+                            contentDescription = "Edit Avatar",
+                            tint = Color.Black,
+                            modifier = Modifier.size(16.dp)
+                        )
                     }
                 }
-
                 Spacer(Modifier.height(8.dp))
                 Text(user?.email ?: "yourname@gmail.com", style = MaterialTheme.typography.bodyMedium)
-
                 Spacer(Modifier.height(24.dp))
-                OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text("Name") }, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(value = phone, onValueChange = { phone = it }, label = { Text("Mobile number") }, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(value = address, onValueChange = { address = it }, label = { Text("Location") }, modifier = Modifier.fillMaxWidth())
-
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Name") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = phone,
+                    onValueChange = { phone = it },
+                    label = { Text("Mobile number") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = address,
+                    onValueChange = { address = it },
+                    label = { Text("Location") },
+                    modifier = Modifier.fillMaxWidth()
+                )
                 Spacer(Modifier.height(24.dp))
-
                 Button(
                     onClick = {
                         val uid = user?.uid ?: return@Button
                         val data = mapOf("name" to name, "phone" to phone, "address" to address, "avatar" to avatarUrl)
-
                         scope.launch {
                             showSheet = true
                             try {
@@ -905,9 +798,7 @@ fun ProfileScreen(navController: NavController) {
                 ) {
                     Text("Save Change")
                 }
-
                 Spacer(Modifier.height(16.dp))
-
                 TextButton(
                     onClick = { showSignOutDialog = true },
                     modifier = Modifier.fillMaxWidth()
@@ -943,7 +834,7 @@ fun ProfileScreen(navController: NavController) {
                     confirmButton = {
                         TextButton(onClick = {
                             FirebaseAuth.getInstance().signOut()
-                            navController.navigate("login") {
+                            navController.navigate("welcome") {
                                 popUpTo("home") { inclusive = true }
                             }
                             showSignOutDialog = false
@@ -962,9 +853,7 @@ fun ProfileScreen(navController: NavController) {
     }
 }
 
-
-
-
+// Register Info Screen
 @Composable
 fun RegisterInfoScreen(navController: NavController) {
     var name by remember { mutableStateOf("") }
@@ -985,7 +874,6 @@ fun RegisterInfoScreen(navController: NavController) {
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(bottom = 24.dp)
         )
-
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
@@ -993,9 +881,7 @@ fun RegisterInfoScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp)
         )
-
         Spacer(modifier = Modifier.height(12.dp))
-
         OutlinedTextField(
             value = dob,
             onValueChange = { dob = it },
@@ -1003,9 +889,7 @@ fun RegisterInfoScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp)
         )
-
         Spacer(modifier = Modifier.height(12.dp))
-
         OutlinedTextField(
             value = phone,
             onValueChange = { phone = it },
@@ -1013,9 +897,7 @@ fun RegisterInfoScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp)
         )
-
         Spacer(modifier = Modifier.height(12.dp))
-
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -1023,9 +905,7 @@ fun RegisterInfoScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp)
         )
-
         Spacer(modifier = Modifier.height(12.dp))
-
         OutlinedTextField(
             value = address,
             onValueChange = { address = it },
@@ -1033,9 +913,7 @@ fun RegisterInfoScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp)
         )
-
         Spacer(modifier = Modifier.height(24.dp))
-
         Button(
             onClick = {
                 navController.navigate(
@@ -1052,6 +930,7 @@ fun RegisterInfoScreen(navController: NavController) {
     }
 }
 
+// Register Credential Screen
 @Composable
 fun RegisterCredentialScreen(
     navController: NavController,
@@ -1077,11 +956,25 @@ fun RegisterCredentialScreen(
     ) {
         Text("Tạo mật khẩu", style = MaterialTheme.typography.headlineSmall)
         Spacer(Modifier.height(16.dp))
-
-        OutlinedTextField(value = email, onValueChange = {}, label = { Text("Email") }, enabled = false, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(value = password, onValueChange = { password = it }, label = { Text("Mật khẩu") }, modifier = Modifier.fillMaxWidth())
-        OutlinedTextField(value = confirmPassword, onValueChange = { confirmPassword = it }, label = { Text("Xác nhận mật khẩu") }, modifier = Modifier.fillMaxWidth())
-
+        OutlinedTextField(
+            value = email,
+            onValueChange = {},
+            label = { Text("Email") },
+            enabled = false,
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Mật khẩu") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            label = { Text("Xác nhận mật khẩu") },
+            modifier = Modifier.fillMaxWidth()
+        )
         Spacer(Modifier.height(20.dp))
         Button(onClick = {
             if (password != confirmPassword) {
@@ -1102,7 +995,11 @@ fun RegisterCredentialScreen(
 
                     firestore.collection("users").document(uid).set(data)
                         .addOnSuccessListener {
-                            Toast.makeText(context, "Tài khoản đã được tạo, bạn có thể bắt đầu mua sắm rồi!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Tài khoản đã được tạo, bạn có thể bắt đầu mua sắm rồi!",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             navController.navigate("home") {
                                 popUpTo("register_credential") { inclusive = true }
                             }
@@ -1117,6 +1014,7 @@ fun RegisterCredentialScreen(
     }
 }
 
+// Google Login Screen
 @Composable
 fun GoogleLoginScreen(navController: NavController) {
     val context = LocalContext.current
@@ -1139,7 +1037,6 @@ fun GoogleLoginScreen(navController: NavController) {
 
                     userRef.get().addOnSuccessListener { doc ->
                         if (!doc.exists()) {
-                            // Thêm user mới nếu chưa có
                             val newUser = mapOf(
                                 "email" to user.email,
                                 "name" to "",
@@ -1149,7 +1046,6 @@ fun GoogleLoginScreen(navController: NavController) {
                             )
                             userRef.set(newUser)
                         }
-
                         Toast.makeText(context, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show()
                         navController.navigate("home") {
                             popUpTo("login_google") { inclusive = true }
@@ -1159,7 +1055,6 @@ fun GoogleLoginScreen(navController: NavController) {
                 .addOnFailureListener {
                     Toast.makeText(context, "Đăng nhập thất bại: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
-
         } catch (e: ApiException) {
             Toast.makeText(context, "Lỗi đăng nhập: ${e.message}", Toast.LENGTH_SHORT).show()
         }
@@ -1167,7 +1062,7 @@ fun GoogleLoginScreen(navController: NavController) {
 
     val signInClient = remember {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(context.getString(R.string.default_web_client_id)) // Đảm bảo đúng ID trong google-services.json
+            .requestIdToken(context.getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
         GoogleSignIn.getClient(context, gso)
@@ -1181,7 +1076,6 @@ fun GoogleLoginScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(onClick = {
-            // Luôn sign out để buộc hiện danh sách tài khoản mỗi lần
             signInClient.signOut().addOnCompleteListener {
                 val signInIntent = signInClient.signInIntent
                 launcher.launch(signInIntent)
@@ -1190,5 +1084,4 @@ fun GoogleLoginScreen(navController: NavController) {
             Text("Đăng nhập bằng Google")
         }
     }
->>>>>>> 305dbd2 (Update Profile)
 }
