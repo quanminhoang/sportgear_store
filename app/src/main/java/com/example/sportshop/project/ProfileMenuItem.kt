@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.components
+package com.example.sportshop.project
 
 import android.content.Context
 import android.net.Uri
@@ -62,8 +62,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.sportshop.ThemeManager
-import com.example.sportshop.getActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage

@@ -1,4 +1,4 @@
-package com.example.sportshop.welcome
+package com.example.sportshop.project
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

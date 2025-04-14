@@ -1,4 +1,4 @@
-package com.example.sportshop
+package com.example.sportshop.project
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -6,14 +6,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.sportshop.auth.GoogleLoginScreen
-import com.example.sportshop.auth.RegisterCredentialScreen
-import com.example.sportshop.auth.RegisterInfoScreen
-import com.example.sportshop.home.HomeScreen
-import com.example.sportshop.ui.components.MainProfileMenu
-import com.example.sportshop.ui.components.ProfileScreen
-import com.example.sportshop.welcome.SplashScreen
-import com.example.sportshop.welcome.WelcomeScreen
 
 // Ứng dụng chính với Navigation
 @OptIn(ExperimentalMaterial3Api::class)

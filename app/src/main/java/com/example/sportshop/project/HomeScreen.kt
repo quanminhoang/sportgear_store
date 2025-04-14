@@ -1,4 +1,4 @@
-package com.example.sportshop.home
+package com.example.sportshop.project
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,8 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.sportshop.ui.components.ProductList
-import com.example.sportshop.ui.components.SpecialOfferCard
+
 
 // Home Screen
 @OptIn(ExperimentalMaterial3Api::class)

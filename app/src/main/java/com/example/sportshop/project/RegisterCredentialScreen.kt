@@ -1,4 +1,4 @@
-package com.example.sportshop.auth
+package com.example.sportshop.project
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement

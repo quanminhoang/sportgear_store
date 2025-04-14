@@ -1,4 +1,4 @@
-package com.example.sportshop.home
+package com.example.sportshop.project
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.sportshop.R
-import com.example.sportshop.ui.components.CategoryItem
+
 
 // Top Categories Section
 @Composable

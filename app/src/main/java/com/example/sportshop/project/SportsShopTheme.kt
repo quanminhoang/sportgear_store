@@ -1,4 +1,4 @@
-package com.example.sportshop.home
+package com.example.sportshop.project
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme

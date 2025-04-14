@@ -1,4 +1,4 @@
-package com.example.sportshop.auth
+package com.example.sportshop.project
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
