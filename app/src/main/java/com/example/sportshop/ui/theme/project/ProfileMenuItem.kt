@@ -1,4 +1,4 @@
-package com.example.sportshop.project
+package com.example.sportshop.ui.theme.project
 
 import android.content.Context
 import android.net.Uri

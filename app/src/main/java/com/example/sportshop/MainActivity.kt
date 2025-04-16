@@ -1,4 +1,4 @@
-package com.example.sportshop.project
+package com.example.sportshop.ui.theme.project
 
 import android.app.Activity
 import android.content.Context
@@ -73,6 +73,13 @@ data class Product(
     val imageRes: Int
 )
 
+data class CartItem(
+    val id: Int,
+    val name: String,
+    val imageResId: Int,
+    val price: Double,
+    var quantity: Int
+)
 
 
 

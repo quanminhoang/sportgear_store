@@ -1,4 +1,4 @@
-package com.example.sportshop.project
+package com.example.sportshop.ui.theme.project
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

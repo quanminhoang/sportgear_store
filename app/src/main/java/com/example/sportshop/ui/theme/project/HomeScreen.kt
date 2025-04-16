@@ -1,4 +1,4 @@
-package com.example.sportshop.project
+package com.example.sportshop.ui.theme.project
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -47,7 +47,7 @@ fun HomeScreen(navController: NavController) {
                     IconButton(onClick = { /* Search action */ }) {
                         Icon(Icons.Default.Search, contentDescription = "Search")
                     }
-                    IconButton(onClick = { /* Cart action */ }) {
+                    IconButton(onClick = {navController.navigate("cart_screen") }) {
                         Icon(Icons.Default.ShoppingCart, contentDescription = "Cart")
                     }
                 }
