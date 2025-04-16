@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.theme.project
+package com.example.sportshop.ui.theme.components
 
 import android.app.Activity
 import android.content.Context
@@ -8,6 +8,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import com.example.sportshop.ui.components.MyApp
+import com.example.sportshop.ui.theme.SportsShopTheme
 import java.util.Locale
 
 // Theme Manager để quản lý theme

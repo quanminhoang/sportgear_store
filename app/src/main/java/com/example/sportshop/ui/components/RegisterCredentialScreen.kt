@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.theme.project
+package com.example.sportshop.ui.components
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement

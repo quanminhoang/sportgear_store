@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.theme.project
+package com.example.sportshop.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -28,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.sportshop.ui.theme.components.Product
 
 // Product Card
 @Composable

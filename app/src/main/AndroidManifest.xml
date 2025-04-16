@@ -13,7 +13,7 @@
         android:theme="@style/Theme.SportShop"
         tools:targetApi="31">
         <activity
-            android:name=".ui.theme.project.MainActivity"
+            android:name=".ui.theme.components.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.SportShop">

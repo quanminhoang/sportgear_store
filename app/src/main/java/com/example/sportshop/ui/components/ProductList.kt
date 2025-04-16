@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.theme.project
+package com.example.sportshop.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sportshop.R
+import com.example.sportshop.ui.theme.components.Product
 
 // Product List
 @Composable

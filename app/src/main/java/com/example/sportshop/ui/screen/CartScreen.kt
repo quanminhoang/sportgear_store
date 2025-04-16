@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.theme.project
+package com.example.sportshop.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.sportshop.ui.theme.components.CartItem
 
 
 @OptIn(ExperimentalMaterial3Api::class)
