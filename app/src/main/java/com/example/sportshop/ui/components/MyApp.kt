@@ -11,6 +11,7 @@ import com.example.sportshop.CartItem
 import com.example.sportshop.R
 import com.example.sportshop.ThemeManager
 import com.example.sportshop.ui.components.profile.ProfileScreen
+import com.example.sportshop.ui.screen.AdminScreen
 import com.example.sportshop.ui.screen.CartScreen
 import com.example.sportshop.ui.screen.HomeScreen
 import com.example.sportshop.ui.screen.RegisterCredentialScreen
@@ -42,8 +43,9 @@ fun MyApp(themeManager: ThemeManager) {
         composable("welcome") { WelcomeScreen(navController) }
         composable("main_profile") { MainProfileMenu(navController, themeManager) }
         composable("profile") { ProfileScreen(navController) }
+        composable ("admin") { AdminScreen(navController) }
         composable("cart_screen") {
-
+            // Dữ liệu mẫu để test, bạn có thể thay bằng dữ liệu thật trong project
             val sampleCartItems = listOf(
                 CartItem(
                     id = 1,

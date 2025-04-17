@@ -2,6 +2,7 @@ package com.example.sportshop.ui.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -23,23 +25,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.sportshop.ui.components.ProductList
+import com.example.sportshop.ui.components.ProductListWrapper
 import com.example.sportshop.ui.components.SpecialOfferCard
 import com.example.sportshop.ui.components.TopCategoriesSection
-import com.example.sportshop.ui.theme.SportsShopTheme
+import com.example.sportshop.ui.viewmodel.UserViewModel
+import androidx.compose.runtime.getValue
 
 
 // Home Screen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController,userViewModel: UserViewModel = viewModel()) {
     val scrollState = rememberScrollState()
+    val isAdmin by userViewModel.isAdmin.collectAsState()
 
     Scaffold(
         topBar = {
@@ -53,7 +58,7 @@ fun HomeScreen(navController: NavController) {
                     IconButton(onClick = { /* Search action */ }) {
                         Icon(Icons.Default.Search, contentDescription = "Search")
                     }
-                    IconButton(onClick = {navController.navigate("cart_screen") }) {
+                    IconButton(onClick = { navController.navigate("cart_screen") }) {
                         Icon(Icons.Default.ShoppingCart, contentDescription = "Cart")
                     }
                 }
@@ -97,12 +102,22 @@ fun HomeScreen(navController: NavController) {
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            ProductList()
+            ProductListWrapper()
+            Spacer(modifier = Modifier.height(32.dp))
+            // Nút Admin ở cuối trang
+            if (isAdmin) {
+                Button(
+                    onClick = { navController.navigate("admin") },
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text("Vào trang Admin")
+                }
+            }
         }
     }
 }
-
-
 
 
 
