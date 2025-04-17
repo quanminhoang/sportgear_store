@@ -25,11 +25,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.sportshop.ui.components.ProductList
 import com.example.sportshop.ui.components.SpecialOfferCard
 import com.example.sportshop.ui.components.TopCategoriesSection
+import com.example.sportshop.ui.theme.SportsShopTheme
 
 
 // Home Screen
@@ -98,6 +101,8 @@ fun HomeScreen(navController: NavController) {
         }
     }
 }
+
+
 
 
 

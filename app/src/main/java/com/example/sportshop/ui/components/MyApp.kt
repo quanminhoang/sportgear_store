@@ -10,8 +10,10 @@ import androidx.navigation.navArgument
 import com.example.sportshop.CartItem
 import com.example.sportshop.R
 import com.example.sportshop.ThemeManager
+import com.example.sportshop.ui.components.profile.ProfileScreen
 import com.example.sportshop.ui.screen.CartScreen
 import com.example.sportshop.ui.screen.HomeScreen
+import com.example.sportshop.ui.screen.RegisterCredentialScreen
 import com.example.sportshop.ui.screen.SplashScreen
 import com.example.sportshop.ui.screen.WelcomeScreen
 
@@ -41,7 +43,7 @@ fun MyApp(themeManager: ThemeManager) {
         composable("main_profile") { MainProfileMenu(navController, themeManager) }
         composable("profile") { ProfileScreen(navController) }
         composable("cart_screen") {
-            // Dữ liệu mẫu để test, bạn có thể thay bằng dữ liệu thật trong project
+
             val sampleCartItems = listOf(
                 CartItem(
                     id = 1,

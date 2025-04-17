@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.sportshop.CartItem
+import com.example.sportshop.ui.components.Btn_Back
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,9 +30,7 @@ fun CartScreen(navController: NavController, cartItems: List<CartItem>) {
             TopAppBar(
                 title = { Text("Your Cart") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
+                    Btn_Back(navController = navController)
                 }
             )
         },

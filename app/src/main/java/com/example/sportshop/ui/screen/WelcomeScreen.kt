@@ -82,11 +82,4 @@ fun WelcomeScreen(navController: NavController) {
 
 
 
-@Preview(showBackground = true, showSystemUi = true)
-    @Composable
-    fun WelcomeScreenPreview() {
-        val navController = rememberNavController()
-        SportsShopTheme(theme = "Light") {
-            WelcomeScreen(navController = navController)
-        }
-    }
+
