@@ -62,14 +62,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.sportshop.ui.theme.components.ThemeManager
-import com.example.sportshop.ui.theme.components.getActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.Locale
+import com.example.sportshop.ThemeManager
+import com.example.sportshop.getActivity
 
 // Main Profile Menu
 @OptIn(ExperimentalMaterial3Api::class)

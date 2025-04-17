@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.theme.components
+package com.example.sportshop
 
 import android.app.Activity
 import android.content.Context

@@ -17,8 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.sportshop.ui.theme.components.CartItem
-
+import com.example.sportshop.CartItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

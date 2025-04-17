@@ -2,25 +2,27 @@ package com.example.sportshop.ui.components
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.sportshop.CartItem
 import com.example.sportshop.R
+import com.example.sportshop.ThemeManager
 import com.example.sportshop.ui.screen.CartScreen
 import com.example.sportshop.ui.screen.HomeScreen
-import com.example.sportshop.ui.screen.RegisterInfoScreen
 import com.example.sportshop.ui.screen.SplashScreen
 import com.example.sportshop.ui.screen.WelcomeScreen
-import com.example.sportshop.ui.theme.components.CartItem
-import com.example.sportshop.ui.theme.components.ThemeManager
+
+
 
 
 // Ứng dụng chính với Navigation
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp(themeManager: ThemeManager) {
-    val navController = rememberNavController()
+    val navController: NavHostController = rememberNavController()
 
     val dummyCartItems = listOf(
         CartItem(
@@ -33,7 +35,7 @@ fun MyApp(themeManager: ThemeManager) {
     )
 
     NavHost(navController = navController, startDestination = "splash") {
-        composable("splash") { SplashScreen(navController) }
+        composable("splash") { SplashScreen (navController) }
         composable("home") { HomeScreen(navController) }
         composable("welcome") { WelcomeScreen(navController) }
         composable("main_profile") { MainProfileMenu(navController, themeManager) }

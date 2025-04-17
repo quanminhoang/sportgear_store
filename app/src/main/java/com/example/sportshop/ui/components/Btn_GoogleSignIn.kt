@@ -1,7 +1,5 @@
-// File: app/src/main/java/com/example/sportshop/ui/components/GoogleSignInButton.kt
 package com.example.sportshop.ui.components
 
-import android.content.Intent
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts

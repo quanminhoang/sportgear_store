@@ -17,9 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.sportshop.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
+
 
 @Composable
 fun SplashScreen(navController: NavController) {

@@ -8,7 +8,9 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.material3.*
+import com.example.sportshop.ui.theme.Typography
+
+
 
 
 // Màu sắc cho Dark Theme

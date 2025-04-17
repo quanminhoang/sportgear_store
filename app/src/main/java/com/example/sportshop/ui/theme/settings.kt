@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.theme
+package com.example.sportshop
 
 import android.content.Context
 import android.content.SharedPreferences

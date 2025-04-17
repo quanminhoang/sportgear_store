@@ -21,14 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 // Register Credential Screen
 @Composable
-fun RegisterCredentialScreen(
-    navController: NavController,
+fun RegisterCredentialScreen(navController: NavHostController = rememberNavController(),
     name: String,
     dob: String,
     phone: String,
