@@ -27,6 +27,9 @@ import com.example.sportshop.ui.components.SpecialOfferCard
 import com.example.sportshop.ui.components.TopCategoriesSection
 import com.example.sportshop.ui.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.example.sportshop.ui.viewmodel.AdminViewModel
 
 data class BottomNavigationItem(
     val title: String,
@@ -49,6 +52,7 @@ fun HomeScreen(navController: NavController, userViewModel: UserViewModel = view
 
     val context = LocalContext.current
     val themeManager = remember { ThemeManager(context) }
+
 
     Scaffold(
         topBar = {
@@ -103,31 +107,42 @@ fun HomeScreen(navController: NavController, userViewModel: UserViewModel = view
 }
 
 @Composable
-fun HomeTabContent(isAdmin: Boolean, navController: NavController) {
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        SpecialOfferCard()
-        Spacer(modifier = Modifier.height(24.dp))
-        TopCategoriesSection()
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = "Sản Phẩm Nổi Bật",
-            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        ProductListWrapper()
-        Spacer(modifier = Modifier.height(32.dp))
+fun HomeTabContent(
+    isAdmin: Boolean,
+    navController: NavController,
+    adminViewModel: AdminViewModel = viewModel()
+) {
+    val isRefreshing by adminViewModel.isRefreshing.collectAsState()
 
-        if (isAdmin) {
-            Button(
-                onClick = { navController.navigate("admin") },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Vào trang Admin")
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing),
+        onRefresh = { adminViewModel.fetchProducts() }
+    ) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            SpecialOfferCard()
+            Spacer(modifier = Modifier.height(24.dp))
+            TopCategoriesSection()
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "Sản Phẩm Nổi Bật",
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            ProductListWrapper()
+            Spacer(modifier = Modifier.height(32.dp))
+
+            if (isAdmin) {
+                Button(
+                    onClick = { navController.navigate("admin") },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Vào trang Admin")
+                }
             }
         }
     }

@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import com.example.sportshop.Product
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class AdminViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
@@ -13,6 +15,9 @@ class AdminViewModel : ViewModel() {
 
     var showDialog by mutableStateOf(false)
     var editingProduct: Product? by mutableStateOf(null)
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
 
     private var listenerRegistration: ListenerRegistration? = null
 

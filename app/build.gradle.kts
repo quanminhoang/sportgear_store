@@ -84,6 +84,7 @@ dependencies {
     implementation ("androidx.compose.material3:material3:<latest-version>")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
     implementation ("androidx.compose.material:material-icons-extended")
+    implementation ("com.google.accompanist:accompanist-swiperefresh:0.33.2-alpha")
 
 }
 
