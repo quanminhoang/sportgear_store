@@ -1,14 +1,16 @@
-package com.example.sportshop.ui.components
+package com.example.sportshop
 
 import android.content.Context
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.example.sportshop.ThemeManager
-import com.example.sportshop.getActivity
+import com.example.sportshop.ui.components.ProfileCard
+import com.example.sportshop.ui.components.SettingsBottomSheet
 import com.google.firebase.auth.FirebaseAuth
 import java.util.Locale
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,7 +44,7 @@ fun MainProfileMenu(navController: NavController, themeManager: ThemeManager) {
         }
     }
 
-    ProfileCard(
+    ProfileCard (
         name = name,
         email = email,
         photoUrl = photoUrl,

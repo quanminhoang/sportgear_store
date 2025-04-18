@@ -9,7 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import com.example.sportshop.ui.components.MyApp
-import com.example.sportshop.ui.theme.SportsShopTheme
+import com.example.sportshop.ui.theme.SportShopTheme
 import java.util.Locale
 
 // Theme Manager để quản lý theme
@@ -32,6 +32,7 @@ fun rememberThemeManager(): ThemeManager {
     return remember { ThemeManager(context) }
 }
 
+
 // MainActivity
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +48,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val themeManager = rememberThemeManager()
-            SportsShopTheme(themeManager.currentTheme) {
+            SportShopTheme(themeManager.currentTheme) {
                 MyApp(themeManager)
             }
         }

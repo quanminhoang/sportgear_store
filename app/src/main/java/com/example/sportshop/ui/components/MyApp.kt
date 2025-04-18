@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.sportshop.CartItem
+import com.example.sportshop.MainProfileMenu
 import com.example.sportshop.R
 import com.example.sportshop.ThemeManager
 import com.example.sportshop.ui.components.profile.ProfileScreen
@@ -76,5 +77,7 @@ fun MyApp(themeManager: ThemeManager) {
                 address = backStackEntry.arguments?.getString("address") ?: ""
             )
         }
+
+
     }
 }

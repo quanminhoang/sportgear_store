@@ -7,11 +7,8 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import com.example.sportshop.ui.theme.Typography
-
-
-
 
 // Màu sắc cho Dark Theme
 private val DarkColorScheme = darkColorScheme(
@@ -23,6 +20,7 @@ private val DarkColorScheme = darkColorScheme(
 // Màu sắc cho Light Theme
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
+    onPrimary = Color.Black,
     secondary = PurpleGrey40,
     tertiary = Pink40
 )
@@ -43,7 +41,6 @@ fun SportShopTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-        // Nếu không dùng dynamic color, chọn scheme tĩnh
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
