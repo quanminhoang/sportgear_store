@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Store
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -30,6 +31,7 @@ import kotlinx.coroutines.launch
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.example.sportshop.ui.viewmodel.AdminViewModel
+import com.example.sportshop.ui.viewmodel.CartViewModel
 
 data class BottomNavigationItem(
     val title: String,
@@ -38,21 +40,20 @@ data class BottomNavigationItem(
 )
 
 val bottomNavigationItems = listOf(
-    BottomNavigationItem("Home", Icons.Default.Home, Icons.Default.Home),
-    BottomNavigationItem("Favorite", Icons.Default.Favorite, Icons.Default.Favorite),
-    BottomNavigationItem("Profile", Icons.Default.Person, Icons.Default.Person)
+    BottomNavigationItem("Trang Chủ", Icons.Default.Home, Icons.Default.Home),
+    BottomNavigationItem("Sản Phẩm", Icons.Default.Store, Icons.Default.Store),
+    BottomNavigationItem("Thông tin", Icons.Default.Person, Icons.Default.Person)
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, userViewModel: UserViewModel = viewModel()) {
+fun HomeScreen(navController: NavController, cartViewModel: CartViewModel, userViewModel: UserViewModel = viewModel()) {
     val pagerState = rememberPagerState(pageCount = { bottomNavigationItems.size })
     val scope = rememberCoroutineScope()
     val isAdmin by userViewModel.isAdmin.collectAsState()
 
     val context = LocalContext.current
     val themeManager = remember { ThemeManager(context) }
-
 
     Scaffold(
         topBar = {
@@ -62,7 +63,7 @@ fun HomeScreen(navController: NavController, userViewModel: UserViewModel = view
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 actions = {
-                    IconButton(onClick = { /* TODO: Search */ }) {
+                    IconButton(onClick = { navController.navigate("search_screen") }) {
                         Icon(Icons.Default.Search, contentDescription = "Search")
                     }
                     IconButton(onClick = { navController.navigate("cart_screen") }) {
@@ -98,9 +99,9 @@ fun HomeScreen(navController: NavController, userViewModel: UserViewModel = view
             modifier = Modifier.padding(paddingValues)
         ) { page ->
             when (page) {
-                0 -> HomeTabContent(isAdmin, navController)
-                1 -> FavoriteTabContent()
-                2 -> MainProfileMenu(navController = navController, themeManager = themeManager) // Truyền themeManager vào đây
+                0 -> HomeTabContent(isAdmin, navController, cartViewModel)
+                1 -> ProductTabContent(cartViewModel)
+                2 -> MainProfileMenu(navController = navController, themeManager = themeManager)
             }
         }
     }
@@ -110,6 +111,7 @@ fun HomeScreen(navController: NavController, userViewModel: UserViewModel = view
 fun HomeTabContent(
     isAdmin: Boolean,
     navController: NavController,
+    cartViewModel: CartViewModel,
     adminViewModel: AdminViewModel = viewModel()
 ) {
     val isRefreshing by adminViewModel.isRefreshing.collectAsState()
@@ -133,7 +135,7 @@ fun HomeTabContent(
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            ProductListWrapper()
+            ProductListWrapper(cartViewModel = cartViewModel)
             Spacer(modifier = Modifier.height(32.dp))
 
             if (isAdmin) {
@@ -149,15 +151,17 @@ fun HomeTabContent(
 }
 
 @Composable
-fun FavoriteTabContent() {
-    Box(
+fun ProductTabContent(cartViewModel: CartViewModel) {
+    Column(
         modifier = Modifier
+            .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text("Danh sách yêu thích")
+        Text(
+            text = "Tất Cả Sản Phẩm",
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+        )
+        ProductListWrapper(cartViewModel = cartViewModel)
     }
 }
-
-
-

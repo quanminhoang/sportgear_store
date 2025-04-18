@@ -9,20 +9,26 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.sportshop.CartItem
 import com.example.sportshop.ui.components.Btn_Back
+import com.example.sportshop.ui.viewmodel.CartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartScreen(navController: NavController, cartItems: List<CartItem>) {
+fun CartScreen(
+    navController: NavController, cartViewModel: CartViewModel) {
+    val cartItems by cartViewModel.cartItems.collectAsState()
     val totalPrice = cartItems.sumOf { it.price * it.quantity }
 
     Scaffold(
@@ -40,13 +46,13 @@ fun CartScreen(navController: NavController, cartItems: List<CartItem>) {
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Text("Total: $${"%.2f".format(totalPrice)}", style = MaterialTheme.typography.titleMedium)
+                Text("Tổng tiền: ₫${"%.2f".format(totalPrice)}", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 Button(
                     onClick = { /* TODO: Handle checkout */ },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Checkout")
+                    Text("Mua Hàng")
                 }
             }
         }
@@ -68,20 +74,21 @@ fun CartItemRow(item: CartItem) {
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = item.imageResId),
+        AsyncImage(
+            model = item.imageUrl,
             contentDescription = item.name,
             modifier = Modifier
                 .size(64.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(Color.LightGray)
+                .background(Color.LightGray),
+            contentScale = ContentScale.Crop
         )
 
         Spacer(modifier = Modifier.width(16.dp))
 
         Column(modifier = Modifier.weight(1f)) {
             Text(item.name, style = MaterialTheme.typography.bodyMedium)
-            Text("$${"%.2f".format(item.price)}", style = MaterialTheme.typography.bodySmall)
+            Text("₫${"%.2f".format(item.price)}", style = MaterialTheme.typography.bodySmall)
         }
 
         Text("x${item.quantity}", style = MaterialTheme.typography.bodyMedium)

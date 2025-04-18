@@ -8,8 +8,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sportshop.ui.components.MyApp
 import com.example.sportshop.ui.theme.SportShopTheme
+import com.example.sportshop.ui.viewmodel.CartViewModel
 import java.util.Locale
 
 // Theme Manager để quản lý theme
@@ -48,8 +50,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val themeManager = rememberThemeManager()
+            val cartViewModel: CartViewModel = viewModel()
             SportShopTheme(themeManager.currentTheme) {
-                MyApp(themeManager)
+                MyApp(themeManager,cartViewModel)
             }
         }
     }
@@ -80,12 +83,13 @@ data class Product(
 )
 
 data class CartItem(
-    val id: Int,
+    val id: String,
     val name: String,
-    val imageResId: Int,
+    val imageUrl: String,
     val price: Double,
     var quantity: Int
 )
+
 
 
 

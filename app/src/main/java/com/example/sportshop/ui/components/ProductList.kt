@@ -8,18 +8,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sportshop.Product
-import com.example.sportshop.R
+import com.example.sportshop.ui.viewmodel.CartViewModel
 
-
-// Product List
 @Composable
-fun ProductList(products: List<Product>) {
+fun ProductList(products: List<Product>, cartViewModel: CartViewModel) {
     Column(modifier = Modifier.padding(16.dp)) {
         products.forEach { product ->
-            ProductCard(product)
+            ProductCard(product = product, cartViewModel = cartViewModel)
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
+
 
 
