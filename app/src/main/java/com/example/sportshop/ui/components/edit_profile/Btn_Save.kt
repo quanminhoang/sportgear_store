@@ -13,6 +13,6 @@ fun SaveChangesButton(onSave: () -> Unit) {
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp)
     ) {
-        Text("Save Change")
+        Text("Save")
     }
 }

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -12,17 +11,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SportShop"
         tools:targetApi="31">
+
+        <!-- MainActivity dùng theme chính và không có splash mặc định -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.SportShop">
+            android:theme="@style/Theme.SportShop"> <!-- Đảm bảo sử dụng theme đã sửa -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
     <uses-permission android:name="android.permission.INTERNET" />
+
 </manifest>

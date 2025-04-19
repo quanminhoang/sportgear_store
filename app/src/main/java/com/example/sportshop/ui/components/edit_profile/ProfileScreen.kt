@@ -149,18 +149,5 @@ fun ProfileScreen(navController: NavController) {
         if (showSheet) {
             SavingBottomSheet(sheetState = sheetState)
         }
-
-        if (showSignOutDialog) {
-            LogoutDialog(
-                onConfirm = {
-                    FirebaseAuth.getInstance().signOut()
-                    navController.navigate("welcome") {
-                        popUpTo("home") { inclusive = true }
-                    }
-                    showSignOutDialog = false
-                },
-                onDismiss = { showSignOutDialog = false }
-            )
-        }
     }
 }
