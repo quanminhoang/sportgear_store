@@ -5,8 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.sportshop.screen.MainScreen
 import com.example.sportshop.ui.components.profile.MainProfileMenu
-import com.example.sportshop.screen.HomeScreen
 import com.example.sportshop.ui.components.edit_profile.ProfileScreen
 import com.example.sportshop.ui.screen.AdminScreen
 import com.example.sportshop.ui.screen.CartScreen
@@ -34,7 +34,7 @@ fun AppNavaigation(
         }
 
         composable("home") {
-            HomeScreen(
+            MainScreen(
                 navController = navController, cartViewModel = cartViewModel
             )
         }

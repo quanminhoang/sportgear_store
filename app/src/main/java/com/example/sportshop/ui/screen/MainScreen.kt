@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, cartViewModel: CartViewModel, userViewModel: UserViewModel = viewModel()
+fun MainScreen(navController: NavController, cartViewModel: CartViewModel, userViewModel: UserViewModel = viewModel()
 ) {
     val pagerState = rememberPagerState(pageCount = { bottomNavigationItems.size })
     val scope = rememberCoroutineScope()

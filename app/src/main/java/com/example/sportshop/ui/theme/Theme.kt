@@ -1,6 +1,7 @@
 package com.example.sportshop.ui.theme
 
 import android.os.Build
+import android.util.Log
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -12,22 +13,22 @@ import androidx.compose.ui.platform.LocalContext
 
 // Màu sắc cho Dark Theme
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
+    primary = Color.Black,
     secondary = PurpleGrey80,
     tertiary = Pink80
 )
 
 // Màu sắc cho Light Theme
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    onPrimary = Color.Black,
+    primary = Color.White,
+    onPrimary = Color.Red,
     secondary = PurpleGrey40,
     tertiary = Pink40
 )
 
 @Composable
 fun SportShopTheme(
-    theme: String, // Nhận theme từ ThemeManager
+    theme: String,
     dynamicColor: Boolean = true, // Tùy chọn sử dụng dynamic color
     content: @Composable () -> Unit // Thêm tham số content
 ) {
@@ -36,11 +37,6 @@ fun SportShopTheme(
 
     // Chọn colorScheme dựa trên theme và dynamicColor
     val colorScheme = when {
-        // Sử dụng dynamic color nếu được bật và thiết bị hỗ trợ (Android 12+)
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }

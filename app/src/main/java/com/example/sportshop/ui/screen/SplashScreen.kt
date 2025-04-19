@@ -15,13 +15,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.sportshop.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
-
 
 @Composable
 fun SplashScreen(navController: NavController) {
@@ -44,7 +44,7 @@ fun SplashScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.tertiary),
+            .background(MaterialTheme.colorScheme.primary),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -57,8 +57,14 @@ fun SplashScreen(navController: NavController) {
             Text(
                 text = "Sports Shop",
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSplashScreen() {
+    SplashScreen(navController = rememberNavController())
 }
