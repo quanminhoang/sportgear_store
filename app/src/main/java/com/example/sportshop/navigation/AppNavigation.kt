@@ -18,7 +18,7 @@ import com.example.sportshop.ui.viewmodel.CartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyApp(
+fun AppNavaigation(
     themeManager: ThemeManager, cartViewModel: CartViewModel
 ) {
     val navController = rememberNavController()

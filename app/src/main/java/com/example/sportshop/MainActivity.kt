@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sportshop.navigation.MyApp
+import com.example.sportshop.navigation.AppNavaigation
 import com.example.sportshop.ui.theme.SportShopTheme
 import com.example.sportshop.ui.theme.ThemeManager
 import com.example.sportshop.ui.viewmodel.CartViewModel
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             val cartViewModel: CartViewModel = viewModel()
 
             SportShopTheme(themeManager.currentTheme) {
-                MyApp(
+                AppNavaigation(
                     themeManager = themeManager,
                     cartViewModel = cartViewModel
                 )
