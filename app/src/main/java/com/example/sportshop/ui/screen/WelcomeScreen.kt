@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.sportshop.R
-import com.example.sportshop.ui.components.Btn_GoogleSignIn
+import com.example.sportshop.ui.components.buttons.Btn_GoogleSignIn
 
 
 // Welcome Screen

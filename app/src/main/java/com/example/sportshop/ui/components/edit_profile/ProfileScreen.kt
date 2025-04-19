@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.components.profile
+package com.example.sportshop.ui.components.edit_profile
 
 import AvatarEditor
 import LogoutDialog
@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.sportshop.ui.components.Btn_Back
+import com.example.sportshop.ui.components.buttons.Btn_Back
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage

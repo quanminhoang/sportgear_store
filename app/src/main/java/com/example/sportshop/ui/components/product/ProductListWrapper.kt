@@ -1,11 +1,11 @@
-package com.example.sportshop.ui.components
+package com.example.sportshop.ui.components.product
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sportshop.Product
+import com.example.sportshop.model.data.Product
 import com.example.sportshop.ui.viewmodel.ProductViewModel
 import com.example.sportshop.ui.viewmodel.CartViewModel
 

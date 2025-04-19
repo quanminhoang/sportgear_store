@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.components
+package com.example.sportshop.ui.components.product
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,16 +14,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.sportshop.Product
-import com.example.sportshop.CartItem
+import com.example.sportshop.model.data.CartItem
+import com.example.sportshop.model.data.Product
 import com.example.sportshop.ui.viewmodel.CartViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import java.util.UUID
 
 @Composable
 fun ProductCard(
     product: Product,
-    cartViewModel: CartViewModel // Sử dụng ViewModel mặc định
+    cartViewModel: CartViewModel
 ) {
     Card(
         elevation = CardDefaults.cardElevation(4.dp),

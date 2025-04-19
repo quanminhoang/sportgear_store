@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.components
+package com.example.sportshop.ui.components.profile
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

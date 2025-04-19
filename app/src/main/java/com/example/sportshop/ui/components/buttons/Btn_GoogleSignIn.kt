@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.components
+package com.example.sportshop.ui.components.buttons
 
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult

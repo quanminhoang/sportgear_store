@@ -1,7 +1,7 @@
 package com.example.sportshop.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.sportshop.CartItem
+import com.example.sportshop.model.data.CartItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 

@@ -1,11 +1,10 @@
-package com.example.sportshop.ui.components
+package com.example.sportshop.ui.components.product
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import com.example.sportshop.Product
-
+import com.example.sportshop.model.data.Product
 
 
 @Composable

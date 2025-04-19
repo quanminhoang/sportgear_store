@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.components
+package com.example.sportshop.ui.components.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,8 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.sportshop.R
-
-
 
 
 // Top Categories Section

@@ -2,19 +2,16 @@ package com.example.sportshop.ui.screen
 
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.sportshop.ui.components.ProductListWrapper
+import com.example.sportshop.ui.components.product.ProductListWrapper
 import com.example.sportshop.ui.viewmodel.CartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

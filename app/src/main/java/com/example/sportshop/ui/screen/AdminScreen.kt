@@ -19,10 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavOptionsBuilder
-import androidx.navigation.PopUpToBuilder
-import com.example.sportshop.Product
-import com.example.sportshop.ui.components.ProductEditDialog
+import com.example.sportshop.model.data.Product
+import com.example.sportshop.ui.components.product.ProductEditDialog
 import com.example.sportshop.ui.viewmodel.AdminViewModel
 
 

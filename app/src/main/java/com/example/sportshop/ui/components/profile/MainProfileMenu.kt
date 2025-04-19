@@ -1,15 +1,14 @@
-package com.example.sportshop
+package com.example.sportshop.ui.components.profile
 
 import android.content.Context
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.example.sportshop.ui.components.ProfileCard
-import com.example.sportshop.ui.components.SettingsBottomSheet
+import com.example.sportshop.ui.theme.ThemeManager
 import com.google.firebase.auth.FirebaseAuth
 import java.util.Locale
-
+import com.example.sportshop.util.getActivity
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,7 +24,7 @@ fun MainProfileMenu(navController: NavController, themeManager: ThemeManager) {
     val currentLanguage = sharedPreferences.getString("language", "Eng") ?: "Eng"
 
     var notificationSetting by remember { mutableStateOf("Allow") }
-    var showSettingsSheet by remember { mutableStateOf(false) }
+    var showSettingsSheet: Boolean by remember { mutableStateOf(false) }
     var theme by remember { mutableStateOf(themeManager.currentTheme) }
     var language by remember { mutableStateOf(currentLanguage) }
 
