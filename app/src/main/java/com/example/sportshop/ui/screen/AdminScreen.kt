@@ -21,7 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.sportshop.model.data.Product
 import com.example.sportshop.ui.components.product.ProductEditDialog
-import com.example.sportshop.ui.viewmodel.AdminViewModel
+import com.example.sportshop.viewmodel.AdminViewModel
 
 
 

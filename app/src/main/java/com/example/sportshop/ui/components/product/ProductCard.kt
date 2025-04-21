@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.sportshop.model.data.CartItem
 import com.example.sportshop.model.data.Product
-import com.example.sportshop.ui.viewmodel.CartViewModel
+import com.example.sportshop.viewmodel.CartViewModel
 import java.util.UUID
 
 @Composable

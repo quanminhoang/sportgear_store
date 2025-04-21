@@ -1,29 +1,27 @@
 package com.example.sportshop.ui.theme
 
-import android.os.Build
-import android.util.Log
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 
-// Màu sắc cho Dark Theme
+// Màu sắc tùy chỉnh cho Dark Theme
 private val DarkColorScheme = darkColorScheme(
     primary = Color.Black,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    onPrimary = Color.White,
+    secondary = Color.White,
+    onSecondary = Color.Black,
+    tertiary = Color.White,
+    outline = Color.LightGray
 )
 
-// Màu sắc cho Light Theme
+// Màu sắc tùy chỉnh cho Light Theme
 private val LightColorScheme = lightColorScheme(
     primary = Color.White,
-    onPrimary = Color.Red,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    onPrimary = Color.Black,
+    secondary = Color.Black,
+    onSecondary = Color.White,
+    tertiary = Color.White,
+    outline = Color.LightGray
 )
 
 @Composable
@@ -41,9 +39,9 @@ fun SportShopTheme(
         else -> LightColorScheme
     }
 
+    // Áp dụng theme với colorScheme đã chọn
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
         content = content
     )
 }

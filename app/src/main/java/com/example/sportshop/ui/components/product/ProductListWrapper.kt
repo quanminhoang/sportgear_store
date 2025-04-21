@@ -6,8 +6,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sportshop.model.data.Product
-import com.example.sportshop.ui.viewmodel.ProductViewModel
-import com.example.sportshop.ui.viewmodel.CartViewModel
+import com.example.sportshop.viewmodel.ProductViewModel
+import com.example.sportshop.viewmodel.CartViewModel
 
 @Composable
 fun ProductListWrapper(

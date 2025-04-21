@@ -1,6 +1,7 @@
 package com.example.sportshop.ui.components.product
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -10,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sportshop.model.data.Product
-import com.example.sportshop.ui.viewmodel.AdminViewModel
+import com.example.sportshop.viewmodel.AdminViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -37,6 +38,7 @@ fun ProductEditDialog(
         uri?.let {
             scope.launch {
                 val uploadedUrl = viewModel.uploadImage(it)
+                Log.e("hinh", uploadedUrl.toString())
                 if (uploadedUrl != null) {
                     imageUrl = uploadedUrl
                 } else {

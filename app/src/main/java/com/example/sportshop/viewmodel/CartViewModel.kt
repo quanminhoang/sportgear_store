@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.viewmodel
+package com.example.sportshop.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.sportshop.model.data.CartItem

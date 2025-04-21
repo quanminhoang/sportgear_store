@@ -1,20 +1,19 @@
 package com.example.sportshop.navigation
 
+import MainScreen
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.sportshop.screen.MainScreen
 import com.example.sportshop.ui.components.profile.MainProfileMenu
 import com.example.sportshop.ui.components.edit_profile.ProfileScreen
 import com.example.sportshop.ui.screen.AdminScreen
-import com.example.sportshop.ui.screen.CartScreen
 import com.example.sportshop.ui.screen.SearchScreen
 import com.example.sportshop.ui.screen.SplashScreen
 import com.example.sportshop.ui.screen.WelcomeScreen
 import com.example.sportshop.ui.theme.ThemeManager
-import com.example.sportshop.ui.viewmodel.CartViewModel
+import com.example.sportshop.viewmodel.CartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +47,7 @@ fun AppNavaigation(
             ProfileScreen(navController)
         }
 
-        composable("admin") {
+        composable("admin_screen") {
             AdminScreen(navController)
         }
         composable("search_screen") {
@@ -56,10 +55,6 @@ fun AppNavaigation(
                 navController = navController, cartViewModel = cartViewModel
             )
         }
-        composable("cart_screen") {
-            CartScreen(
-                navController = navController, cartViewModel = cartViewModel
-            )
-        }
+
     }
 }

@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sportshop.navigation.AppNavaigation
 import com.example.sportshop.ui.theme.SportShopTheme
 import com.example.sportshop.ui.theme.ThemeManager
-import com.example.sportshop.ui.viewmodel.CartViewModel
+import com.example.sportshop.viewmodel.CartViewModel
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {

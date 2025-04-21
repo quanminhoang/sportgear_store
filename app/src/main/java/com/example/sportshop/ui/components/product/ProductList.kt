@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sportshop.model.data.Product
-import com.example.sportshop.ui.viewmodel.CartViewModel
+import com.example.sportshop.viewmodel.CartViewModel
 
 @Composable
 fun ProductList(products: List<Product>, cartViewModel: CartViewModel) {

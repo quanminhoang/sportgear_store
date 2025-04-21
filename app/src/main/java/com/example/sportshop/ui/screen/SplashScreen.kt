@@ -62,9 +62,3 @@ fun SplashScreen(navController: NavController) {
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSplashScreen() {
-    SplashScreen(navController = rememberNavController())
-}

@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.viewmodel
+package com.example.sportshop.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,24 +14,29 @@ class ProductViewModel : ViewModel() {
     private val _products = MutableStateFlow<List<Product>>(emptyList())
     val products: StateFlow<List<Product>> = _products
 
+    // Add a new StateFlow for featured products
+    private val _featuredProducts = MutableStateFlow<List<Product>>(emptyList())
+    val featuredProducts: StateFlow<List<Product>> = _featuredProducts
+
     init {
-        loadFromFirestore() // Thay bằng loadFromFirestore() khi bạn kết nối Firestore
+        loadFromFirestore()
     }
 
-
-    // Nếu dùng Firestore thì bạn sẽ có một hàm như sau:
     private fun loadFromFirestore() {
         viewModelScope.launch {
             Firebase.firestore.collection("products")
                 .get()
                 .addOnSuccessListener { result ->
                     val fetchedProducts = result.documents.mapNotNull { doc ->
-                        doc.toObject(Product::class.java)
+                        doc.toObject(Product::class.java)?.copy(id = doc.id)
                     }
                     _products.value = fetchedProducts
+
+                    // Filter featured products
+                    _featuredProducts.value = fetchedProducts.filter { it.feature }
                 }
                 .addOnFailureListener {
-                    // Xử lý lỗi
+                    // Handle error
                 }
         }
     }

@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
@@ -19,49 +20,36 @@ fun ProfileCard(
     name: String,
     email: String,
     photoUrl: String?,
-    notificationSetting: String,
     onProfileClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onNotificationToggle: () -> Unit,
     onLogout: () -> Unit
 ) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(6.dp)
-    ) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+        Column {
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(16.dp)) {
                 AsyncImage(
                     model = photoUrl,
                     contentDescription = "Avatar",
                     modifier = Modifier
-                        .size(60.dp)
+                        .size(80.dp)
                         .clip(CircleShape)
                         .background(Color.LightGray)
                 )
                 Spacer(Modifier.width(16.dp))
-                Column {
-                    Text(name, style = MaterialTheme.typography.titleMedium)
-                    Text(email, style = MaterialTheme.typography.bodySmall)
+                Column(
+                ) {
+                    Text(name, style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold))
+                    Text(email, style = MaterialTheme.typography.bodyMedium)
                 }
             }
             Spacer(Modifier.height(16.dp))
-            Divider()
-            ProfileMenuItem(Icons.Default.Person, "My Profile", onProfileClick)
+            ProfileMenuItem(Icons.Default.Person, "Edit Profile", onProfileClick)
             ProfileMenuItem(Icons.Default.Settings, "Settings", onSettingsClick)
             ProfileMenuItem(Icons.Default.Notifications, "Notification", onNotificationToggle)
             ProfileMenuItem(Icons.Default.Logout, "Log Out", onLogout)
 
-            if (notificationSetting.isNotEmpty()) {
-                Text(
-                    "Notification: $notificationSetting",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.align(Alignment.End)
-                )
-            }
         }
     }
-}
+
+

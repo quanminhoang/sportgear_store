@@ -115,12 +115,6 @@ fun ProfileScreen(navController: NavController) {
                 })
 
                 Spacer(Modifier.height(8.dp))
-                TextButton(
-                    onClick = { showSignOutDialog = true },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Đăng xuất", color = MaterialTheme.colorScheme.error)
-                }
             }
         }
     ) { padding ->

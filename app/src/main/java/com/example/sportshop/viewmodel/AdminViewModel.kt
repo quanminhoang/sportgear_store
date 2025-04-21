@@ -1,12 +1,14 @@
-package com.example.sportshop.ui.viewmodel
+package com.example.sportshop.viewmodel
 
 import android.net.Uri
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import com.example.sportshop.model.data.Product
+import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.storage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.tasks.await
@@ -31,9 +33,14 @@ class AdminViewModel : ViewModel() {
 
     suspend fun uploadImage(uri: Uri): String? {
         return try {
+            val storage = Firebase.storage
             val fileName = "product_images/${UUID.randomUUID()}.jpg"
-            val ref = FirebaseStorage.getInstance().reference.child(fileName)
-            ref.putFile(uri).await()
+            val ref = storage.reference.child(fileName)
+
+            // 1. First upload the file
+            val uploadTask = ref.putFile(uri).await()
+
+            // 2. Then get the download URL
             ref.downloadUrl.await().toString()
         } catch (e: Exception) {
             e.printStackTrace()
