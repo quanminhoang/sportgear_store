@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.sportshop.ui.components.profile.MainProfileMenu
 import com.example.sportshop.ui.components.edit_profile.ProfileScreen
 import com.example.sportshop.ui.screen.AdminScreen
+import com.example.sportshop.ui.screen.CheckoutScreen
 import com.example.sportshop.ui.screen.SearchScreen
 import com.example.sportshop.ui.screen.SplashScreen
 import com.example.sportshop.ui.screen.WelcomeScreen
@@ -52,6 +53,11 @@ fun AppNavaigation(
         }
         composable("search_screen") {
             SearchScreen(
+                navController = navController, cartViewModel = cartViewModel
+            )
+        }
+        composable("checkout") {
+            CheckoutScreen(
                 navController = navController, cartViewModel = cartViewModel
             )
         }

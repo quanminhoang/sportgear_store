@@ -11,11 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ModifierInfo
 
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.sportshop.viewmodel.CartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartTabContent(cartViewModel: CartViewModel) {
+fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
     val cartItems by cartViewModel.cartItems.collectAsState()
     val totalPrice = cartItems.sumOf { it.price * it.quantity }
 
@@ -31,55 +32,57 @@ fun CartTabContent(cartViewModel: CartViewModel) {
         return
     }
 
-    Scaffold(containerColor = MaterialTheme.colorScheme.primary, bottomBar = {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(MaterialTheme.colorScheme.outline)
-            )
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.primary,
+        bottomBar = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .background(MaterialTheme.colorScheme.primary)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text("Tổng tiền")
-                    Text(
-                        "₫${"%,.0f".format(totalPrice)}",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(MaterialTheme.colorScheme.outline)
+                )
+                Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Tổng tiền")
+                        Text(
+                            "₫${"%,.0f".format(totalPrice)}",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
 
-                Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(8.dp))
 
-                Button(
-                    onClick = { /* Handle purchase */ },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        contentColor = MaterialTheme.colorScheme.onSecondary)
+                    Button(
+                        onClick = {
+                            navController.navigate("checkout")
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.medium,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            contentColor = MaterialTheme.colorScheme.onSecondary
+                        )
                     ) {
                         Text("Mua Hàng", modifier = Modifier.padding(12.dp))
                     }
+                }
             }
         }
-    }) { paddingValues ->
+    ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(bottom = 6.dp)
         ) {
-            item { Spacer(modifier = Modifier.height(5.dp)) } // Sửa Spacer
+            item { Spacer(modifier = Modifier.height(5.dp)) }
 
             items(cartItems) { item ->
                 Column(

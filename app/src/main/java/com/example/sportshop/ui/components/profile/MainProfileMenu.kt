@@ -47,7 +47,6 @@ fun MainProfileMenu(navController: NavController, themeManager: ThemeManager) {
         name = name,
         email = email,
         photoUrl = photoUrl,
-        notificationSetting = notificationSetting,
         onProfileClick = { navController.navigate("profile") },
         onSettingsClick = { showSettingsSheet = true },
         onNotificationToggle = {
