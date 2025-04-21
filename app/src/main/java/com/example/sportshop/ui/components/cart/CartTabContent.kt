@@ -8,7 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ModifierInfo
 
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -24,28 +23,23 @@ fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primary),
+                .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
-            Text("Giỏ hàng đang trống", color = MaterialTheme.colorScheme.onPrimary)
+            Text("Giỏ hàng đang trống", color = MaterialTheme.colorScheme.onBackground)
         }
         return
     }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.primary,
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primary)
+                    .background(MaterialTheme.colorScheme.surface)
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(MaterialTheme.colorScheme.outline)
-                )
+
                 Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -54,7 +48,7 @@ fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
                         Text("Tổng tiền")
                         Text(
                             "₫${"%,.0f".format(totalPrice)}",
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSurface)
                         )
                     }
 
@@ -67,8 +61,8 @@ fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.medium,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondary,
-                            contentColor = MaterialTheme.colorScheme.onSecondary
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
                         )
                     ) {
                         Text("Mua Hàng", modifier = Modifier.padding(12.dp))

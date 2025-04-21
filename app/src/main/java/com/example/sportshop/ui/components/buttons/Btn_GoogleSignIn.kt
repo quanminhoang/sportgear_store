@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -17,9 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.sportshop.GoogleAuthManager
 import com.example.sportshop.R
 
@@ -53,10 +52,10 @@ fun Btn_GoogleSignIn(
             .padding(horizontal = 16.dp)
             .fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White,
-            contentColor = Color(0xFF1F1F1F)
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.onSurface
         ),
-        border = BorderStroke(1.dp, Color(0xFF747775)),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         shape = RoundedCornerShape(4.dp),
         elevation = null
     ) {
@@ -67,16 +66,14 @@ fun Btn_GoogleSignIn(
             Icon(
                 painter = painterResource(id = R.drawable.icon_google),
                 contentDescription = "Google Logo",
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(32.dp),
                 tint = Color.Unspecified
             )
             Spacer(modifier = Modifier.width(8.dp))
 
             Text(
                 text = "Continue with Google",
-                fontSize = 16.sp,
-                letterSpacing = 0.25.sp,
-                fontFamily = FontFamily.SansSerif
+                style = MaterialTheme.typography.labelLarge
             )
         }
     }

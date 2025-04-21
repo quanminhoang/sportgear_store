@@ -1,7 +1,6 @@
 package com.example.sportshop.ui.components.edit_profile
 
 import AvatarEditor
-import LogoutDialog
 import SaveChangesButton
 import SavingBottomSheet
 import UserInfoFields
@@ -115,6 +114,12 @@ fun ProfileScreen(navController: NavController) {
                 })
 
                 Spacer(Modifier.height(8.dp))
+                TextButton(
+                    onClick = { showSignOutDialog = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Đăng xuất", color = MaterialTheme.colorScheme.error)
+                }
             }
         }
     ) { padding ->

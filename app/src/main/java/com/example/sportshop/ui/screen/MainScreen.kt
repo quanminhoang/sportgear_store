@@ -1,4 +1,11 @@
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -6,9 +13,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,9 +20,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -53,65 +58,76 @@ fun MainScreen(
     val featuredProducts by productViewModel.featuredProducts.collectAsState()
 
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.primary,
-        topBar = {
-            Column {
-                when (pagerState.currentPage) {
-                    0 -> HomeTopBar(isAdmin, navController, modifier = Modifier, userViewModel, adminViewModel)
-                    1 -> ProductTopBar(navController)
-                    2 -> CartTopBar()
-                    3 -> ProfileTopBar()
-                }
-                Divider(
-                    color = MaterialTheme.colorScheme.outline,
-                    thickness = 1.dp
+    Scaffold(containerColor = MaterialTheme.colorScheme.background, topBar = {
+        Column {
+            when (pagerState.currentPage) {
+                0 -> HomeTopBar(
+                    isAdmin, navController, modifier = Modifier, userViewModel, adminViewModel
                 )
+
+                1 -> ProductTopBar(navController)
+                2 -> CartTopBar()
+                3 -> ProfileTopBar()
             }
-        },
-        bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ) {
-                bottomNavigationItems.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        selected = pagerState.currentPage == index,
-                        onClick = {
+            Divider(
+                color = MaterialTheme.colorScheme.outline, thickness = 1.dp
+            )
+        }
+    }, bottomBar = {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .background(MaterialTheme.colorScheme.surface),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            bottomNavigationItems.forEachIndexed { index, item ->
+                Column(horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .padding(6.dp, top = 12.dp, bottom = 24.dp)
+                        .clickable {
                             scope.launch {
                                 pagerState.animateScrollToPage(index)
                             }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = if (pagerState.currentPage == index) item.selectedIcon
-                                else item.unselectedIcon,
-                                contentDescription = item.title
-                            )
-                        },
-                        label = { Text(item.title, style = MaterialTheme.typography.bodySmall)
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                            unselectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                            indicatorColor = Color.Transparent)
+                        }) {
+                    Icon(
+                        imageVector = if (pagerState.currentPage == index) item.selectedIcon
+                        else item.unselectedIcon,
+                        contentDescription = item.title,
+                        tint = if (pagerState.currentPage == index) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f) // màu khi chưa chọn
                     )
+
+                    val isSelected = pagerState.currentPage == index
+
+                    Text(
+                        text = item.title,
+                        color = if (isSelected) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                        )
+                    )
+
                 }
             }
         }
-    ) { paddingValues ->
+
+    }) { paddingValues ->
         HorizontalPager(
-            state = pagerState,
-            modifier = Modifier.padding(paddingValues),
-            userScrollEnabled = true
+            state = pagerState, modifier = Modifier.padding(paddingValues), userScrollEnabled = true
         ) { page ->
 
-                when (page) {
-                    0 -> HomeTabContent(productViewModel, cartViewModel, navController)
-                    1 -> ProductTabContent(cartViewModel)
-                    2 -> CartTabContent(navController, cartViewModel)
-                    3 -> ProfileTabContent(navController, themeManager)
-                }
+            when (page) {
+                0 -> HomeTabContent(productViewModel, cartViewModel, navController)
+                1 -> ProductTabContent(cartViewModel)
+                2 -> CartTabContent(navController, cartViewModel)
+                3 -> ProfileTabContent(navController, themeManager)
             }
         }
     }
+}

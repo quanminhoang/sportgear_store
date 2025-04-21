@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,7 +32,7 @@ fun WelcomeScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(color = MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -49,8 +50,11 @@ fun WelcomeScreen(navController: NavController) {
 
         Text(
             text = "Chào mừng\nđến với Sport Store!",
-            fontWeight = FontWeight.Bold,
-            fontSize = 32.sp,
+            style = MaterialTheme.typography.headlineMedium.copy(
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold,
+                fontSize = 32.sp,
+            ),
             textAlign = TextAlign.Center,
             lineHeight = 32.sp
         )
@@ -60,20 +64,20 @@ fun WelcomeScreen(navController: NavController) {
         Text(
             text = "Hãy trở thành một phần của cộng đồng Sport Shop – nơi bạn có thể tìm thấy những sản phẩm chất lượng, ưu đãi độc quyền và nhiều tiện ích chỉ dành riêng cho thành viên",
             modifier = Modifier.padding(top = 16.dp),
-            color = Color.DarkGray,
-            textAlign = TextAlign.Center,
-            lineHeight = 24.sp
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.bodyMedium.copy(
+            ),
+            lineHeight = 24.sp,
+            textAlign = TextAlign.Center
         )
 
         Spacer(modifier = Modifier.run { height(100.dp) })
 
-        Btn_GoogleSignIn(
-            onSignInSuccess = {
-                navController.navigate("home") {
-                    popUpTo("login") { inclusive = true }
-                }
+        Btn_GoogleSignIn(onSignInSuccess = {
+            navController.navigate("home") {
+                popUpTo("login") { inclusive = true }
             }
-        )
+        })
     }
 }
 
