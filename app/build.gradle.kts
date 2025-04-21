@@ -85,6 +85,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
     implementation ("androidx.compose.material:material-icons-extended")
     implementation ("com.google.accompanist:accompanist-swiperefresh:0.33.2-alpha")
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    implementation ("com.google.code.gson:gson:2.10.1")
 
 }
 

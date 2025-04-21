@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.sportshop.ui.components.cart.CartTabContent
 import com.example.sportshop.ui.components.profile.MainProfileMenu
 import com.example.sportshop.ui.components.edit_profile.ProfileScreen
 import com.example.sportshop.ui.screen.AdminScreen
@@ -60,6 +61,9 @@ fun AppNavaigation(
             CheckoutScreen(
                 navController = navController, cartViewModel = cartViewModel
             )
+        }
+        composable("cart") {
+            CartTabContent(navController = navController, cartViewModel = cartViewModel)
         }
 
     }

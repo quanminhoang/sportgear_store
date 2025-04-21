@@ -1,19 +1,37 @@
 package com.example.sportshop.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sportshop.model.data.CartDataStore
 import com.example.sportshop.model.data.CartItem
 import com.example.sportshop.model.data.Order
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class CartViewModel : ViewModel() {
+class CartViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val cartDataStore = CartDataStore(application.applicationContext)
+
     private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
     val cartItems: StateFlow<List<CartItem>> = _cartItems
 
+    private var currentUserId: String? = null
+
+    fun setUser(userId: String) {
+        currentUserId = userId
+
+        viewModelScope.launch {
+            _cartItems.value = cartDataStore.getCartItems(userId).first()
+        }
+    }
+
     fun addToCart(item: CartItem) {
+        val userId = currentUserId ?: return
+
         val currentItems = _cartItems.value.toMutableList()
         val existingItem = currentItems.find { it.id == item.id }
 
@@ -25,14 +43,31 @@ class CartViewModel : ViewModel() {
         }
 
         _cartItems.value = currentItems
+
+        viewModelScope.launch {
+            cartDataStore.saveCartItems(userId, currentItems)
+        }
     }
 
     fun removeItem(itemId: String) {
-        _cartItems.value = _cartItems.value.filterNot { it.id == itemId }
+        val userId = currentUserId ?: return
+
+        val updatedList = _cartItems.value.filterNot { it.id == itemId }
+        _cartItems.value = updatedList
+
+        viewModelScope.launch {
+            cartDataStore.saveCartItems(userId, updatedList)
+        }
     }
 
     fun clearCart() {
+        val userId = currentUserId ?: return
+
         _cartItems.value = emptyList()
+
+        viewModelScope.launch {
+            cartDataStore.clearCart(userId)
+        }
     }
 
     fun placeOrder(
@@ -41,6 +76,8 @@ class CartViewModel : ViewModel() {
         onSuccess: () -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
+        val userId = currentUserId ?: return
+
         viewModelScope.launch {
             val firestore = FirebaseFirestore.getInstance()
             val order = Order(
@@ -53,6 +90,7 @@ class CartViewModel : ViewModel() {
             firestore.collection("orders")
                 .add(order)
                 .addOnSuccessListener {
+                    clearCart()
                     onSuccess()
                 }
                 .addOnFailureListener { e ->

@@ -8,14 +8,22 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.sportshop.viewmodel.CartViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
+    // Lấy userId từ Firebase
+    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+    // Gọi setUser một lần để load cart của user
+    LaunchedEffect(userId) {
+        cartViewModel.setUser(userId)
+    }
+
     val cartItems by cartViewModel.cartItems.collectAsState()
     val totalPrice = cartItems.sumOf { it.price * it.quantity }
 
@@ -39,8 +47,9 @@ fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
             ) {
-
-                Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
