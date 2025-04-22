@@ -1,26 +1,26 @@
 package com.example.sportshop.navigation
 
 import MainScreen
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.sportshop.ui.components.cart.CartTabContent
+import com.example.sportshop.model.data.Product
 import com.example.sportshop.ui.components.profile.MainProfileMenu
 import com.example.sportshop.ui.components.edit_profile.ProfileScreen
+import com.example.sportshop.ui.screen.AddProductScreen
 import com.example.sportshop.ui.screen.AdminScreen
 import com.example.sportshop.ui.screen.CheckoutScreen
 import com.example.sportshop.ui.screen.SearchScreen
 import com.example.sportshop.ui.screen.SplashScreen
 import com.example.sportshop.ui.screen.WelcomeScreen
 import com.example.sportshop.ui.theme.ThemeManager
+import com.example.sportshop.viewmodel.AdminViewModel
 import com.example.sportshop.viewmodel.CartViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavaigation(
-    themeManager: ThemeManager, cartViewModel: CartViewModel
+    themeManager: ThemeManager, cartViewModel: CartViewModel, adminViewModel: AdminViewModel
 ) {
     val navController = rememberNavController()
 
@@ -62,9 +62,19 @@ fun AppNavaigation(
                 navController = navController, cartViewModel = cartViewModel
             )
         }
-        composable("cart") {
-            CartTabContent(navController = navController, cartViewModel = cartViewModel)
+        composable("add_product") {
+            AddProductScreen(
+                navcontroller = navController,
+                product = Product(),
+                onSave = { updatedProduct ->
+                    adminViewModel.saveProduct(updatedProduct)
+                }
+            )
         }
+
+
 
     }
 }
+
+

@@ -8,7 +8,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sportshop.navigation.AppNavaigation
 import com.example.sportshop.ui.theme.SportShopTheme
 import com.example.sportshop.ui.theme.ThemeManager
+import com.example.sportshop.viewmodel.AdminViewModel
 import com.example.sportshop.viewmodel.CartViewModel
+
+
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {
@@ -19,11 +22,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             val themeManager = rememberThemeManager()
             val cartViewModel: CartViewModel = viewModel()
-
+            val adminViewModel: AdminViewModel = viewModel()
             SportShopTheme(themeManager.currentTheme) {
                 AppNavaigation(
                     themeManager = themeManager,
-                    cartViewModel = cartViewModel
+                    cartViewModel = cartViewModel,
+                    adminViewModel = adminViewModel
                 )
             }
         }

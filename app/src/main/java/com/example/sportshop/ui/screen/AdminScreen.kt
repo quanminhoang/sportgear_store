@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
@@ -19,18 +19,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.sportshop.model.data.Product
-import com.example.sportshop.ui.components.product.ProductEditDialog
 import com.example.sportshop.viewmodel.AdminViewModel
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminScreen(navController: NavController, viewModel: AdminViewModel = viewModel()) {
     val products = viewModel.products
-    val showDialog = viewModel.showDialog
-    val editingProduct = viewModel.editingProduct
 
     Scaffold(
         topBar = {
@@ -39,12 +33,10 @@ fun AdminScreen(navController: NavController, viewModel: AdminViewModel = viewMo
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.navigate("home") {
-                            popUpTo("admin") {
-                                inclusive = true
-                            }
+                            popUpTo("admin") { inclusive = true }
                         }
                     }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Quay về Trang Chủ")
+                        Icon(Icons.Default.ArrowBackIosNew, contentDescription = "Quay về Trang Chủ")
                     }
                 }
             )
@@ -52,8 +44,8 @@ fun AdminScreen(navController: NavController, viewModel: AdminViewModel = viewMo
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.editingProduct = Product()
-                    viewModel.showDialog = true
+                    // Điều hướng đến màn hình thêm sản phẩm
+                    navController.navigate("add_product")
                 }
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Thêm sản phẩm")
@@ -82,12 +74,13 @@ fun AdminScreen(navController: NavController, viewModel: AdminViewModel = viewMo
                             horizontalArrangement = Arrangement.End
                         ) {
                             IconButton(onClick = {
-                                viewModel.editingProduct = product
-                                viewModel.showDialog = true
+                                // Điều hướng đến màn hình sửa sản phẩm
+                                navController.navigate("add_product/${product.id}")
                             }) {
                                 Icon(Icons.Default.Edit, contentDescription = "Sửa")
                             }
                             IconButton(onClick = {
+                                // Xoá sản phẩm
                                 viewModel.deleteProduct(product.id!!)
                             }) {
                                 Icon(Icons.Default.Delete, contentDescription = "Xoá")
@@ -97,17 +90,5 @@ fun AdminScreen(navController: NavController, viewModel: AdminViewModel = viewMo
                 }
             }
         }
-
-        if (showDialog) {
-            ProductEditDialog(
-                product = editingProduct ?: Product(),
-                onDismiss = { viewModel.showDialog = false },
-                onSave = {
-                    viewModel.saveProduct(it)
-                    viewModel.showDialog = false
-                }
-            )
-        }
     }
 }
-

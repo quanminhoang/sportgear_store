@@ -10,29 +10,34 @@ private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFF1E88E5),
     onPrimary = Color(0xFF121212),
     secondary = Color(0xFFFFFFFF),
-    onSecondary = Color(0xFFB0B0B0),
+    onSecondary = Color(0xFF151515),
     background = Color(0xFF2a2a2a),
     onBackground = Color(0xFFFFFFFF),
     surface = Color(0xFF3f3f3f),
     onSurface = Color(0xFFFFFFFF),
     error = Color(0xFFCF6679),
     onError = Color.Red,
-    outline = Color(0XFFFFFFFF),
+    outline = Color(0X54545454),
     tertiary = Color(0xFF6a6a6a),
-    surfaceContainer = Color(0xFF545454)
+    surfaceContainer = Color(0xFF6a6a6a),
+    onSurfaceVariant = Color(0xFFd3d3d3)
 )
 
 // Màu sắc tùy chỉnh cho Light Theme
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFF003366),
     onPrimary = Color(0xFFFFFFFF),
-    background = Color(0xFFd3d3d3),
+    onSecondary = Color(0xFF151515),
+    background = Color(0xFFFFFFFF),
     onBackground = Color(0xFF121212),
     surface = Color(0xFFFFFFFF),
     onSurface = Color(0xFF121212),
     error = Color(0xFFCF6679),
     onError = Color.Red,
-    outline = Color(0xFF6D6D6D)
+    outline = Color(0xFFd3d3d3),
+    tertiary = Color(0xFFbebebe),
+    surfaceContainer = Color(0xFFd3d3d3),
+    onSurfaceVariant = Color(0xFF6a6a6a)
 )
 
 @Composable

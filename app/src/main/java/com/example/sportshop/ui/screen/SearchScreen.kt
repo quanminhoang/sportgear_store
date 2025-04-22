@@ -32,7 +32,7 @@ fun SearchScreen(navController: NavController, cartViewModel: CartViewModel) {
                         Text(
                             "Tìm sản phẩm...",
                             style = MaterialTheme.typography.bodyMedium.copy(
-                                color = MaterialTheme.colorScheme.onSecondary
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         )
                     },
@@ -61,8 +61,15 @@ fun SearchScreen(navController: NavController, cartViewModel: CartViewModel) {
             titleContentColor = MaterialTheme.colorScheme.onError,
             actionIconContentColor = MaterialTheme.colorScheme.onPrimary
         )
+
         )
-    }) { padding ->
+    }
+
+    ) { padding ->
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.outline,
+            thickness = 1.dp
+        )
         Column(
             modifier = Modifier
                 .padding(padding)

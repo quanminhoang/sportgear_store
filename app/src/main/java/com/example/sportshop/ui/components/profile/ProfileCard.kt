@@ -25,42 +25,35 @@ fun ProfileCard(
     onNotificationToggle: () -> Unit,
     onLogout: () -> Unit
 ) {
-    Column {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(16.dp)
-        ) {
-            AsyncImage(
-                model = photoUrl,
-                contentDescription = "Avatar",
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape)
-                    .background(Color.LightGray)
-            )
-            Spacer(Modifier.width(16.dp))
-            Column(
-            ) {
-                Text(
-                    name, style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = MaterialTheme.colorScheme.onBackground
+        Column {
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(16.dp)) {
+                AsyncImage(
+                    model = photoUrl,
+                    contentDescription = "Avatar",
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(CircleShape)
+                        .background(Color.LightGray)
                 )
-                Text(
-                    email, style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onSecondary
-                    )
-                )
+                Spacer(Modifier.width(16.dp))
+                Column(
+                ) {
+                    Text(name, style = MaterialTheme.typography.headlineLarge.copy(
+                        fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onBackground)
+                    Text(email, style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    ))
+                }
             }
-        }
-        Spacer(Modifier.height(16.dp))
-        ProfileMenuItem(Icons.Default.Person, "Edit Profile", onProfileClick)
-        ProfileMenuItem(Icons.Default.Settings, "Settings", onSettingsClick)
-        ProfileMenuItem(Icons.Default.Notifications, "Notification", onNotificationToggle)
-        ProfileMenuItem(Icons.Default.Logout, "Log Out", onLogout)
+            Spacer(Modifier.height(16.dp))
+            ProfileMenuItem(Icons.Default.Person, "Edit Profile", onProfileClick)
+            ProfileMenuItem(Icons.Default.Settings, "Settings", onSettingsClick)
+            ProfileMenuItem(Icons.Default.Notifications, "Notification", onNotificationToggle)
+            ProfileMenuItem(Icons.Default.Logout, "Log Out", onLogout)
 
+        }
     }
-}
 
 
