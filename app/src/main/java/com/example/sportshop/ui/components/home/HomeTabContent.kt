@@ -26,7 +26,11 @@ fun HomeTabContent(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
+    // Lấy danh sách sản phẩm nổi bật từ view model
     val featuredProducts by productViewModel.featuredProducts.collectAsState()
+
+    // Lấy danh sách tất cả sản phẩm từ view model
+    val allProducts by productViewModel.products.collectAsState()
 
     Column(
         modifier = modifier
@@ -34,14 +38,15 @@ fun HomeTabContent(
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        // Tiêu đề sản phẩm nổi bật
         Spacer(modifier = Modifier.height(24.dp))
-
         Text(
             text = "Sản Phẩm Nổi Bật",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
         Spacer(modifier = Modifier.height(8.dp))
 
+        // Hiển thị các sản phẩm nổi bật
         FeaturedProductsRow(
             products = featuredProducts,
             cartViewModel = cartViewModel,
@@ -50,14 +55,16 @@ fun HomeTabContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        // Tiêu đề sản phẩm tất cả
         Text(
             text = "Tất Cả Sản Phẩm",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Fixed the typo here: cartViewMode -> cartViewModel
+        // Hiển thị tất cả các sản phẩm
         ProductListWrapper(
+            products = allProducts,  // Chắc chắn truyền đúng danh sách
             navController = navController,
             cartViewModel = cartViewModel
         )

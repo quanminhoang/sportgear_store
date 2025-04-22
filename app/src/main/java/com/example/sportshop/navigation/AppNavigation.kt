@@ -9,15 +9,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.sportshop.model.data.CartItem
 import com.example.sportshop.model.data.Product
-import com.example.sportshop.ui.components.profile.MainProfileMenu
 import com.example.sportshop.ui.components.edit_profile.ProfileScreen
-import com.example.sportshop.ui.screen.AddProductScreen
-import com.example.sportshop.ui.screen.AdminScreen
-import com.example.sportshop.ui.screen.CheckoutScreen
-import com.example.sportshop.ui.screen.ProductDetailScreen
-import com.example.sportshop.ui.screen.SearchScreen
-import com.example.sportshop.ui.screen.SplashScreen
-import com.example.sportshop.ui.screen.WelcomeScreen
+import com.example.sportshop.ui.components.profile.MainProfileMenu
+import com.example.sportshop.ui.screen.*
 import com.example.sportshop.ui.theme.ThemeManager
 import com.example.sportshop.viewmodel.AdminViewModel
 import com.example.sportshop.viewmodel.CartViewModel
@@ -39,33 +33,40 @@ fun AppNavaigation(
         composable("splash") {
             SplashScreen(navController)
         }
+
         composable("welcome") {
             WelcomeScreen(navController)
         }
+
         composable("home") {
             MainScreen(
                 navController = navController,
                 cartViewModel = cartViewModel
             )
         }
+
         composable("main_profile") {
             MainProfileMenu(
                 navController = navController,
                 themeManager = themeManager
             )
         }
+
         composable("profile") {
             ProfileScreen(navController)
         }
+
         composable("admin_screen") {
             AdminScreen(navController)
         }
+
         composable("search_screen") {
             SearchScreen(
                 navController = navController,
                 cartViewModel = cartViewModel
             )
         }
+
         composable("checkout") {
             CheckoutScreen(
                 navController = navController,
@@ -73,18 +74,18 @@ fun AppNavaigation(
             )
         }
 
-        // Thêm sản phẩm
+        // Thêm sản phẩm mới
         composable("add_product") {
             AddProductScreen(
                 navcontroller = navController,
-                product = Product(),
+                product = Product(), // sản phẩm mới
                 onSave = { updatedProduct ->
                     adminViewModel.saveProduct(updatedProduct)
                 }
             )
         }
 
-        // Sửa sản phẩm
+        // Sửa sản phẩm (đã FIX route)
         composable(
             route = "add_product/{productId}",
             arguments = listOf(navArgument("productId") {

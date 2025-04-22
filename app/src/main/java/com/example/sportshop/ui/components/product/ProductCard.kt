@@ -1,7 +1,5 @@
 package com.example.sportshop.ui.components.product
 
-
-import android.R.string
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,16 +24,15 @@ import java.util.UUID
 fun ProductCard(
     product: Product,
     cartViewModel: CartViewModel,
-    onClick: (String) -> Unit // onClick nhận String không rỗng
+    onClick: (String) -> Unit
 ) {
-    // Kiểm tra nếu product.id là null, dùng giá trị mặc định
-    val productId = product.id ?: UUID.randomUUID().toString() // Dùng UUID nếu id là null
+    val productId = product.id ?: UUID.randomUUID().toString()
 
     Card(
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick(productId) } // Truyền productId không thể null
+            .clickable { onClick(productId) }
     ) {
         Row(
             modifier = Modifier.padding(12.dp),

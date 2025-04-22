@@ -14,6 +14,10 @@ class ProductViewModel : ViewModel() {
     private val _products = MutableStateFlow<List<Product>>(emptyList())
     val products: StateFlow<List<Product>> = _products
 
+    private val _allProducts = MutableStateFlow<List<Product>>(emptyList())
+    val allProducts: StateFlow<List<Product>> = _allProducts
+
+
     // Add a new StateFlow for featured products
     private val _featuredProducts = MutableStateFlow<List<Product>>(emptyList())
     val featuredProducts: StateFlow<List<Product>> = _featuredProducts
@@ -32,11 +36,14 @@ class ProductViewModel : ViewModel() {
                     }
                     _products.value = fetchedProducts
 
-                    // Filter featured products
+                    // Cập nhật danh sách tất cả sản phẩm
+                    _allProducts.value = fetchedProducts
+
+                    // Lọc sản phẩm nổi bật
                     _featuredProducts.value = fetchedProducts.filter { it.feature }
                 }
                 .addOnFailureListener {
-                    // Handle error
+                    // Xử lý lỗi
                 }
         }
     }

@@ -1,6 +1,6 @@
 package com.example.sportshop.ui.screen
 
-import AddProductForm
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.sportshop.model.data.Product
+import com.example.sportshop.ui.components.add_product.AddProductForm
 import com.example.sportshop.ui.components.add_product.AddProductTopBar
 import com.example.sportshop.viewmodel.AdminViewModel
 
@@ -62,7 +63,8 @@ fun AddProductScreen(
                                     price = parsedPrice,
                                     description = description,
                                     quantity = parsedQuantity,
-                                    category = category
+                                    category = category,
+                                    imageUrl = imageUrl // Lưu giá trị imageUrl
                                 )
                             )
                         }
@@ -84,7 +86,7 @@ fun AddProductScreen(
                 category = category,
                 onCategoryChange = { category = it },
                 imageUrl = imageUrl,
-                onImageUrlChange = { imageUrl = it },
+                onImageUrlChange = { imageUrl = it }, // Trường nhập URL ảnh
                 feature = feature,
                 onFeatureChange = { feature = it }
             )

@@ -1,24 +1,17 @@
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+package com.example.sportshop.ui.components.add_product
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,72 +28,59 @@ fun AddProductForm(
     category: String,
     onCategoryChange: (String) -> Unit,
     imageUrl: String,
-    onImageUrlChange: (String) -> Unit, // Fixed imageUrl handling
+    onImageUrlChange: (String) -> Unit,
     feature: Boolean,
     onFeatureChange: (Boolean) -> Unit
 ) {
-    val categories = listOf("Giày", "Quần", "Áo", "Phụ kiện")
+    // State quản lý expanded của menu category
     var expandedCategoryMenu by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(padding)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        // Input for Name
-        OutlinedTextField(
+    // Dữ liệu danh mục (ví dụ chỉ có 3 danh mục)
+    val categories = listOf("Dụng Cụ Thể Thao", "Giày", "Quần Áo")
+
+    // State để quản lý giá trị của category
+    var selectedCategory by remember { mutableStateOf(category) }
+
+    Column(modifier = Modifier.padding(padding)) {
+        TextField(
             value = name,
             onValueChange = onNameChange,
-            label = { Text("Tên Sản Phẩm") },
-            modifier = Modifier.fillMaxWidth(),
-            isError = name.isBlank()
+            label = { Text("Tên sản phẩm") },
+            modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Input for Price
-        OutlinedTextField(
+        TextField(
             value = price,
             onValueChange = onPriceChange,
-            label = { Text("Giá") },
-            modifier = Modifier.fillMaxWidth(),
-            isError = price.replace(",", "").toDoubleOrNull() == null
+            label = { Text("Giá sản phẩm") },
+            modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Input for Description
-        OutlinedTextField(
+        TextField(
             value = description,
             onValueChange = onDescriptionChange,
-            label = { Text("Mô tả") },
-            modifier = Modifier.fillMaxWidth(),
-            isError = description.isBlank()
+            label = { Text("Mô tả sản phẩm") },
+            modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Input for Quantity
-        OutlinedTextField(
+        TextField(
             value = quantity,
             onValueChange = onQuantityChange,
             label = { Text("Số lượng") },
-            modifier = Modifier.fillMaxWidth(),
-            isError = quantity.toIntOrNull() == null
+            modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Input for Image URL
-        OutlinedTextField(
-            value = imageUrl,
-            onValueChange = onImageUrlChange, // Fix: Use onImageUrlChange to handle input change
-            label = { Text("Ảnh URL") },
-            modifier = Modifier.fillMaxWidth(),
-            isError = imageUrl.isBlank()
-        )
-
-        // Category Dropdown Menu
+        // Dropdown menu cho danh mục
         ExposedDropdownMenuBox(
             expanded = expandedCategoryMenu,
             onExpandedChange = { expandedCategoryMenu = it }
         ) {
             OutlinedTextField(
-                value = category,
+                value = selectedCategory,
                 onValueChange = {},
                 readOnly = true,
                 label = { Text("Danh mục") },
@@ -111,7 +91,7 @@ fun AddProductForm(
                 modifier = Modifier
                     .menuAnchor()
                     .fillMaxWidth(),
-                isError = category.isBlank()
+                isError = selectedCategory.isBlank()
             )
 
             ExposedDropdownMenu(
@@ -122,23 +102,32 @@ fun AddProductForm(
                     DropdownMenuItem(
                         text = { Text(categoryOption) },
                         onClick = {
-                            onCategoryChange(categoryOption)
+                            selectedCategory = categoryOption
                             expandedCategoryMenu = false
+                            onCategoryChange(categoryOption)  // Thực thi hàm truyền vào
                         }
                     )
                 }
             }
         }
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // Feature Checkbox
-        Row(
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = feature,
-                onCheckedChange = onFeatureChange
-            )
-            Text("Sản phẩm nổi bật")
-        }
+        TextField(
+            value = imageUrl,
+            onValueChange = onImageUrlChange,
+            label = { Text("URL ảnh sản phẩm") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Checkbox(
+            checked = feature,
+            onCheckedChange = onFeatureChange,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        Text(
+            text = "Sản phẩm nổi bật",
+            modifier = Modifier.padding(start = 4.dp)
+        )
     }
 }

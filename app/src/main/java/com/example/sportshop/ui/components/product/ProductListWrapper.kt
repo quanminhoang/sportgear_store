@@ -13,25 +13,24 @@ import com.example.sportshop.viewmodel.CartViewModel
 @Composable
 fun ProductListWrapper(
     cartViewModel: CartViewModel,
-    searchQuery: String? = null,
+    products: List<Product>, // Dữ liệu này truyền từ bên ngoài
+    searchQuery: String = "", // Default to empty string instead of null
     navController: NavController
 ) {
-    val productViewModel: ProductViewModel = viewModel()
-    val products by productViewModel.products.collectAsState()
-
+    // Sử dụng sản phẩm từ tham số truyền vào (không cần lấy lại từ viewModel nữa)
     val displayProducts = when {
-        searchQuery == null -> products
-        searchQuery.isBlank() -> emptyList()
-        else -> getFilteredProducts(products, searchQuery)
+        searchQuery.isBlank() -> products // Nếu không có tìm kiếm, hiển thị tất cả sản phẩm
+        else -> getFilteredProducts(products, searchQuery) // Lọc theo truy vấn tìm kiếm
     }
 
-    if (searchQuery != null && searchQuery.isNotBlank() && displayProducts.isEmpty()) {
+    // Nếu tìm thấy sản phẩm
+    if (displayProducts.isEmpty()) {
         Text("Không tìm thấy sản phẩm")
     } else {
-        ProductList( displayProducts, cartViewModel = cartViewModel,navController = navController)
+        // Hiển thị danh sách sản phẩm
+        ProductList(displayProducts, cartViewModel = cartViewModel, navController = navController)
     }
 }
-
 
 private fun getFilteredProducts(products: List<Product>, query: String): List<Product> {
     val lowerCaseQuery = query.lowercase()

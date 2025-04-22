@@ -27,7 +27,7 @@ fun ProductDetailScreen(
                 title = { Text(product.name) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Quay lại")
                     }
                 }
             )
@@ -39,34 +39,34 @@ fun ProductDetailScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            // Display the product image
+            // Hiển thị hình ảnh sản phẩm từ URL mà không có placeholder
             AsyncImage(
-                model = product.imageUrl,
-                contentDescription = "Product Image",
+                model = product.imageUrl,  // URL của hình ảnh sản phẩm
+                contentDescription = "Hình ảnh sản phẩm",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(250.dp)
+                    .height(250.dp)  // Đặt kích thước của hình ảnh
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Product Name
+            // Tên sản phẩm
             Text(text = product.name, style = MaterialTheme.typography.headlineSmall)
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Product Price
+            // Giá sản phẩm
             Text(
                 text = "₫${product.price}",
                 style = MaterialTheme.typography.titleMedium.copy(color = Color.Red)
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Product Description
+            // Mô tả sản phẩm
             Text(text = "Mô tả:", style = MaterialTheme.typography.titleSmall)
             Text(text = product.description, style = MaterialTheme.typography.bodyMedium)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Button to add to cart
+            // Nút thêm vào giỏ hàng
             Button(
                 onClick = { onAddToCart(product) },
                 modifier = Modifier.fillMaxWidth()
@@ -76,3 +76,4 @@ fun ProductDetailScreen(
         }
     }
 }
+

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sportshop.model.data.CartDataStore
 import com.example.sportshop.model.data.CartItem
 import com.example.sportshop.model.data.Order
+import com.example.sportshop.model.data.Product
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +19,8 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
     val cartItems: StateFlow<List<CartItem>> = _cartItems
+    private val _products = MutableStateFlow<List<Product>>(emptyList())
+    val products: StateFlow<List<Product>> = _products
 
     private var currentUserId: String? = null
 

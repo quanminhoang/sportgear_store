@@ -1,10 +1,9 @@
 package com.example.sportshop.ui.screen
 
-
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -18,7 +17,11 @@ import com.example.sportshop.viewmodel.CartViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(navController: NavController, cartViewModel: CartViewModel) {
+    // State for search query
     var query by remember { mutableStateOf("") }
+
+    // Collect products from CartViewModel, ensure it's not null
+    val products by cartViewModel.products.collectAsState(initial = emptyList()) // Default to empty list if null
 
     Scaffold(topBar = {
         TopAppBar(title = {
@@ -26,7 +29,9 @@ fun SearchScreen(navController: NavController, cartViewModel: CartViewModel) {
                 shape = RoundedCornerShape(24.dp),
                 color = MaterialTheme.colorScheme.surfaceContainer,
             ) {
-                TextField(value = query,
+                // TextField for searching products
+                TextField(
+                    value = query,
                     onValueChange = { query = it },
                     placeholder = {
                         Text(
@@ -60,16 +65,16 @@ fun SearchScreen(navController: NavController, cartViewModel: CartViewModel) {
             navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
             titleContentColor = MaterialTheme.colorScheme.onError,
             actionIconContentColor = MaterialTheme.colorScheme.onPrimary
-        )
+        ))
 
-        )
-    }
+    }) { padding ->
 
-    ) { padding ->
+        // Horizontal divider to separate top bar from the content
         HorizontalDivider(
             color = MaterialTheme.colorScheme.outline,
             thickness = 1.dp
         )
+
         Column(
             modifier = Modifier
                 .padding(padding)
@@ -77,7 +82,14 @@ fun SearchScreen(navController: NavController, cartViewModel: CartViewModel) {
                 .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            ProductListWrapper(cartViewModel = cartViewModel,navController = navController, searchQuery = query)
+
+            // Pass the search query to the ProductListWrapper for filtering products
+            ProductListWrapper(
+                cartViewModel = cartViewModel,
+                navController = navController,
+                searchQuery = query,
+                products = products // Ensure this is passed properly to handle filtering
+            )
         }
     }
 }

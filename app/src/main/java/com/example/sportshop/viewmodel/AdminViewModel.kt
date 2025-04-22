@@ -8,7 +8,6 @@ import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-
 class AdminViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
 
@@ -40,7 +39,7 @@ class AdminViewModel : ViewModel() {
     }
 
     fun saveProduct(product: Product) {
-        val data = product.copy(id = null)
+        val data = product.copy(id = null) // Nếu id là null, thêm mới
         if (product.id == null) {
             db.collection("products").add(data)
         } else {
@@ -48,11 +47,8 @@ class AdminViewModel : ViewModel() {
         }
     }
 
-
     override fun onCleared() {
         super.onCleared()
         listenerRegistration?.remove()
     }
 }
-
-

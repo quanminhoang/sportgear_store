@@ -27,6 +27,7 @@ fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
     val cartItems by cartViewModel.cartItems.collectAsState()
     val totalPrice = cartItems.sumOf { it.price * it.quantity }
 
+    // Nếu giỏ hàng trống
     if (cartItems.isEmpty()) {
         Box(
             modifier = Modifier
@@ -80,6 +81,8 @@ fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
             }
         }
     ) { paddingValues ->
+
+        // Hiển thị danh sách các sản phẩm trong giỏ hàng
         LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
@@ -87,6 +90,7 @@ fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
         ) {
             item { Spacer(modifier = Modifier.height(5.dp)) }
 
+            // Duyệt qua các sản phẩm trong giỏ hàng và hiển thị chúng
             items(cartItems) { item ->
                 Column(
                     modifier = Modifier
@@ -94,9 +98,10 @@ fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
                         .padding(horizontal = 16.dp)
                         .background(MaterialTheme.colorScheme.outline)
                 ) {
-                    CartItemRow(item)
+                    CartItemRow(cartItem = item, cartViewModel = cartViewModel)  // Sửa lại từ cartItems = item thành cartItem = item
                 }
             }
         }
     }
 }
+
