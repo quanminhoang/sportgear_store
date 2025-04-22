@@ -1,5 +1,6 @@
 package com.example.sportshop.ui.components.profile
 
+import UserViewModel
 import android.content.Context
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,10 +14,10 @@ import com.example.sportshop.util.getActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainProfileMenu(navController: NavController, themeManager: ThemeManager) {
+fun MainProfileMenu(navController: NavController, themeManager: ThemeManager, userViewModel: UserViewModel) {
     val user = FirebaseAuth.getInstance().currentUser
     val email = user?.email ?: "yourname@gmail.com"
-    val name = user?.displayName ?: "Your name"
+    val name by userViewModel.fullName.collectAsState() // Lấy tên từ UserViewModel
     val photoUrl = user?.photoUrl?.toString()
 
     val context = LocalContext.current
@@ -43,12 +44,12 @@ fun MainProfileMenu(navController: NavController, themeManager: ThemeManager) {
         }
     }
 
-    ProfileCard (
+    ProfileCard(
         name = name,
         email = email,
         photoUrl = photoUrl,
         notificationSetting = notificationSetting,
-        onProfileClick = { navController.navigate("profile") },
+        onProfileClick = { navController.navigate("edit_profile") },
         onSettingsClick = { showSettingsSheet = true },
         onNotificationToggle = {
             notificationSetting = if (notificationSetting == "Allow") "Mute" else "Allow"
@@ -75,4 +76,3 @@ fun MainProfileMenu(navController: NavController, themeManager: ThemeManager) {
         )
     }
 }
-

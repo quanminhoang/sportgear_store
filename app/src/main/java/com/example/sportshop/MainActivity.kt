@@ -1,11 +1,12 @@
 package com.example.sportshop
 
+import UserViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sportshop.navigation.AppNavaigation
+import com.example.sportshop.navigation.AppNavigation
 import com.example.sportshop.ui.theme.SportShopTheme
 import com.example.sportshop.ui.theme.ThemeManager
 import com.example.sportshop.viewmodel.AdminViewModel
@@ -25,12 +26,15 @@ class MainActivity : ComponentActivity() {
             val cartViewModel: CartViewModel = viewModel()
             val adminViewModel: AdminViewModel = viewModel()
             val productViewModel: ProductViewModel = viewModel()
+            val userViewModel: UserViewModel = viewModel()
+
             SportShopTheme(themeManager.currentTheme) {
-                AppNavaigation(
+                AppNavigation(
                     themeManager = themeManager,
                     cartViewModel = cartViewModel,
                     adminViewModel = adminViewModel,
-                    productViewModel = productViewModel
+                    productViewModel = productViewModel,
+                    userViewModel = userViewModel
                 )
             }
         }

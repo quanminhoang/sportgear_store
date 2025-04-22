@@ -25,35 +25,41 @@ fun ProfileCard(
     onNotificationToggle: () -> Unit,
     onLogout: () -> Unit
 ) {
-        Column {
-            Row(verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(16.dp)) {
-                AsyncImage(
-                    model = photoUrl,
-                    contentDescription = "Avatar",
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(CircleShape)
-                        .background(Color.LightGray)
-                )
-                Spacer(Modifier.width(16.dp))
-                Column(
-                ) {
-                    Text(name, style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onBackground)
-                    Text(email, style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    ))
-                }
-            }
-            Spacer(Modifier.height(16.dp))
-            ProfileMenuItem(Icons.Default.Person, "Edit Profile", onProfileClick)
-            ProfileMenuItem(Icons.Default.Settings, "Settings", onSettingsClick)
-            ProfileMenuItem(Icons.Default.Notifications, "Notification", onNotificationToggle)
-            ProfileMenuItem(Icons.Default.Logout, "Log Out", onLogout)
+    Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(30.dp).fillMaxWidth()
+        ) {
+            AsyncImage(
+                model = photoUrl,
+                contentDescription = "Avatar",
+                modifier = Modifier
+                    .size(80.dp)
+                    .clip(CircleShape)
+                    .background(Color.LightGray)
+            )
 
+            Spacer(Modifier.height(8.dp))
+
+            Text(
+                name, style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            Spacer(Modifier.height(4.dp))
+
+            Text(
+                email, style = MaterialTheme.typography.bodyLarge.copy(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            )
         }
+        ProfileMenuItem(Icons.Default.Person, "Thông tin cá nhân", onProfileClick)
+        ProfileMenuItem(Icons.Default.Settings, "Cài đặt", onSettingsClick)
+        ProfileMenuItem(Icons.Default.Notifications, "Thông Báo", onNotificationToggle)
+        ProfileMenuItem(Icons.Default.Logout, "Đăng xuất", onLogout)
+
     }
+}
 
 

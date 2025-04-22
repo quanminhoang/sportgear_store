@@ -126,7 +126,7 @@ fun MainScreen(
                 0 -> HomeTabContent(productViewModel, cartViewModel, navController)
                 1 -> ProductTabContent(productViewModel,cartViewModel,navController,)
                 2 -> CartTabContent(navController, cartViewModel)
-                3 -> ProfileTabContent(navController, themeManager)
+                3 -> ProfileTabContent(navController, themeManager, userViewModel)
             }
         }
     }

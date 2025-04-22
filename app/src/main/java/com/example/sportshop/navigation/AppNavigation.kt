@@ -1,6 +1,7 @@
 package com.example.sportshop.navigation
 
 import MainScreen
+import UserViewModel
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -9,23 +10,29 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.sportshop.model.data.CartItem
 import com.example.sportshop.model.data.Product
-import com.example.sportshop.ui.components.edit_profile.ProfileScreen
 import com.example.sportshop.ui.components.profile.MainProfileMenu
-import com.example.sportshop.ui.screen.*
+import com.example.sportshop.ui.screen.AddProductScreen
+import com.example.sportshop.ui.screen.AdminScreen
+import com.example.sportshop.ui.screen.CheckoutScreen
+import com.example.sportshop.ui.screen.EditProfileScreen
+import com.example.sportshop.ui.screen.ProductDetailScreen
+import com.example.sportshop.ui.screen.SearchScreen
+import com.example.sportshop.ui.screen.SplashScreen
+import com.example.sportshop.ui.screen.WelcomeScreen
 import com.example.sportshop.ui.theme.ThemeManager
 import com.example.sportshop.viewmodel.AdminViewModel
 import com.example.sportshop.viewmodel.CartViewModel
 import com.example.sportshop.viewmodel.ProductViewModel
 
 @Composable
-fun AppNavaigation(
+fun AppNavigation(
     themeManager: ThemeManager,
     cartViewModel: CartViewModel,
     adminViewModel: AdminViewModel,
-    productViewModel: ProductViewModel
+    productViewModel: ProductViewModel,
+    userViewModel: UserViewModel
 ) {
     val navController = rememberNavController()
-
     NavHost(
         navController = navController,
         startDestination = "splash"
@@ -33,40 +40,34 @@ fun AppNavaigation(
         composable("splash") {
             SplashScreen(navController)
         }
-
         composable("welcome") {
             WelcomeScreen(navController)
         }
-
         composable("home") {
             MainScreen(
                 navController = navController,
                 cartViewModel = cartViewModel
             )
         }
-
         composable("main_profile") {
             MainProfileMenu(
                 navController = navController,
-                themeManager = themeManager
+                themeManager = themeManager,
+                userViewModel = userViewModel
             )
         }
-
-        composable("profile") {
-            ProfileScreen(navController)
+        composable("edit_profile") {
+            EditProfileScreen(navController)
         }
-
         composable("admin_screen") {
             AdminScreen(navController)
         }
-
         composable("search_screen") {
             SearchScreen(
                 navController = navController,
                 cartViewModel = cartViewModel
             )
         }
-
         composable("checkout") {
             CheckoutScreen(
                 navController = navController,
@@ -74,18 +75,18 @@ fun AppNavaigation(
             )
         }
 
-        // Thêm sản phẩm mới
+        // Thêm sản phẩm
         composable("add_product") {
             AddProductScreen(
                 navcontroller = navController,
-                product = Product(), // sản phẩm mới
+                product = Product(),
                 onSave = { updatedProduct ->
                     adminViewModel.saveProduct(updatedProduct)
                 }
             )
         }
 
-        // Sửa sản phẩm (đã FIX route)
+        // Sửa sản phẩm
         composable(
             route = "add_product/{productId}",
             arguments = listOf(navArgument("productId") {
