@@ -1,5 +1,8 @@
 package com.example.sportshop.ui.components.product
 
+
+import android.R.string
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,17 +25,22 @@ import java.util.UUID
 @Composable
 fun ProductCard(
     product: Product,
-    cartViewModel: CartViewModel
+    cartViewModel: CartViewModel,
+    onClick: (String) -> Unit // onClick nhận String không rỗng
 ) {
+    // Kiểm tra nếu product.id là null, dùng giá trị mặc định
+    val productId = product.id ?: UUID.randomUUID().toString() // Dùng UUID nếu id là null
+
     Card(
         elevation = CardDefaults.cardElevation(4.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick(productId) } // Truyền productId không thể null
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Load ảnh từ URL
             AsyncImage(
                 model = product.imageUrl,
                 contentDescription = product.name,
@@ -41,7 +49,9 @@ fun ProductCard(
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop
             )
+
             Spacer(modifier = Modifier.width(12.dp))
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = product.name,
@@ -50,8 +60,6 @@ fun ProductCard(
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-
-                // 👇 Hiển thị giá
                 Text(
                     text = "₫${product.price}",
                     style = MaterialTheme.typography.titleMedium.copy(

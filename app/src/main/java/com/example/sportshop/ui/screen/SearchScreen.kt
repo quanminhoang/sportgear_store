@@ -77,7 +77,7 @@ fun SearchScreen(navController: NavController, cartViewModel: CartViewModel) {
                 .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            ProductListWrapper(cartViewModel = cartViewModel, searchQuery = query)
+            ProductListWrapper(cartViewModel = cartViewModel,navController = navController, searchQuery = query)
         }
     }
 }

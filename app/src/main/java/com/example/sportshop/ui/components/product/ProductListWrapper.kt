@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.sportshop.model.data.Product
 import com.example.sportshop.viewmodel.ProductViewModel
 import com.example.sportshop.viewmodel.CartViewModel
@@ -12,7 +13,8 @@ import com.example.sportshop.viewmodel.CartViewModel
 @Composable
 fun ProductListWrapper(
     cartViewModel: CartViewModel,
-    searchQuery: String? = null
+    searchQuery: String? = null,
+    navController: NavController
 ) {
     val productViewModel: ProductViewModel = viewModel()
     val products by productViewModel.products.collectAsState()
@@ -26,7 +28,7 @@ fun ProductListWrapper(
     if (searchQuery != null && searchQuery.isNotBlank() && displayProducts.isEmpty()) {
         Text("Không tìm thấy sản phẩm")
     } else {
-        ProductList(products = displayProducts, cartViewModel = cartViewModel)
+        ProductList( displayProducts, cartViewModel = cartViewModel,navController = navController)
     }
 }
 

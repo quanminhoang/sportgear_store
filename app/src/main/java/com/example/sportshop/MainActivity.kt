@@ -10,6 +10,7 @@ import com.example.sportshop.ui.theme.SportShopTheme
 import com.example.sportshop.ui.theme.ThemeManager
 import com.example.sportshop.viewmodel.AdminViewModel
 import com.example.sportshop.viewmodel.CartViewModel
+import com.example.sportshop.viewmodel.ProductViewModel
 
 
 import java.util.Locale
@@ -23,11 +24,13 @@ class MainActivity : ComponentActivity() {
             val themeManager = rememberThemeManager()
             val cartViewModel: CartViewModel = viewModel()
             val adminViewModel: AdminViewModel = viewModel()
+            val productViewModel: ProductViewModel = viewModel()
             SportShopTheme(themeManager.currentTheme) {
                 AppNavaigation(
                     themeManager = themeManager,
                     cartViewModel = cartViewModel,
-                    adminViewModel = adminViewModel
+                    adminViewModel = adminViewModel,
+                    productViewModel = productViewModel
                 )
             }
         }

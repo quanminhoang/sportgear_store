@@ -1,10 +1,10 @@
 package com.example.sportshop.ui.components.home
 
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,7 +36,6 @@ fun HomeTabContent(
     ) {
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Featured Products Section
         Text(
             text = "Sản Phẩm Nổi Bật",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
@@ -51,13 +50,17 @@ fun HomeTabContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Regular Products Section
         Text(
             text = "Tất Cả Sản Phẩm",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
         Spacer(modifier = Modifier.height(8.dp))
-        ProductListWrapper(cartViewModel = cartViewModel)
+
+        // Fixed the typo here: cartViewMode -> cartViewModel
+        ProductListWrapper(
+            navController = navController,
+            cartViewModel = cartViewModel
+        )
     }
 }
 
@@ -76,7 +79,10 @@ fun FeaturedProductsRow(
         items(products) { product ->
             ProductCard(
                 product = product,
-                cartViewModel
+                cartViewModel = cartViewModel,
+                onClick = { productId ->
+                    navController.navigate("product_detail/$productId")
+                }
             )
         }
     }

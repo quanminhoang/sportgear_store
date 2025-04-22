@@ -9,12 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.sportshop.ui.components.product.ProductListWrapper
 import com.example.sportshop.viewmodel.CartViewModel
 
 @Composable
 fun ProductTabContent(
     cartViewModel: CartViewModel,
+    navController: NavController, // Add navController as a parameter
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -27,6 +29,7 @@ fun ProductTabContent(
             text = "Tất Cả Sản Phẩm",
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
         )
-        ProductListWrapper(cartViewModel = cartViewModel)
+        // Pass the navController into ProductListWrapper
+        ProductListWrapper(cartViewModel = cartViewModel, navController = navController)
     }
 }

@@ -40,4 +40,7 @@ class ProductViewModel : ViewModel() {
                 }
         }
     }
+    fun getProductById(productId: String): Product? {
+        return _products.value.find { it.id == productId }
+    }
 }

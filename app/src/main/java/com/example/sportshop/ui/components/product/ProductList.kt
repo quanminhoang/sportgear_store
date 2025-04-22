@@ -9,12 +9,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sportshop.model.data.Product
 import com.example.sportshop.viewmodel.CartViewModel
+import androidx.navigation.NavController
 
 @Composable
-fun ProductList(products: List<Product>, cartViewModel: CartViewModel) {
+fun ProductList(
+    products: List<Product>,
+    cartViewModel: CartViewModel,
+    navController: NavController // <- thêm dòng này
+) {
     Column(modifier = Modifier.padding(16.dp)) {
         products.forEach { product ->
-            ProductCard(product = product, cartViewModel = cartViewModel)
+            ProductCard(
+                product = product,
+                cartViewModel = cartViewModel,
+                onClick = {
+                    navController.navigate("product_detail/${product.id}")
+                }
+            )
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
