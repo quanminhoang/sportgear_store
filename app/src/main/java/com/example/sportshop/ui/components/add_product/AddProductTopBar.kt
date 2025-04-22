@@ -1,30 +1,39 @@
-package com.example.sportshop.ui.components.product
+package com.example.sportshop.ui.components.add_product
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavController
+import com.example.sportshop.ui.components.buttons.Btn_Back
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductTopBar(navController: NavController) {
-    TopAppBar(
+fun AddProductTopBar(
+    navController: NavController,
+    onSaveClick: () -> Unit
+) {
+    CenterAlignedTopAppBar(
         title = {
             Text(
-                text = "CỬA HÀNG",
+                text = "Thêm sản phẩm",
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
             )
         },
+        navigationIcon = {
+            Btn_Back(navController)
+        },
         actions = {
-            IconButton(onClick = { navController.navigate("search_screen") }) {
+            IconButton(onClick = onSaveClick) {
                 Icon(Icons.Default.Search, contentDescription = "Tìm kiếm")
             }
         },
