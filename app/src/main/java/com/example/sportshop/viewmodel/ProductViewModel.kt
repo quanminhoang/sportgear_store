@@ -17,8 +17,6 @@ class ProductViewModel : ViewModel() {
     private val _allProducts = MutableStateFlow<List<Product>>(emptyList())
     val allProducts: StateFlow<List<Product>> = _allProducts
 
-
-    // Add a new StateFlow for featured products
     private val _featuredProducts = MutableStateFlow<List<Product>>(emptyList())
     val featuredProducts: StateFlow<List<Product>> = _featuredProducts
 
@@ -34,19 +32,57 @@ class ProductViewModel : ViewModel() {
                     val fetchedProducts = result.documents.mapNotNull { doc ->
                         doc.toObject(Product::class.java)?.copy(id = doc.id)
                     }
+
                     _products.value = fetchedProducts
-
-                    // Cập nhật danh sách tất cả sản phẩm
                     _allProducts.value = fetchedProducts
-
-                    // Lọc sản phẩm nổi bật
                     _featuredProducts.value = fetchedProducts.filter { it.feature }
+
+                    val grouped = fetchedProducts.groupBy { it.category.orEmpty() }
+                    grouped.forEach { (category, productList) ->
+                        _productsByCategory.getOrPut(category) { MutableStateFlow(emptyList()) }.value = productList
+                    }
                 }
                 .addOnFailureListener {
                     // Xử lý lỗi
                 }
         }
     }
+
+
+    // Phương thức để thêm sản phẩm vào Firestore
+    fun addProduct(product: Product) {
+        viewModelScope.launch {
+            // Add the product without the ID first
+            Firebase.firestore.collection("products")
+                .add(product)
+                .addOnSuccessListener { documentReference ->
+                    // Get the auto-generated ID from Firestore
+                    val productWithId = product.copy(id = documentReference.id)
+
+                    // Now update the product in Firestore with the new ID
+                    Firebase.firestore.collection("products")
+                        .document(documentReference.id)
+                        .set(productWithId)
+                        .addOnSuccessListener {
+                            // Successfully updated product with the ID
+                            loadFromFirestore()  // Reload the product list
+                        }
+                        .addOnFailureListener { e ->
+                            // Handle failure to set the product ID
+                        }
+                }
+                .addOnFailureListener { e ->
+                    // Handle failure to add product
+                }
+        }
+    }
+
+    private val _productsByCategory = mutableMapOf<String, MutableStateFlow<List<Product>>>()
+    fun getProductsByCategory(category: String): StateFlow<List<Product>> {
+        return _productsByCategory.getOrPut(category) { MutableStateFlow(emptyList()) }
+    }
+
+
     fun getProductById(productId: String): Product? {
         return _products.value.find { it.id == productId }
     }

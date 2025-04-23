@@ -11,12 +11,13 @@ import androidx.navigation.navArgument
 import com.example.sportshop.model.data.CartItem
 import com.example.sportshop.model.data.Product
 import com.example.sportshop.ui.components.profile.MainProfileMenu
+import com.example.sportshop.ui.components.screen.AllProductsScreen
 import com.example.sportshop.ui.screen.AddProductScreen
 import com.example.sportshop.ui.screen.AdminScreen
 import com.example.sportshop.ui.screen.CheckoutScreen
 import com.example.sportshop.ui.screen.EditProfileScreen
 import com.example.sportshop.ui.screen.ProductDetailScreen
-import com.example.sportshop.ui.screen.SearchScreen
+import com.example.sportshop.ui.components.search.SearchScreen
 import com.example.sportshop.ui.screen.SplashScreen
 import com.example.sportshop.ui.screen.WelcomeScreen
 import com.example.sportshop.ui.theme.ThemeManager
@@ -49,6 +50,17 @@ fun AppNavigation(
                 cartViewModel = cartViewModel
             )
         }
+        composable("all_products/{category}?featured={featured}") { backStackEntry ->
+            val category = backStackEntry.arguments?.getString("category") ?: "default_category" // Giá trị mặc định nếu không có category
+            val featured = backStackEntry.arguments?.getString("featured")?.toBoolean() ?: false
+
+            AllProductsScreen(
+                productViewModel = productViewModel,
+                navController = navController,
+                category = category,
+                featured = featured
+            )
+        }
         composable("main_profile") {
             MainProfileMenu(
                 navController = navController,
@@ -65,7 +77,8 @@ fun AppNavigation(
         composable("search_screen") {
             SearchScreen(
                 navController = navController,
-                cartViewModel = cartViewModel
+                cartViewModel = cartViewModel,
+                productViewModel = productViewModel
             )
         }
         composable("checkout") {

@@ -31,49 +31,43 @@ fun HomeTopBar(
     val lastName by userViewModel.lastName.collectAsState()
     val isRefreshing by adminViewModel.isRefreshing.collectAsState()
 
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing),
-        onRefresh = { adminViewModel.fetchProducts() }
-    ) {
-        TopAppBar(
-            modifier = modifier,
-            title = {
-                Text(
-                    text = "XIN CHÀO, ${lastName.uppercase()}",
-                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.onSurface,
+    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing),
+        onRefresh = { adminViewModel.fetchProducts() }) {
+        TopAppBar(modifier = modifier, title = {
+            Text(
+                text = "XIN CHÀO, ${lastName.uppercase()}",
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        }, actions = {
+            IconButton(
+                onClick = { navController.navigate("search_screen") },
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Tìm kiếm",
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
-            },
-            actions = {
+            }
+
+            if (isAdmin) {
                 IconButton(
-                    onClick = { navController.navigate("search_screen") },
+                    onClick = { navController.navigate("admin_screen") },
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Search,
+                        imageVector = Icons.Outlined.AdminPanelSettings,
                         contentDescription = "Tìm kiếm",
-                        tint = MaterialTheme.colorScheme.onSurface
+                        tint = MaterialTheme.colorScheme.onSurface,
                     )
                 }
-
-                if (isAdmin) {
-                    IconButton(
-                        onClick = { navController.navigate("admin_screen") },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.AdminPanelSettings,
-                            contentDescription = "Tìm kiếm",
-                            tint = MaterialTheme.colorScheme.onSurface,
-                        )
-                    }
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                scrolledContainerColor = MaterialTheme.colorScheme.surface,
-                navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                titleContentColor = MaterialTheme.colorScheme.onSurface,
-                actionIconContentColor = MaterialTheme.colorScheme.onSurface
-            )
+            }
+        }, colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            scrolledContainerColor = MaterialTheme.colorScheme.surface,
+            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            actionIconContentColor = MaterialTheme.colorScheme.onSurface
+        )
         )
     }
 }

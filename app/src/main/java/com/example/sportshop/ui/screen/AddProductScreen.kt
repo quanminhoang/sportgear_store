@@ -12,21 +12,26 @@ import com.example.sportshop.model.data.Product
 import com.example.sportshop.ui.components.add_product.AddProductForm
 import com.example.sportshop.ui.components.add_product.AddProductTopBar
 import com.example.sportshop.viewmodel.AdminViewModel
+import com.example.sportshop.viewmodel.ProductViewModel
 
 @Composable
 fun AddProductScreen(
     navcontroller: NavController,
     product: Product,
     onSave: (Product) -> Unit,
-    viewModel: AdminViewModel = viewModel()
+    adminviewModel: AdminViewModel = viewModel(),
+    productViewModel: ProductViewModel= viewModel(),
+
+
 ) {
     var name by remember { mutableStateOf(product.name) }
     var price by remember { mutableStateOf(product.price.toString()) }
     var description by remember { mutableStateOf(product.description) }
     var quantity by remember { mutableStateOf(product.quantity.toString()) }
     var category by remember { mutableStateOf(product.category) }
-    var imageUrl by remember { mutableStateOf("") }
-    var feature by remember { mutableStateOf(false) }
+    // Sửa lại 2 dòng sau
+    var imageUrl by remember { mutableStateOf(product.imageUrl) }
+    var feature by remember { mutableStateOf(product.feature) }
 
     var showError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
@@ -64,9 +69,11 @@ fun AddProductScreen(
                                     description = description,
                                     quantity = parsedQuantity,
                                     category = category,
-                                    imageUrl = imageUrl // Lưu giá trị imageUrl
+                                    imageUrl = imageUrl,
+                                    feature = feature // Thêm feature vào đây
                                 )
                             )
+                            navcontroller.popBackStack()
                         }
                     }
                 }
@@ -86,11 +93,14 @@ fun AddProductScreen(
                 category = category,
                 onCategoryChange = { category = it },
                 imageUrl = imageUrl,
-                onImageUrlChange = { imageUrl = it }, // Trường nhập URL ảnh
+                onImageUrlChange = { imageUrl = it },
                 feature = feature,
-                onFeatureChange = { feature = it }
+                onFeatureChange = { feature = it },
+                onAddClick = { newProduct ->
+                    productViewModel.addProduct(newProduct)
+                    navcontroller.popBackStack()
+                }
             )
-
             if (showError) {
                 Text(
                     text = errorMessage,

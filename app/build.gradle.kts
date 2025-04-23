@@ -67,6 +67,7 @@ dependencies {
     implementation ("androidx.activity:activity-ktx:1.8.0")
 
     implementation ("androidx.compose.ui:ui:1.6.0")
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation ("androidx.compose.material3:material3:1.1.2")
     implementation ("androidx.compose.ui:ui-tooling-preview:1.6.0")
     debugImplementation ("androidx.compose.ui:ui-tooling:1.6.0")
@@ -88,6 +89,7 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-swiperefresh:0.33.2-alpha")
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
     implementation ("com.google.code.gson:gson:2.10.1")
+
 
 }
 

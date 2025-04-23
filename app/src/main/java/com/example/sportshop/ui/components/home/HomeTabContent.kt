@@ -14,23 +14,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.sportshop.model.data.Product
-import com.example.sportshop.ui.components.product.ProductCard
-import com.example.sportshop.ui.components.product.ProductListWrapper
-import com.example.sportshop.viewmodel.CartViewModel
+import com.example.sportshop.ui.components.product.FeatureProductCard
 import com.example.sportshop.viewmodel.ProductViewModel
 
 @Composable
 fun HomeTabContent(
-    productViewModel: ProductViewModel,
-    cartViewModel: CartViewModel,
-    navController: NavController,
-    modifier: Modifier = Modifier
+    productViewModel: ProductViewModel, navController: NavController, modifier: Modifier = Modifier
 ) {
-    // Lấy danh sách sản phẩm nổi bật từ view model
     val featuredProducts by productViewModel.featuredProducts.collectAsState()
-
-    // Lấy danh sách tất cả sản phẩm từ view model
-    val allProducts by productViewModel.products.collectAsState()
 
     Column(
         modifier = modifier
@@ -38,45 +29,30 @@ fun HomeTabContent(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Tiêu đề sản phẩm nổi bật
         Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text = "Sản Phẩm Nổi Bật",
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-        )
+        Row() {
+            Text("Dành riêng cho bạn")
+            TextButton(
+                onClick = {
+                    navController.navigate("all_products?featured=true")
+                }
+            ) {
+                Text("Xem tất cả")
+            }
+
+        }
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Hiển thị các sản phẩm nổi bật
         FeaturedProductsRow(
-            products = featuredProducts,
-            cartViewModel = cartViewModel,
-            navController = navController
+            products = featuredProducts, navController = navController
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Tiêu đề sản phẩm tất cả
-        Text(
-            text = "Tất Cả Sản Phẩm",
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Hiển thị tất cả các sản phẩm
-        ProductListWrapper(
-            products = allProducts,  // Chắc chắn truyền đúng danh sách
-            navController = navController,
-            cartViewModel = cartViewModel
-        )
     }
 }
 
 @Composable
 fun FeaturedProductsRow(
-    products: List<Product>,
-    cartViewModel: CartViewModel,
-    navController: NavController,
-    modifier: Modifier = Modifier
+    products: List<Product>, navController: NavController, modifier: Modifier = Modifier
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),
@@ -84,13 +60,9 @@ fun FeaturedProductsRow(
         contentPadding = PaddingValues(horizontal = 8.dp)
     ) {
         items(products) { product ->
-            ProductCard(
-                product = product,
-                cartViewModel = cartViewModel,
-                onClick = { productId ->
-                    navController.navigate("product_detail/$productId")
-                }
-            )
+            FeatureProductCard(product = product, onClick = { productId ->
+                navController.navigate("product_detail/$productId")
+            })
         }
     }
 }

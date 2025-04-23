@@ -119,11 +119,11 @@ fun MainScreen(
 
     }) { paddingValues ->
         HorizontalPager(
-            state = pagerState, modifier = Modifier.padding(paddingValues), userScrollEnabled = true
+            state = pagerState, modifier = Modifier.padding(paddingValues), userScrollEnabled = false
         ) { page ->
 
             when (page) {
-                0 -> HomeTabContent(productViewModel, cartViewModel, navController)
+                0 -> HomeTabContent(productViewModel, navController)
                 1 -> ProductTabContent(productViewModel,cartViewModel,navController,)
                 2 -> CartTabContent(navController, cartViewModel)
                 3 -> ProfileTabContent(navController, themeManager, userViewModel)

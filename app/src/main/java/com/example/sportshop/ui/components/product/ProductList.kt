@@ -19,9 +19,8 @@ fun ProductList(
 ) {
     Column(modifier = Modifier.padding(16.dp)) {
         products.forEach { product ->
-            ProductCard(
+            FeatureProductCard(
                 product = product,
-                cartViewModel = cartViewModel,
                 onClick = {
                     navController.navigate("product_detail/${product.id}")
                 }

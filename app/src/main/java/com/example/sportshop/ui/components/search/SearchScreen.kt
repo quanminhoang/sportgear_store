@@ -1,4 +1,4 @@
-package com.example.sportshop.ui.screen
+package com.example.sportshop.ui.components.search
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,17 +11,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.sportshop.ui.components.buttons.Btn_Back
-import com.example.sportshop.ui.components.product.ProductListWrapper
 import com.example.sportshop.viewmodel.CartViewModel
+import com.example.sportshop.viewmodel.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(navController: NavController, cartViewModel: CartViewModel) {
+fun SearchScreen(navController: NavController, cartViewModel: CartViewModel,    productViewModel: ProductViewModel) {
     // State for search query
     var query by remember { mutableStateOf("") }
 
     // Collect products from CartViewModel, ensure it's not null
-    val products by cartViewModel.products.collectAsState(initial = emptyList()) // Default to empty list if null
+    val products by productViewModel.products.collectAsState(initial = emptyList())
 
     Scaffold(topBar = {
         TopAppBar(title = {
