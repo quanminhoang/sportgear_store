@@ -1,5 +1,6 @@
 package com.example.sportshop.ui.screen
 
+import UserViewModel
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
@@ -8,31 +9,55 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.sportshop.model.data.CartItem
 import com.example.sportshop.ui.components.buttons.Btn_Back
 import com.example.sportshop.viewmodel.CartViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CheckoutScreen(navController: NavController, cartViewModel: CartViewModel) {
+fun CheckoutScreen(navController: NavController, cartViewModel: CartViewModel, userViewModel: UserViewModel) {
+    val fullName by userViewModel.fullName.collectAsState()
+    val phone by userViewModel.phone.collectAsState()
+    val userAddress by userViewModel.address.collectAsState()
+    val cartItems by cartViewModel.cartItems.collectAsState()
+
     var address by remember { mutableStateOf("") }
     var paymentMethod by remember { mutableStateOf("cash") }
-    val cartItems by cartViewModel.cartItems.collectAsState()
     val totalPrice = cartItems.sumOf { it.price * it.quantity }
-
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-
     var showSuccessDialog by remember { mutableStateOf(false) }
 
+    LaunchedEffect(userAddress) {
+        if (address.isBlank()) {
+            address = userAddress
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Thanh Toán") },
-                navigationIcon = { Btn_Back(navController) }
+                title = {
+                    Text(
+                        text = "Thanh toán"
+                        ,
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                    )
+                },
+                navigationIcon = {
+                    Btn_Back(navController)
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                )
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -43,11 +68,29 @@ fun CheckoutScreen(navController: NavController, cartViewModel: CartViewModel) {
                 .padding(16.dp)
         ) {
             OutlinedTextField(
+                value = fullName,
+                onValueChange = { userViewModel.updateUserInfo(it, phone, address) },
+                label = { Text("Họ và tên") },
+                modifier = Modifier.fillMaxWidth().padding(top = 24.dp)
+            )
+
+            OutlinedTextField(
+                value = phone,
+                onValueChange = { userViewModel.updateUserInfo(fullName, it, address) },
+                label = { Text("Số điện thoại") },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp)
+            )
+
+            OutlinedTextField(
                 value = address,
-                onValueChange = { address = it },
+                onValueChange = {
+                    address = it
+                    userViewModel.updateUserInfo(fullName, phone, it)
+                },
                 label = { Text("Địa chỉ nhận hàng") },
                 modifier = Modifier.fillMaxWidth()
             )
+
 
             Spacer(modifier = Modifier.height(16.dp))
 

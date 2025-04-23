@@ -6,6 +6,8 @@ import androidx.navigation.NavController
 import com.example.sportshop.model.data.Product
 import com.example.sportshop.ui.components.product.ProductList
 import com.example.sportshop.viewmodel.CartViewModel
+import java.text.Normalizer
+import java.util.Locale
 
 @Composable
 fun ProductListWrapper(
@@ -36,10 +38,18 @@ fun ProductListWrapper(
 }
 
 private fun getFilteredProducts(products: List<Product>, query: String): List<Product> {
-    val lowerQuery = query.lowercase()
+    val normalizedQuery = normalizeText(query)
+
     return products.filter {
         listOf(it.name, it.description).any { field ->
-            field?.lowercase()?.contains(lowerQuery) == true
+            field?.let { normalizeText(it).contains(normalizedQuery) } == true
         }
     }
+}
+
+private fun normalizeText(input: String): String {
+    val normalized = Normalizer.normalize(input, Normalizer.Form.NFD)
+    return normalized
+        .replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "") // Loại bỏ dấu
+        .lowercase(Locale.getDefault()) // Chuyển thành chữ thường
 }

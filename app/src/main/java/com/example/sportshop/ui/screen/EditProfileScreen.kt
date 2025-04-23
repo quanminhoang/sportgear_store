@@ -2,6 +2,7 @@ package com.example.sportshop.ui.screen
 
 import SavingBottomSheet
 import UserInfoFields
+import UserViewModel
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,7 +24,7 @@ import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditProfileScreen(navController: NavController) {
+fun EditProfileScreen(navController: NavController, userViewModel: UserViewModel) {
     val context = LocalContext.current
     val user = FirebaseAuth.getInstance().currentUser
     val firestore = FirebaseFirestore.getInstance()
@@ -42,10 +43,8 @@ fun EditProfileScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
     var showSheet by remember { mutableStateOf(false) }
 
-    // Check if data has changed
     val isChanged by remember {
         derivedStateOf {
-            // Use stable references for comparison
             name != originalName || phone != originalPhone || address != originalAddress || avatarUrl != originalAvatarUrl
         }
     }
@@ -81,7 +80,6 @@ fun EditProfileScreen(navController: NavController) {
                     }
                 },
                 actions = {
-                    // Save button: disabled if no changes, enabled if there are changes
                     TextButton(
                         onClick = {
                             val uid = user?.uid ?: return@TextButton
@@ -95,6 +93,7 @@ fun EditProfileScreen(navController: NavController) {
                                 showSheet = true
                                 try {
                                     firestore.collection("users").document(uid).update(data).await()
+                                    userViewModel.updateUserInfo(name, phone, address) // ✅ Update ViewModel properly
                                     Toast.makeText(context, "Đã lưu thông tin!", Toast.LENGTH_SHORT).show()
                                     navController.navigate("home") {
                                         popUpTo("main_profile") { inclusive = true }
@@ -130,7 +129,7 @@ fun EditProfileScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(Modifier.height(16.dp))
-            // Avatar image with option to update
+
             AsyncImage(
                 model = avatarUrl,
                 contentDescription = "Avatar",
@@ -142,7 +141,6 @@ fun EditProfileScreen(navController: NavController) {
 
             Spacer(Modifier.height(32.dp))
 
-            // User info fields
             UserInfoFields(
                 name = name,
                 phone = phone,
@@ -153,7 +151,6 @@ fun EditProfileScreen(navController: NavController) {
             )
         }
 
-        // Show saving progress while data is being saved
         if (showSheet) {
             SavingBottomSheet(sheetState = sheetState)
         }

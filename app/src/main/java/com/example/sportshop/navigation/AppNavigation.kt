@@ -69,7 +69,7 @@ fun AppNavigation(
             )
         }
         composable("edit_profile") {
-            EditProfileScreen(navController)
+            EditProfileScreen(navController, userViewModel)
         }
         composable("admin_screen") {
             AdminScreen(navController)
@@ -84,7 +84,8 @@ fun AppNavigation(
         composable("checkout") {
             CheckoutScreen(
                 navController = navController,
-                cartViewModel = cartViewModel
+                cartViewModel = cartViewModel,
+                userViewModel = userViewModel
             )
         }
 
