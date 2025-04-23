@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,32 +28,49 @@ fun HomeTabContent(
         modifier = modifier
             .verticalScroll(rememberScrollState())
             .fillMaxSize()
-            .padding(16.dp)
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
-        Row() {
-            Text("Dành riêng cho bạn")
-            TextButton(
-                onClick = {
-                    navController.navigate("all_products?featured=true")
-                }
-            ) {
-                Text("Xem tất cả")
-            }
+        BannerSlider()
 
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(62.dp)
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Dành riêng cho bạn",
+                style = MaterialTheme.typography.titleLarge, // Sửa thành titleLarge
+                color = MaterialTheme.colorScheme.onBackground // Sửa color
+            )
+            TextButton(onClick = {
+                navController.navigate("all_products?featured=true")
+            }) {
+                Text(
+                    text = "Xem tất cả",
+                    style = MaterialTheme.typography.titleMedium, // Đổi style cho "Xem tất cả"
+                    color = MaterialTheme.colorScheme.primary // Đổi màu
+                )
+            }
         }
+
         Spacer(modifier = Modifier.height(8.dp))
 
         FeaturedProductsRow(
-            products = featuredProducts, navController = navController
+            products = featuredProducts,
+            navController = navController
         )
-
     }
 }
 
 @Composable
 fun FeaturedProductsRow(
-    products: List<Product>, navController: NavController, modifier: Modifier = Modifier
+    products: List<Product>,
+    navController: NavController,
+    modifier: Modifier = Modifier
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),

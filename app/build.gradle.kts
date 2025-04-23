@@ -89,6 +89,8 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-swiperefresh:0.33.2-alpha")
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
     implementation ("com.google.code.gson:gson:2.10.1")
+    implementation ("com.google.accompanist:accompanist-pager:0.30.1")
+    implementation ("com.google.accompanist:accompanist-pager-indicators:0.30.1")
 
 
 }
