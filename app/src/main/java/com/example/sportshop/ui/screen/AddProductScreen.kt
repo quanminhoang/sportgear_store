@@ -1,6 +1,5 @@
 package com.example.sportshop.ui.screen
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,21 +19,20 @@ fun AddProductScreen(
     product: Product,
     onSave: (Product) -> Unit,
     adminviewModel: AdminViewModel = viewModel(),
-    productViewModel: ProductViewModel= viewModel(),
-
-
+    productViewModel: ProductViewModel = viewModel(),
 ) {
     var name by remember { mutableStateOf(product.name) }
     var price by remember { mutableStateOf(product.price.toString()) }
     var description by remember { mutableStateOf(product.description) }
     var quantity by remember { mutableStateOf(product.quantity.toString()) }
     var category by remember { mutableStateOf(product.category) }
-    // Sửa lại 2 dòng sau
     var imageUrl by remember { mutableStateOf(product.imageUrl) }
     var feature by remember { mutableStateOf(product.feature) }
 
     var showError by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
+
+    var showSuccessDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -62,51 +60,72 @@ fun AddProductScreen(
 
                         else -> {
                             showError = false
-                            onSave(
-                                product.copy(
-                                    name = name,
-                                    price = parsedPrice,
-                                    description = description,
-                                    quantity = parsedQuantity,
-                                    category = category,
-                                    imageUrl = imageUrl,
-                                    feature = feature // Thêm feature vào đây
-                                )
+                            val updatedProduct = product.copy(
+                                name = name,
+                                price = parsedPrice,
+                                description = description,
+                                quantity = parsedQuantity,
+                                category = category,
+                                imageUrl = imageUrl,
+                                feature = feature
                             )
-                            navcontroller.popBackStack()
+                            onSave(updatedProduct)
+                            showSuccessDialog = true
                         }
                     }
                 }
             )
         },
         content = { padding ->
-            AddProductForm(
-                padding = padding,
-                name = name,
-                onNameChange = { name = it },
-                price = price,
-                onPriceChange = { price = it },
-                description = description,
-                onDescriptionChange = { description = it },
-                quantity = quantity,
-                onQuantityChange = { quantity = it },
-                category = category,
-                onCategoryChange = { category = it },
-                imageUrl = imageUrl,
-                onImageUrlChange = { imageUrl = it },
-                feature = feature,
-                onFeatureChange = { feature = it },
-                onAddClick = { newProduct ->
-                    productViewModel.addProduct(newProduct)
-                    navcontroller.popBackStack()
+            Column(modifier = Modifier.fillMaxSize()) {
+                AddProductForm(
+                    padding = padding,
+                    name = name,
+                    onNameChange = { name = it },
+                    price = price,
+                    onPriceChange = { price = it },
+                    description = description,
+                    onDescriptionChange = { description = it },
+                    quantity = quantity,
+                    onQuantityChange = { quantity = it },
+                    category = category,
+                    onCategoryChange = { category = it },
+                    imageUrl = imageUrl,
+                    onImageUrlChange = { imageUrl = it },
+                    feature = feature,
+                    onFeatureChange = { feature = it },
+                    onAddClick = { newProduct ->
+                        productViewModel.addProduct(newProduct)
+                        navcontroller.popBackStack()
+                    }
+                )
+
+                if (showError) {
+                    Text(
+                        text = errorMessage,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
-            )
-            if (showError) {
-                Text(
-                    text = errorMessage,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+            }
+
+            if (showSuccessDialog) {
+                AlertDialog(
+                    onDismissRequest = {
+                        showSuccessDialog = false
+                        navcontroller.popBackStack()
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            showSuccessDialog = false
+                            navcontroller.popBackStack()
+                        }) {
+                            Text("OK")
+                        }
+                    },
+                    title = { Text("Thành công") },
+                    text = { Text("Sản phẩm đã được lưu thành công.") }
                 )
             }
         }

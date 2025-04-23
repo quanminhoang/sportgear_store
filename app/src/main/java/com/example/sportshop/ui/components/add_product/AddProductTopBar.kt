@@ -1,6 +1,7 @@
 package com.example.sportshop.ui.components.add_product
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -9,6 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -30,11 +32,22 @@ fun AddProductTopBar(
             )
         },
         navigationIcon = {
-            Btn_Back(navController)
+            TextButton(onClick = { navController.popBackStack() }) {
+                TextButton(onClick = onSaveClick) {
+                    Text(
+                        "Huỷ",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }            }
         },
         actions = {
-            IconButton(onClick = onSaveClick) {
-                Icon(Icons.Default.Search, contentDescription = "Tìm kiếm")
+            TextButton(onClick = onSaveClick) {
+                Text(
+                    "Lưu",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
