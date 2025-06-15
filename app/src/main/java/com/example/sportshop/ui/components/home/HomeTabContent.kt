@@ -17,6 +17,9 @@ import androidx.navigation.NavController
 import com.example.sportshop.model.data.Product
 import com.example.sportshop.ui.components.product.FeatureProductCard
 import com.example.sportshop.viewmodel.ProductViewModel
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 
 @Composable
 fun HomeTabContent(
@@ -26,8 +29,8 @@ fun HomeTabContent(
 
     Column(
         modifier = modifier
-            .verticalScroll(rememberScrollState())
             .fillMaxSize()
+            .padding(bottom = 16.dp) // tránh tràn lề
     ) {
         BannerSlider()
 
@@ -59,7 +62,7 @@ fun HomeTabContent(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        FeaturedProductsRow(
+        FeaturedProductsGrid(
             products = featuredProducts,
             navController = navController
         )
@@ -67,15 +70,19 @@ fun HomeTabContent(
 }
 
 @Composable
-fun FeaturedProductsRow(
+fun FeaturedProductsGrid(
     products: List<Product>,
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    LazyRow(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(horizontal = 8.dp)
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        contentPadding = PaddingValues(vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         items(products) { product ->
             FeatureProductCard(product = product, onClick = { productId ->

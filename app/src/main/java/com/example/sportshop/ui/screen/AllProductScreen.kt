@@ -34,7 +34,7 @@ fun AllProductsScreen(
     }
     val dynamicTitle = when {
         category != null -> "${category.replaceFirstChar { it.uppercase() }}"
-        featured -> "Sản phẩm nổi bật"
+        featured -> "Tất cả sản phẩm"
         else -> ""
     }
 

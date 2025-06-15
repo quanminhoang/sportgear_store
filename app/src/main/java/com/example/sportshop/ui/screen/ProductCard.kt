@@ -2,6 +2,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,9 +36,8 @@ fun ProductCard(product: Product, onClick: (String) -> Unit) {
             contentDescription = product.name,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .width(200.dp)
-                .height(215.dp)
-                .fillMaxSize()
+                .fillMaxWidth()
+                .aspectRatio(1f)
                 .background(MaterialTheme.colorScheme.surface) // Background for image
         )
         Text(

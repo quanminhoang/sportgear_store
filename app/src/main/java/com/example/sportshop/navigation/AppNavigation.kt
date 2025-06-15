@@ -143,5 +143,24 @@ fun AppNavigation(
                 )
             }
         }
+        composable(
+            route = "all_products?featured={featured}",
+            arguments = listOf(
+                navArgument("featured") {
+                    type = NavType.BoolType
+                    defaultValue = false
+                }
+            )
+        ) { backStackEntry ->
+            val featured = backStackEntry.arguments?.getBoolean("featured") ?: false
+
+            AllProductsScreen(
+                productViewModel = productViewModel,
+                navController = navController,
+                category = null, // hoặc "" tùy theo bạn setup
+                featured = featured
+            )
+        }
+
     }
 }

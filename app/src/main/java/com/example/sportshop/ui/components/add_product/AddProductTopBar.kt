@@ -33,13 +33,12 @@ fun AddProductTopBar(
         },
         navigationIcon = {
             TextButton(onClick = { navController.popBackStack() }) {
-                TextButton(onClick = onSaveClick) {
                     Text(
                         "Huỷ",
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary
                     )
-                }            }
+            }
         },
         actions = {
             TextButton(onClick = onSaveClick) {
