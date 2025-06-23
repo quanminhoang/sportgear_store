@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -41,7 +40,6 @@ import com.example.sportshop.viewmodel.CartViewModel
 import com.example.sportshop.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     navController: NavController,
@@ -55,7 +53,6 @@ fun MainScreen(
     val context = LocalContext.current
     val themeManager = remember { ThemeManager(context) }
     val adminViewModel: AdminViewModel = viewModel()
-    val featuredProducts by productViewModel.featuredProducts.collectAsState()
 
 
     Scaffold(containerColor = MaterialTheme.colorScheme.background, topBar = {
