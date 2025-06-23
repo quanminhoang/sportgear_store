@@ -14,7 +14,12 @@ import com.example.sportshop.util.getActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainProfileMenu(navController: NavController, themeManager: ThemeManager, userViewModel: UserViewModel) {
+fun MainProfileMenu(
+    navController: NavController,
+    themeManager: ThemeManager,
+    userViewModel: UserViewModel,
+    reloadApp: () -> Unit // nhận callback reloadApp từ AppNavigation
+) {
     val user = FirebaseAuth.getInstance().currentUser
     val email = user?.email ?: "yourname@gmail.com"
     val name by userViewModel.fullName.collectAsState() // Lấy tên từ UserViewModel
@@ -30,6 +35,7 @@ fun MainProfileMenu(navController: NavController, themeManager: ThemeManager, us
     var language by remember { mutableStateOf(currentLanguage) }
 
     val onSaveSettings: () -> Unit = {
+        val themeChanged = theme != themeManager.currentTheme
         themeManager.setTheme(theme)
         sharedPreferences.edit().apply {
             putString("language", language)
@@ -41,6 +47,9 @@ fun MainProfileMenu(navController: NavController, themeManager: ThemeManager, us
             config.setLocale(locale)
             context.resources.updateConfiguration(config, context.resources.displayMetrics)
             context.getActivity()?.recreate()
+        }
+        if (themeChanged) {
+            reloadApp()
         }
     }
 
@@ -63,16 +72,23 @@ fun MainProfileMenu(navController: NavController, themeManager: ThemeManager, us
     )
 
     if (showSettingsSheet) {
+        // Truyền themeManager.currentTheme để giữ giao diện bottom sheet theo theme hiện tại của app
         SettingsBottomSheet(
             theme = theme,
             language = language,
-            onThemeChange = { theme = it },
-            onLanguageChange = { language = it },
+            onThemeChange = { theme = it }, // chỉ cập nhật biến tạm, chưa lưu
+            onLanguageChange = { language = it }, // chỉ cập nhật biến tạm, chưa lưu
             onSave = {
                 onSaveSettings()
                 showSettingsSheet = false
             },
-            onDismiss = { showSettingsSheet = false }
+            onDismiss = {
+                // Reset lại theme và language về giá trị gốc nếu chưa nhấn lưu
+                theme = themeManager.currentTheme
+                language = currentLanguage
+                showSettingsSheet = false
+            },
+            reloadApp = {}, // Không dùng reloadApp trực tiếp trong sheet, chỉ dùng khi Save
         )
     }
 }

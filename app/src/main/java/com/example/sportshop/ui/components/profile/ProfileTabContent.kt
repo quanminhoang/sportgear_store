@@ -11,15 +11,15 @@ import com.example.sportshop.ui.theme.ThemeManager
 fun ProfileTabContent(
     navController: NavController,
     themeManager: ThemeManager,
-    userViewModel: UserViewModel
-
+    userViewModel: UserViewModel,
+    reload: () -> Unit // thêm tham số reload
 ) {
     val userViewModel: UserViewModel = viewModel()
 
     MainProfileMenu(
         navController = navController,
         themeManager = themeManager,
-        userViewModel = userViewModel
-        
+        userViewModel = userViewModel,
+        reloadApp = reload // truyền đúng tên tham số
     )
 }

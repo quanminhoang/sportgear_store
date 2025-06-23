@@ -1,10 +1,10 @@
 package com.example.sportshop.ui.components.search
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.example.sportshop.model.data.Product
-import com.example.sportshop.ui.components.product.ProductList
 import com.example.sportshop.viewmodel.CartViewModel
 import java.text.Normalizer
 import java.util.Locale
@@ -24,16 +24,20 @@ fun ProductListWrapper(
 
     val displayProducts = getFilteredProducts(products, trimmedQuery)
 
-    // Nếu không tìm thấy sản phẩm
     if (displayProducts.isEmpty()) {
         Text("Không tìm thấy sản phẩm")
     } else {
-        // Hiển thị danh sách sản phẩm
-        ProductList(
-            products = displayProducts,
-            cartViewModel = cartViewModel,
-            navController = navController
-        )
+        // Hiển thị danh sách sản phẩm bằng SearchProductCard riêng cho search
+        Column {
+            displayProducts.forEach { product ->
+                SearchProductCard(
+                    product = product,
+                    onClick = { productId ->
+                        navController.navigate("product_detail/$productId")
+                    }
+                )
+            }
+        }
     }
 }
 

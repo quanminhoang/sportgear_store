@@ -31,7 +31,8 @@ fun AppNavigation(
     cartViewModel: CartViewModel,
     adminViewModel: AdminViewModel,
     productViewModel: ProductViewModel,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    reloadApp: () -> Unit // thêm tham số này
 ) {
     val navController = rememberNavController()
     NavHost(
@@ -65,7 +66,8 @@ fun AppNavigation(
             MainProfileMenu(
                 navController = navController,
                 themeManager = themeManager,
-                userViewModel = userViewModel
+                userViewModel = userViewModel,
+                reloadApp = reloadApp // truyền callback reloadApp vào
             )
         }
         composable("edit_profile") {

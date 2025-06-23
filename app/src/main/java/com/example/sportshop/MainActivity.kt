@@ -4,15 +4,15 @@ import UserViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sportshop.navigation.AppNavigation
 import com.example.sportshop.ui.theme.SportShopTheme
-import com.example.sportshop.ui.theme.ThemeManager
+import com.example.sportshop.ui.theme.rememberThemeManager
 import com.example.sportshop.viewmodel.AdminViewModel
 import com.example.sportshop.viewmodel.CartViewModel
 import com.example.sportshop.viewmodel.ProductViewModel
-
 
 import java.util.Locale
 
@@ -28,13 +28,22 @@ class MainActivity : ComponentActivity() {
             val productViewModel: ProductViewModel = viewModel()
             val userViewModel: UserViewModel = viewModel()
 
-            SportShopTheme(themeManager.currentTheme) {
+            val currentTheme by themeManager.themeFlow.collectAsState()
+
+            // Callback để reload lại Activity
+            val reloadApp: () -> Unit = {
+                finish()
+                startActivity(intent)
+            }
+
+            SportShopTheme(currentTheme) {
                 AppNavigation(
                     themeManager = themeManager,
                     cartViewModel = cartViewModel,
                     adminViewModel = adminViewModel,
                     productViewModel = productViewModel,
-                    userViewModel = userViewModel
+                    userViewModel = userViewModel,
+                    reloadApp = reloadApp // thêm dòng này để truyền callback reloadApp
                 )
             }
         }
@@ -48,9 +57,4 @@ class MainActivity : ComponentActivity() {
         config.setLocale(locale)
         resources.updateConfiguration(config, resources.displayMetrics)
     }
-}
-
-@Composable
-private fun rememberThemeManager(): ThemeManager {
-    return com.example.sportshop.ui.theme.rememberThemeManager()
 }

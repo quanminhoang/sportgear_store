@@ -126,7 +126,18 @@ fun MainScreen(
                 0 -> HomeTabContent(productViewModel, navController)
                 1 -> ProductTabContent(productViewModel,cartViewModel,navController,)
                 2 -> CartTabContent(navController, cartViewModel)
-                3 -> ProfileTabContent(navController, themeManager, userViewModel)
+                3 -> ProfileTabContent(
+                    navController = navController,
+                    themeManager = themeManager,
+                    userViewModel = userViewModel,
+                    reload = {
+                        // Reload lại Activity khi đổi theme
+                        (context as? android.app.Activity)?.let {
+                            it.finish()
+                            it.startActivity(it.intent)
+                        }
+                    }
+                )
             }
         }
     }
