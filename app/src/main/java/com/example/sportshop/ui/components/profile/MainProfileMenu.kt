@@ -18,11 +18,11 @@ fun MainProfileMenu(
     navController: NavController,
     themeManager: ThemeManager,
     userViewModel: UserViewModel,
-    reloadApp: () -> Unit // nhận callback reloadApp từ AppNavigation
+    reloadApp: () -> Unit
 ) {
     val user = FirebaseAuth.getInstance().currentUser
     val email = user?.email ?: "yourname@gmail.com"
-    val name by userViewModel.fullName.collectAsState() // Lấy tên từ UserViewModel
+    val name by userViewModel.fullName.collectAsState()
     val photoUrl = user?.photoUrl?.toString()
 
     val context = LocalContext.current
@@ -68,6 +68,9 @@ fun MainProfileMenu(
             navController.navigate("welcome") {
                 popUpTo("home") { inclusive = true }
             }
+        },
+        onOrderHistoryClick = {
+            navController.navigate("order_history")
         }
     )
 
@@ -83,12 +86,11 @@ fun MainProfileMenu(
                 showSettingsSheet = false
             },
             onDismiss = {
-                // Reset lại theme và language về giá trị gốc nếu chưa nhấn lưu
                 theme = themeManager.currentTheme
                 language = currentLanguage
                 showSettingsSheet = false
             },
-            reloadApp = {}, // Không dùng reloadApp trực tiếp trong sheet, chỉ dùng khi Save
+            reloadApp = {},
         )
     }
 }

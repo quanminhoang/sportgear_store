@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
@@ -19,11 +18,10 @@ fun ProfileCard(
     name: String,
     email: String,
     photoUrl: String?,
-    notificationSetting: String,
     onProfileClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onNotificationToggle: () -> Unit,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onOrderHistoryClick: () -> Unit // ✅ Thêm callback mới
 ) {
     Column {
         Column(
@@ -54,9 +52,10 @@ fun ProfileCard(
                 )
             )
         }
+
         ProfileMenuItem(Icons.Default.Person, "Thông tin cá nhân", onProfileClick)
         ProfileMenuItem(Icons.Default.Settings, "Cài đặt", onSettingsClick)
-        ProfileMenuItem(Icons.Default.Notifications, "Thông Báo", onNotificationToggle)
+        ProfileMenuItem(Icons.Default.History, "Lịch sử đơn hàng", onOrderHistoryClick)
         ProfileMenuItem(Icons.Default.Logout, "Đăng xuất", onLogout)
 
     }

@@ -17,12 +17,14 @@ import com.example.sportshop.ui.screen.AdminScreen
 import com.example.sportshop.ui.screen.CheckoutScreen
 import com.example.sportshop.ui.screen.EditProfileScreen
 import com.example.sportshop.ui.screen.ProductDetailScreen
+import com.example.sportshop.ui.screen.*
 import com.example.sportshop.ui.components.search.SearchScreen
 import com.example.sportshop.ui.screen.SplashScreen
 import com.example.sportshop.ui.screen.WelcomeScreen
 import com.example.sportshop.ui.theme.ThemeManager
 import com.example.sportshop.viewmodel.AdminViewModel
 import com.example.sportshop.viewmodel.CartViewModel
+import com.example.sportshop.viewmodel.OrderViewModel
 import com.example.sportshop.viewmodel.ProductViewModel
 
 @Composable
@@ -32,9 +34,11 @@ fun AppNavigation(
     adminViewModel: AdminViewModel,
     productViewModel: ProductViewModel,
     userViewModel: UserViewModel,
-    reloadApp: () -> Unit // thêm tham số này
+    reloadApp: () -> Unit
 ) {
     val navController = rememberNavController()
+    val orderViewModel = OrderViewModel()
+
     NavHost(
         navController = navController,
         startDestination = "splash"
@@ -52,7 +56,7 @@ fun AppNavigation(
             )
         }
         composable("all_products/{category}?featured={featured}") { backStackEntry ->
-            val category = backStackEntry.arguments?.getString("category") ?: "default_category" // Giá trị mặc định nếu không có category
+            val category = backStackEntry.arguments?.getString("category") ?: "default_category"
             val featured = backStackEntry.arguments?.getString("featured")?.toBoolean() ?: false
 
             AllProductsScreen(
@@ -67,7 +71,7 @@ fun AppNavigation(
                 navController = navController,
                 themeManager = themeManager,
                 userViewModel = userViewModel,
-                reloadApp = reloadApp // truyền callback reloadApp vào
+                reloadApp = reloadApp
             )
         }
         composable("edit_profile") {
@@ -91,7 +95,6 @@ fun AppNavigation(
             )
         }
 
-        // Thêm sản phẩm
         composable("add_product") {
             AddProductScreen(
                 navcontroller = navController,
@@ -102,7 +105,6 @@ fun AppNavigation(
             )
         }
 
-        // Sửa sản phẩm
         composable(
             route = "add_product/{productId}",
             arguments = listOf(navArgument("productId") {
@@ -123,7 +125,6 @@ fun AppNavigation(
             )
         }
 
-        // Trang chi tiết sản phẩm
         composable("product_detail/{productId}") { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
             val product = productViewModel.getProductById(productId)
@@ -145,6 +146,7 @@ fun AppNavigation(
                 )
             }
         }
+
         composable(
             route = "all_products?featured={featured}",
             arguments = listOf(
@@ -159,10 +161,17 @@ fun AppNavigation(
             AllProductsScreen(
                 productViewModel = productViewModel,
                 navController = navController,
-                category = null, // hoặc "" tùy theo bạn setup
+                category = null,
                 featured = featured
             )
         }
 
+        composable("order_history") {
+            OrderHistoryScreen(navController = navController, orderViewModel = orderViewModel)
+        }
+
+        composable("order_detail/{id}") { backStackEntry ->
+            OrderDetailScreen(backStackEntry = backStackEntry, orderViewModel = orderViewModel)
+        }
     }
 }
