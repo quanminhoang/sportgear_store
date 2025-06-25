@@ -171,7 +171,7 @@ fun AppNavigation(
         }
 
         composable("order_detail/{id}") { backStackEntry ->
-            OrderDetailScreen(backStackEntry = backStackEntry, orderViewModel = orderViewModel)
+            OrderDetailScreen(backStackEntry = backStackEntry, orderViewModel = orderViewModel, navController = navController)
         }
     }
 }

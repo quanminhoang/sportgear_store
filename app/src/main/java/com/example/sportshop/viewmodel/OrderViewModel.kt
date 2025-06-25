@@ -2,6 +2,7 @@ package com.example.sportshop.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.sportshop.model.data.OrderFirebase
+import com.example.sportshop.model.data.OrderItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,22 +16,52 @@ class OrderViewModel : ViewModel() {
     fun fetchOrders() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         db.collection("orders")
-            .whereEqualTo("userId", userId)
+            .whereEqualTo("uid", userId)
             .get()
             .addOnSuccessListener { result ->
-                val list = result.mapNotNull { it.toObject(OrderFirebase::class.java) }
+                val list = result.mapNotNull { doc ->
+                    val data = doc.data
+                    OrderFirebase(
+                        id = doc.id,
+                        uid = data["uid"] as? String ?: "",
+                        address = data["address"] as? String ?: "",
+                        paymentMethod = data["paymentMethod"] as? String ?: "",
+                        totalPrice = when (val tp = data["totalPrice"]) {
+                            is Long -> tp.toInt()
+                            is Int -> tp
+                            is Double -> tp.toInt()
+                            else -> 0
+                        },
+                        status = data["status"] as? String ?: "",
+                        timestamp = data["timestamp"] as? Long ?: 0L,
+                        items = (data["items"] as? List<Map<String, Any>>)?.map { item ->
+                            OrderItem(
+                                id = item["id"] as? String ?: "",
+                                name = item["name"] as? String ?: "",
+                                imageUrl = item["imageUrl"] as? String ?: "",
+                                price = when (val p = item["price"]) {
+                                    is Long -> p.toInt()
+                                    is Int -> p
+                                    is Double -> p.toInt()
+                                    else -> 0
+                                },
+                                quantity = when (val q = item["quantity"]) {
+                                    is Long -> q.toInt()
+                                    is Int -> q
+                                    is Double -> q.toInt()
+                                    else -> 0
+                                }
+                            )
+                        } ?: emptyList()
+                    )
+                }
                 _orders.value = list
             }
     }
 
     fun updateOrderStatus(orderId: String, newStatus: String) {
         db.collection("orders")
-            .whereEqualTo("orderId", orderId)
-            .get()
-            .addOnSuccessListener { docs ->
-                for (doc in docs) {
-                    doc.reference.update("status", newStatus)
-                }
-            }
+            .document(orderId)
+            .update("status", newStatus)
     }
 }

@@ -20,6 +20,11 @@ class ProductViewModel : ViewModel() {
     private val _featuredProducts = MutableStateFlow<List<Product>>(emptyList())
     val featuredProducts: StateFlow<List<Product>> = _featuredProducts
 
+    private val _productsByCategory = mutableMapOf<String, MutableStateFlow<List<Product>>>()
+    fun getProductsByCategory(category: String): StateFlow<List<Product>> {
+        return _productsByCategory.getOrPut(category) { MutableStateFlow(emptyList()) }
+    }
+
     init {
         loadFromFirestore()
     }
@@ -48,24 +53,17 @@ class ProductViewModel : ViewModel() {
         }
     }
 
-
-    // Phương thức để thêm sản phẩm vào Firestore
     fun addProduct(product: Product) {
         viewModelScope.launch {
-            // Add the product without the ID first
             Firebase.firestore.collection("products")
                 .add(product)
                 .addOnSuccessListener { documentReference ->
-                    // Get the auto-generated ID from Firestore
                     val productWithId = product.copy(id = documentReference.id)
-
-                    // Now update the product in Firestore with the new ID
                     Firebase.firestore.collection("products")
                         .document(documentReference.id)
                         .set(productWithId)
                         .addOnSuccessListener {
-                            // Successfully updated product with the ID
-                            loadFromFirestore()  // Reload the product list
+                            loadFromFirestore()
                         }
                         .addOnFailureListener { e ->
                             // Handle failure to set the product ID
@@ -76,12 +74,6 @@ class ProductViewModel : ViewModel() {
                 }
         }
     }
-
-    private val _productsByCategory = mutableMapOf<String, MutableStateFlow<List<Product>>>()
-    fun getProductsByCategory(category: String): StateFlow<List<Product>> {
-        return _productsByCategory.getOrPut(category) { MutableStateFlow(emptyList()) }
-    }
-
 
     fun getProductById(productId: String): Product? {
         return _products.value.find { it.id == productId }

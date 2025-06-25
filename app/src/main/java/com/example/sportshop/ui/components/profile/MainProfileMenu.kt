@@ -28,8 +28,6 @@ fun MainProfileMenu(
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE)
     val currentLanguage = sharedPreferences.getString("language", "Eng") ?: "Eng"
-
-    var notificationSetting by remember { mutableStateOf("Allow") }
     var showSettingsSheet: Boolean by remember { mutableStateOf(false) }
     var theme by remember { mutableStateOf(themeManager.currentTheme) }
     var language by remember { mutableStateOf(currentLanguage) }
@@ -57,12 +55,8 @@ fun MainProfileMenu(
         name = name,
         email = email,
         photoUrl = photoUrl,
-        notificationSetting = notificationSetting,
         onProfileClick = { navController.navigate("edit_profile") },
         onSettingsClick = { showSettingsSheet = true },
-        onNotificationToggle = {
-            notificationSetting = if (notificationSetting == "Allow") "Mute" else "Allow"
-        },
         onLogout = {
             FirebaseAuth.getInstance().signOut()
             navController.navigate("welcome") {
