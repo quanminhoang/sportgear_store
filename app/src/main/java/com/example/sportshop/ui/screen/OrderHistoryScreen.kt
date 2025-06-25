@@ -31,13 +31,21 @@ import com.example.sportshop.R
 @Composable
 fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewModel) {
     val orders by orderViewModel.orders.collectAsState()
-    var selectedStatus by remember { mutableStateOf("Tất cả") }
+    var selectedStatus by remember { mutableStateOf("Chờ xác nhận") }
 
     LaunchedEffect(Unit) {
         orderViewModel.fetchOrders()
     }
 
-    val filteredOrders = orders.filter { selectedStatus == "Tất cả" || it.status == selectedStatus }
+    val statusMap = mapOf(
+        "Chờ xác nhận" to "Chờ xác nhận",
+        "Đang giao" to "Đang giao",
+        "Đã giao" to "Đã giao",
+        "Đã huỷ" to "Đã huỷ"
+    )
+
+    val filteredOrders = orders
+        .filter { selectedStatus == "Tất cả" || it.status.trim().lowercase() == statusMap[selectedStatus]?.trim()?.lowercase() }
         .sortedByDescending { it.timestamp }
 
     Scaffold(topBar = {
@@ -67,10 +75,12 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
             Row(
                 Modifier.padding(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                listOf("Chờ xác nhận", "Đang giao", "Đã giao").forEach { status ->
-                    FilterChip(selected = selectedStatus == status,
+                listOf("Chờ xác nhận", "Đang giao", "Đã giao", "Đã huỷ", "hehe").forEach { status ->
+                    FilterChip(
+                        selected = selectedStatus == status,
                         onClick = { selectedStatus = status },
-                        label = { Text(status) })
+                        label = { Text(status) }
+                    )
                 }
             }
 
@@ -184,14 +194,19 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
                                             modifier = Modifier.fillMaxWidth()
                                         )
                                         if (order.items.size > 1) {
-                                            Text(
-                                                text = ".......",
-                                                style = MaterialTheme.typography.bodyLarge,
-                                                color = MaterialTheme.colorScheme.onSurface,
-                                                textAlign = TextAlign.Center,
-                                                fontWeight = FontWeight.Bold,
-                                                modifier = Modifier.fillMaxWidth()
-                                            )
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(vertical = 4.dp),
+                                                horizontalArrangement = Arrangement.Center
+                                            ) {
+                                                Text(
+                                                    text = "...",
+                                                    style = MaterialTheme.typography.bodyLarge,
+                                                    color = MaterialTheme.colorScheme.primary,
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            }
                                         }
                                     }
                                 }
