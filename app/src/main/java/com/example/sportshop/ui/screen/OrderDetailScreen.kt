@@ -32,7 +32,7 @@ fun OrderDetailScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = if (orderId.isNotBlank()) "Chi tiết đơn hàng #$orderId" else "Lỗi: Không tìm thấy đơn hàng",
+                        text = "Chi tiết đơn hàng",
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 },
@@ -95,6 +95,8 @@ fun OrderDetailScreen(
             } else {
                 Text("Mã đơn hàng: ${order.id}")
                 Text("Địa chỉ: ${order.address}")
+                Text("Người nhận: ${order.fullName}")
+                Text("Số điện thoại: ${order.phone}")
                 Text("Phương thức thanh toán: ${order.paymentMethod}")
                 Text("Tổng tiền: ${numberFormat.format(order.totalPrice)}")
                 Text("Trạng thái: ${order.status}")

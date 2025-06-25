@@ -2,6 +2,7 @@ package com.example.sportshop.ui.components.profile
 
 import UserViewModel
 import android.content.Context
+import android.util.Log
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext

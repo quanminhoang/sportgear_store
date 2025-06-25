@@ -9,10 +9,11 @@
         <option name="gradleJvm" value="jbr-21" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/../../Lập Trình Thiết Bị Di Động/sportgear_store" />
+            <option value="$PROJECT_DIR$/../../Lập Trình Thiết Bị Di Động/sportgear_store/app" />
           </set>
         </option>
+        <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

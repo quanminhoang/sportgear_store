@@ -1,11 +1,13 @@
 package com.example.sportshop.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sportshop.model.data.CartDataStore
 import com.example.sportshop.model.data.CartItem
 import com.example.sportshop.model.data.Order
+import com.example.sportshop.model.data.OrderItem
 import com.example.sportshop.model.data.Product
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -74,6 +76,8 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun placeOrder(
+        fullName: String,
+        phone: String,
         address: String,
         paymentMethod: String,
         onSuccess: () -> Unit,
@@ -83,11 +87,23 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch {
             val firestore = FirebaseFirestore.getInstance()
+            Log.i("CartViewModel", "Placing order for user: ${cartItems.value}")
             val order = Order(
+                uid = userId,
+                fullName = fullName,
+                phone = phone,
                 address = address,
                 paymentMethod = paymentMethod,
                 totalPrice = cartItems.value.sumOf { it.price * it.quantity },
-                items = cartItems.value
+                items = cartItems.value.map {
+                    OrderItem(
+                        id = it.id ?: "",
+                        name = it.name,
+                        imageUrl = it.imageUrl,
+                        price = it.price,
+                        quantity = it.quantity
+                    )
+                }
             )
 
             firestore.collection("orders")
