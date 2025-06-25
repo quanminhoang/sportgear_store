@@ -150,6 +150,8 @@ fun CheckoutScreen(navController: NavController, cartViewModel: CartViewModel, u
 
                     cartViewModel.placeOrder(
                         address = address,
+                        fullName = fullName,
+                        phone = phone,
                         paymentMethod = paymentMethod,
                         onSuccess = {
                             showSuccessDialog = true

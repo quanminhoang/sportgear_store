@@ -1,5 +1,6 @@
 package com.example.sportshop.ui.theme
 
+import android.util.Log
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
