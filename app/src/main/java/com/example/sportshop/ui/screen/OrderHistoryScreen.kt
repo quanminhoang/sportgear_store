@@ -31,7 +31,7 @@ import com.example.sportshop.R
 @Composable
 fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewModel) {
     val orders by orderViewModel.orders.collectAsState()
-    var selectedStatus by remember { mutableStateOf("Tất cả") }
+    var selectedStatus by remember { mutableStateOf("Chờ xác nhận") }
 
     LaunchedEffect(Unit) {
         orderViewModel.fetchOrders()
@@ -67,7 +67,7 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
             Row(
                 Modifier.padding(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                listOf("Chờ xác nhận", "Đang giao", "Đã giao").forEach { status ->
+                listOf("Chờ xác nhận", "Đang giao", "Đã giao","Đã hủy").forEach { status ->
                     FilterChip(selected = selectedStatus == status,
                         onClick = { selectedStatus = status },
                         label = { Text(status) })

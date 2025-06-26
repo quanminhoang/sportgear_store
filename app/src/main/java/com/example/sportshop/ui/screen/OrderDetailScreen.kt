@@ -1,14 +1,17 @@
 package com.example.sportshop.ui.screen
 
 import Btn_Search
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
+import com.example.sportshop.viewmodel.CartViewModel
 import com.example.sportshop.viewmodel.OrderViewModel
 import com.example.sportshop.ui.components.buttons.Btn_Back
 import java.text.NumberFormat
@@ -20,8 +23,10 @@ import java.util.*
 fun OrderDetailScreen(
     navController: NavController,
     backStackEntry: NavBackStackEntry,
-    orderViewModel: OrderViewModel
+    orderViewModel: OrderViewModel,
+    cartViewModel: CartViewModel
 ) {
+    val context = LocalContext.current
     val orderId = backStackEntry.arguments?.getString("id") ?: ""
     val orders by orderViewModel.orders.collectAsState()
     val order = orders.find { it.id == orderId }
@@ -51,16 +56,51 @@ fun OrderDetailScreen(
             )
         },
         bottomBar = {
-            if (orderId.isNotBlank() && order != null) {
-                Button(
-                    onClick = { showDialog = true },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Text("Hủy đơn hàng")
+            if (order != null) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    if (order.status == "Đã hủy") {
+                        Button(
+                            onClick = {
+                                cartViewModel.reorder(
+                                    order = order,
+                                    onSuccess = {
+                                        Toast.makeText(
+                                            context,
+                                            "Mua lại thành công!",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        navController.popBackStack()
+                                    },
+                                    onFailure = {
+                                        Toast.makeText(
+                                            context,
+                                            "Lỗi khi mua lại: ${it.message}",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                )
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Text("Mua lại")
+                        }
+                    }
+
+                    if (order.status != "Đã hủy") {
+                        Button(
+                            onClick = { showDialog = true },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        ) {
+                            Text("Hủy đơn hàng")
+                        }
+                    }
                 }
             }
+
             if (showDialog && order != null) {
                 AlertDialog(
                     onDismissRequest = { showDialog = false },
@@ -69,6 +109,7 @@ fun OrderDetailScreen(
                     confirmButton = {
                         TextButton(onClick = {
                             orderViewModel.updateOrderStatus(orderId, "Đã hủy")
+                            navController.popBackStack()
                             showDialog = false
                         }) {
                             Text("Đồng ý")
@@ -91,7 +132,10 @@ fun OrderDetailScreen(
                 .padding(16.dp)
         ) {
             if (order == null) {
-                Text("Không tìm thấy thông tin đơn hàng. Vui lòng quay lại.", color = MaterialTheme.colorScheme.error)
+                Text(
+                    "Không tìm thấy thông tin đơn hàng. Vui lòng quay lại.",
+                    color = MaterialTheme.colorScheme.error
+                )
             } else {
                 Text("Mã đơn hàng: ${order.id}")
                 Text("Địa chỉ: ${order.address}")
