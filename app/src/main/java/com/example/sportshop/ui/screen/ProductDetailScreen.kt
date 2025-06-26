@@ -106,12 +106,6 @@ fun ProductDetailScreen(
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(64.dp)
                         )
-                        Button(
-                            onClick = { reloadProduct() },
-                            modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp)
-                        ) {
-                            Text("Tải lại sản phẩm")
-                        }
                     }
                     if (isRefreshing) {
                         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
