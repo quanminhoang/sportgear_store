@@ -52,7 +52,12 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
     )
 
     val filteredOrders = orders
-        .filter { selectedStatus == "Tất cả" || it.status.trim().lowercase() == statusMap[selectedStatus]?.trim()?.lowercase() }
+        .filter {
+            selectedStatus == "Tất cả" ||
+            (
+                it.status.trim().lowercase() == statusMap[selectedStatus]?.trim()?.lowercase()
+            )
+        }
         .sortedByDescending { it.timestamp }
 
     val currentBackStackEntry = navController.currentBackStackEntryAsState().value

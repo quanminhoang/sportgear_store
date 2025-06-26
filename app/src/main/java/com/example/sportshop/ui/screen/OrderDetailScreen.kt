@@ -1,6 +1,7 @@
 package com.example.sportshop.ui.screen
 
 import Btn_Search
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -31,19 +32,26 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.sportshop.viewmodel.OrderViewModel
 import com.example.sportshop.ui.components.buttons.Btn_Back
+import com.example.sportshop.viewmodel.CartViewModel
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderDetailScreen(
-    navController: NavController, backStackEntry: NavBackStackEntry, orderViewModel: OrderViewModel
+    navController: NavController,
+    backStackEntry: NavBackStackEntry,
+    orderViewModel: OrderViewModel,
+    cartViewModel: CartViewModel
 ) {
     val orderId = backStackEntry.arguments?.getString("id") ?: ""
     val orders by orderViewModel.orders.collectAsState()
     val order = orders.find { it.id == orderId }
     var showDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     if (order == null) {
         Box(
@@ -90,7 +98,7 @@ fun OrderDetailScreen(
             )
             )
         }, bottomBar = {
-            if (orderId.isNotBlank() && order != null) {
+            if (order.status != "Đã hủy") {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -116,6 +124,60 @@ fun OrderDetailScreen(
                     }
                 }
             }
+
+            if (order.status == "Đã hủy") {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surface)
+                        .padding(top = 8.dp, bottom = 32.dp, start = 24.dp, end = 24.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    OutlinedButton(
+                        onClick = {
+                            // Thêm lại các sản phẩm vào giỏ hàng thay vì mua lại ngay
+                            order.items.forEach { item ->
+                                cartViewModel.addToCart(
+                                    com.example.sportshop.model.data.CartItem(
+                                        id = item.id,
+                                        name = item.name,
+                                        price = item.price,
+                                        imageUrl = item.imageUrl,
+                                        quantity = item.quantity
+                                    )
+                                )
+                            }
+                            Toast.makeText(
+                                context,
+                                "Đã thêm sản phẩm vào giỏ hàng!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            // Chuyển sang tab giỏ hàng (CartTab)
+                            navController.popBackStack("home", inclusive = false)
+                            navController.navigate("home")
+                            // Gửi sự kiện sang MainScreen để chuyển sang tab Cart
+                            navController.currentBackStackEntry
+                                ?.savedStateHandle
+                                ?.set("switch_to_cart_tab", true)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = Color.White
+                        ),
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    ) {
+                        Text("Mua lại")
+                    }
+                }
+            }
+
             if (showDialog && order != null) {
                 AlertDialog(onDismissRequest = { showDialog = false },
                     title = { Text("Xác nhận hủy đơn") },
@@ -123,6 +185,7 @@ fun OrderDetailScreen(
                     confirmButton = {
                         TextButton(onClick = {
                             orderViewModel.updateOrderStatus(orderId, "Đã hủy")
+                            navController.popBackStack()
                             showDialog = false
                         }) {
                             Text("Đồng ý")

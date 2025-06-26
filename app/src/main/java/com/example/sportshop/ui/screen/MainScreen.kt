@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -26,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.sportshop.components.products.ProductTabContent
 import com.example.sportshop.components.profile.ProfileTabContent
 import com.example.sportshop.navigation.bottomNavigationItems
@@ -54,6 +56,17 @@ fun MainScreen(
     val themeManager = remember { ThemeManager(context) }
     val adminViewModel: AdminViewModel = viewModel()
 
+    // Lắng nghe sự kiện chuyển tab từ OrderDetailScreen
+    val currentBackStackEntry = navController.currentBackStackEntryAsState().value
+    val switchToCartTab = currentBackStackEntry?.savedStateHandle?.get<Boolean>("switch_to_cart_tab") == true
+    LaunchedEffect(switchToCartTab) {
+        if (switchToCartTab) {
+            scope.launch {
+                pagerState.scrollToPage(2) // 2 là index của CartTab
+            }
+            currentBackStackEntry?.savedStateHandle?.set("switch_to_cart_tab", false)
+        }
+    }
 
     Scaffold(containerColor = MaterialTheme.colorScheme.background, topBar = {
         Column {

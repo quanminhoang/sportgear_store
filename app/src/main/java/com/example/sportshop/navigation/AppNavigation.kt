@@ -171,7 +171,17 @@ fun AppNavigation(
         }
 
         composable("order_detail/{id}") { backStackEntry ->
-            OrderDetailScreen(backStackEntry = backStackEntry, orderViewModel = orderViewModel, navController = navController)
+            // Lấy userId hiện tại từ FirebaseAuth để đảm bảo CartViewModel có userId khi mua lại
+            val userId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+            if (userId != null) {
+                cartViewModel.setUser(userId)
+            }
+            OrderDetailScreen(
+                backStackEntry = backStackEntry,
+                orderViewModel = orderViewModel,
+                navController = navController,
+                cartViewModel = cartViewModel
+            )
         }
     }
 }
