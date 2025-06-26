@@ -22,9 +22,10 @@ class OrderViewModel : ViewModel() {
                 val list = result.mapNotNull { doc ->
                     val data = doc.data
                     Order(
-                        id = doc.id,
+                        id = data["id"] as? String ?: doc.id,
                         uid = data["uid"] as? String ?: "",
                         fullName = data["fullName"] as? String ?: "",
+                        phone = data["phone"] as? String ?: "",
                         address = data["address"] as? String ?: "",
                         paymentMethod = data["paymentMethod"] as? String ?: "",
                         totalPrice = when (val tp = data["totalPrice"]) {
@@ -62,7 +63,12 @@ class OrderViewModel : ViewModel() {
 
     fun updateOrderStatus(orderId: String, newStatus: String) {
         db.collection("orders")
-            .document(orderId)
-            .update("status", newStatus)
+            .whereEqualTo("id", orderId)
+            .get()
+            .addOnSuccessListener { result ->
+                for (doc in result) {
+                    doc.reference.update("status", newStatus)
+                }
+            }
     }
 }

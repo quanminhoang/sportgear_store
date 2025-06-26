@@ -21,7 +21,7 @@ fun ProfileCard(
     onProfileClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onLogout: () -> Unit,
-    onOrderHistoryClick: () -> Unit // ✅ Thêm callback mới
+    onOrderHistoryClick: () -> Unit
 ) {
     Column {
         Column(

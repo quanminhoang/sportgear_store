@@ -12,7 +12,7 @@ fun ProfileTabContent(
     navController: NavController,
     themeManager: ThemeManager,
     userViewModel: UserViewModel,
-    reload: () -> Unit // thêm tham số reload
+    reload: () -> Unit
 ) {
     val userViewModel: UserViewModel = viewModel()
 
@@ -20,6 +20,6 @@ fun ProfileTabContent(
         navController = navController,
         themeManager = themeManager,
         userViewModel = userViewModel,
-        reloadApp = reload // truyền đúng tên tham số
+        reloadApp = reload
     )
 }

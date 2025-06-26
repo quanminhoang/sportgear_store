@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -66,7 +66,7 @@ fun MainScreen(
                 2 -> CartTopBar()
                 3 -> ProfileTopBar()
             }
-            Divider(
+            HorizontalDivider(
                 color = MaterialTheme.colorScheme.outline, thickness = 1.dp
             )
         }

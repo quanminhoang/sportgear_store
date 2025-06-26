@@ -19,7 +19,7 @@ fun SettingsBottomSheet(
     onDismiss: () -> Unit,
     reloadApp: () -> Unit // vẫn giữ để không lỗi, nhưng không dùng nữa
 ) {
-    // Luôn dùng theme hiện tại của app, không dùng theme đang chọn tạm thời
+
     ModalBottomSheet(
         onDismissRequest = onDismiss
     ) {

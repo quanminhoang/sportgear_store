@@ -26,12 +26,19 @@ import java.util.Locale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
 import com.example.sportshop.R
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewModel) {
     val orders by orderViewModel.orders.collectAsState()
-    var selectedStatus by remember { mutableStateOf("Chờ xác nhận") }
+    var selectedStatus by rememberSaveable { mutableStateOf("Đã giao") }
 
     LaunchedEffect(Unit) {
         orderViewModel.fetchOrders()
@@ -41,12 +48,34 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
         "Chờ xác nhận" to "Chờ xác nhận",
         "Đang giao" to "Đang giao",
         "Đã giao" to "Đã giao",
-        "Đã huỷ" to "Đã huỷ"
+        "Đã hủy" to "Đã hủy"
     )
 
     val filteredOrders = orders
         .filter { selectedStatus == "Tất cả" || it.status.trim().lowercase() == statusMap[selectedStatus]?.trim()?.lowercase() }
         .sortedByDescending { it.timestamp }
+
+    val currentBackStackEntry = navController.currentBackStackEntryAsState().value
+    val restoredStatus = currentBackStackEntry?.savedStateHandle?.get<String>("order_status_restore")
+    var restoredFlag by rememberSaveable { mutableStateOf(false) }
+    // Sửa logic: chỉ set filter khi quay lại từ detail, không tự động set lại filter khi user đã chọn filter mới
+    LaunchedEffect(restoredStatus) {
+        if (
+            restoredStatus != null &&
+            restoredStatus != selectedStatus &&
+            listOf("Chờ xác nhận", "Đang giao", "Đã giao", "Đã hủy").contains(restoredStatus) &&
+            !restoredFlag
+        ) {
+            selectedStatus = restoredStatus
+            restoredFlag = true
+            currentBackStackEntry?.savedStateHandle?.remove<String>("order_status_restore")
+        }
+    }
+    // Khi user click filterchip, reset flag để cho phép chuyển filter bình thường
+    fun onFilterChipClick(status: String) {
+        selectedStatus = status
+        restoredFlag = false
+    }
 
     Scaffold(topBar = {
         TopAppBar(
@@ -75,10 +104,10 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
             Row(
                 Modifier.padding(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                listOf("Chờ xác nhận", "Đang giao", "Đã giao", "Đã huỷ", "hehe").forEach { status ->
+                listOf("Chờ xác nhận", "Đang giao", "Đã giao", "Đã hủy").forEach { status ->
                     FilterChip(
                         selected = selectedStatus == status,
-                        onClick = { selectedStatus = status },
+                        onClick = { onFilterChipClick(status) },
                         label = { Text(status) }
                     )
                 }
@@ -91,6 +120,8 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
                             .clickable {
+                                // Khi vào chi tiết, truyền trạng thái hiện tại
+                                navController.currentBackStackEntry?.savedStateHandle?.set("order_status_restore", selectedStatus)
                                 navController.navigate("order_detail/${order.id}")
                             }, colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.surface
@@ -125,19 +156,24 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
                                     Box(
                                         modifier = Modifier
                                             .size(80.dp)
-                                            .background(Color.LightGray)
+                                            .background(Color.LightGray, shape = RoundedCornerShape(12.dp))
                                             .border(
                                                 width = 1.dp,
                                                 color = MaterialTheme.colorScheme.outline,
-                                                shape = MaterialTheme.shapes.medium
-                                            ), contentAlignment = Alignment.Center
+                                                shape = RoundedCornerShape(12.dp)
+                                            ),
+                                        contentAlignment = Alignment.Center
                                     ) {
                                         if (!imageUrl.isNullOrBlank() && imageUrl != "null") {
-                                            AsyncImage(model = imageUrl,
+                                            AsyncImage(
+                                                model = imageUrl,
                                                 contentDescription = "Order Image",
-                                                modifier = Modifier.fillMaxSize(),
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .clip(RoundedCornerShape(12.dp)),
                                                 contentScale = ContentScale.Crop,
-                                                onState = { state -> imageState = state })
+                                                onState = { state -> imageState = state }
+                                            )
                                             if (imageState is AsyncImagePainter.State.Loading) {
                                                 CircularProgressIndicator()
                                             }
@@ -145,7 +181,9 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
                                                 Image(
                                                     painter = painterResource(id = R.drawable.ic_no_picture_available),
                                                     contentDescription = "No Image",
-                                                    modifier = Modifier.fillMaxSize(),
+                                                    modifier = Modifier
+                                                        .fillMaxSize()
+                                                        .clip(RoundedCornerShape(12.dp)),
                                                     contentScale = ContentScale.Crop
                                                 )
                                             }
@@ -153,7 +191,9 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
                                             Image(
                                                 painter = painterResource(id = R.drawable.ic_no_picture_available),
                                                 contentDescription = "No Image",
-                                                modifier = Modifier.fillMaxSize(),
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .clip(RoundedCornerShape(12.dp)),
                                                 contentScale = ContentScale.Crop
                                             )
                                         }
@@ -201,9 +241,9 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
                                                 horizontalArrangement = Arrangement.Center
                                             ) {
                                                 Text(
-                                                    text = "...",
+                                                    text = ".......",
                                                     style = MaterialTheme.typography.bodyLarge,
-                                                    color = MaterialTheme.colorScheme.primary,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                     fontWeight = FontWeight.Bold
                                                 )
                                             }
@@ -218,8 +258,13 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
                             val formattedTotal = NumberFormat.getNumberInstance(Locale("vi", "VN"))
                                 .format(order.totalPrice)
                             Text(
-                                text = "Tổng số tiền ($totalQuantity sản phẩm): ₫$formattedTotal",
-                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                                text = buildAnnotatedString {
+                                    append("Tổng số tiền ($totalQuantity sản phẩm): ")
+                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                        append("₫$formattedTotal")
+                                    }
+                                },
+                                style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 textAlign = TextAlign.End,
                                 modifier = Modifier.fillMaxWidth()

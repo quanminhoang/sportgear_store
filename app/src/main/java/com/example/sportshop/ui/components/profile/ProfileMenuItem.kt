@@ -35,7 +35,7 @@ fun ProfileMenuItem(icon: ImageVector, title: String, onClick: () -> Unit) {
                 contentDescription = "$title icon",
                 modifier = Modifier
                     .size(32.dp)
-                    .padding(end = 8.dp), // khoảng cách giữa icon và text
+                    .padding(end = 8.dp),
                 tint = MaterialTheme.colorScheme.onSurface
             )
         },
