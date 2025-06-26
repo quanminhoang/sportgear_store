@@ -78,4 +78,31 @@ class ProductViewModel : ViewModel() {
     fun getProductById(productId: String): Product? {
         return _products.value.find { it.id == productId }
     }
+
+    fun reloadProductById(productId: String, onDone: () -> Unit = {}) {
+        viewModelScope.launch {
+            Firebase.firestore.collection("products")
+                .document(productId)
+                .get()
+                .addOnSuccessListener { doc ->
+                    val updatedProduct = doc.toObject(Product::class.java)?.copy(id = doc.id)
+                    if (updatedProduct != null) {
+                        val updatedList = _products.value.map {
+                            if (it.id == productId) updatedProduct else it
+                        }
+                        _products.value = updatedList
+                        _allProducts.value = updatedList
+                        // Cập nhật lại các nhóm category nếu cần
+                        val grouped = updatedList.groupBy { it.category.orEmpty() }
+                        grouped.forEach { (category, productList) ->
+                            _productsByCategory.getOrPut(category) { MutableStateFlow(emptyList()) }.value = productList
+                        }
+                    }
+                    onDone()
+                }
+                .addOnFailureListener {
+                    onDone()
+                }
+        }
+    }
 }

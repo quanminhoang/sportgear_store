@@ -27,7 +27,7 @@ fun ProductListWrapper(
     if (displayProducts.isEmpty()) {
         Text("Không tìm thấy sản phẩm")
     } else {
-        // Hiển thị danh sách sản phẩm bằng SearchProductCard riêng cho search
+
         Column {
             displayProducts.forEach { product ->
                 SearchProductCard(

@@ -127,7 +127,9 @@ fun AppNavigation(
 
         composable("product_detail/{productId}") { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
-            val product = productViewModel.getProductById(productId)
+            // Lấy lại product mới nhất từ adminViewModel nếu có, nếu không thì từ productViewModel
+            val product = adminViewModel.products.find { it.id == productId }
+                ?: productViewModel.getProductById(productId)
 
             if (product != null) {
                 ProductDetailScreen(
@@ -142,7 +144,8 @@ fun AppNavigation(
                             quantity = 1
                         )
                         cartViewModel.addToCart(cartItem)
-                    }
+                    },
+                    productViewModel = productViewModel
                 )
             }
         }

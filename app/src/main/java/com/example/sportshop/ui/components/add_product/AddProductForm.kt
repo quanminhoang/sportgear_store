@@ -2,6 +2,8 @@ package com.example.sportshop.ui.components.add_product
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -75,14 +77,57 @@ fun AddProductForm(
                 // Image preview if URL is not empty
                 if (imageUrl.isNotBlank()) {
                     Spacer(modifier = Modifier.height(8.dp))
-                    AsyncImage(
-                        model = imageUrl,
-                        contentDescription = "Preview",
+                    var imageLoading by remember { mutableStateOf(true) }
+                    var imageError by remember { mutableStateOf(false) }
+                    Box(
                         modifier = Modifier
                             .height(150.dp)
-                            .fillMaxWidth(),
-                        contentScale = ContentScale.Fit
-                    )
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.surfaceVariant, shape = MaterialTheme.shapes.medium),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (!imageError) {
+                            AsyncImage(
+                                model = imageUrl,
+                                contentDescription = "Preview",
+                                modifier = Modifier
+                                    .matchParentSize(),
+                                contentScale = ContentScale.Fit,
+                                onLoading = { imageLoading = true },
+                                onSuccess = {
+                                    imageLoading = false
+                                    imageError = false
+                                },
+                                onError = {
+                                    imageLoading = false
+                                    imageError = true
+                                }
+                            )
+                        }
+                        if (imageLoading) {
+                            CircularProgressIndicator()
+                        }
+                        if (imageError) {
+                            // Hiển thị hình "No image available" (dùng icon mặc định của Material)
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.BrokenImage,
+                                    contentDescription = "No image available",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.size(48.dp)
+                                )
+                                Text(
+                                    text = "No image available",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
                 }
 
                 // Product name, price, category, and description fields

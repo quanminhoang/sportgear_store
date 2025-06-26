@@ -42,8 +42,13 @@ class AdminViewModel : ViewModel() {
         val data = product.copy(id = null) // Nếu id là null, thêm mới
         if (product.id == null) {
             db.collection("products").add(data)
+                .addOnSuccessListener { docRef ->
+                    // Sau khi thêm mới, cập nhật lại document với id vừa tạo
+                    val productWithId = product.copy(id = docRef.id)
+                    db.collection("products").document(docRef.id).set(productWithId)
+                }
         } else {
-            db.collection("products").document(product.id).set(data)
+            db.collection("products").document(product.id).set(product)
         }
     }
 

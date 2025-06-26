@@ -71,7 +71,7 @@ fun OrderDetailScreen(
     }
 
     BackHandler {
-        order?.status?.let { status ->
+        order.status.let { status ->
             navController.previousBackStackEntry
                 ?.savedStateHandle
                 ?.set("order_status_restore", status)
@@ -199,7 +199,7 @@ fun OrderDetailScreen(
             }
         }
     ) { padding ->
-        val numberFormat = NumberFormat.getCurrencyInstance(Locale("vi", "VN"))
+
         val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
         Column(
             modifier = Modifier
@@ -212,20 +212,19 @@ fun OrderDetailScreen(
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
 
-                val statusBgColor = when (order?.status) {
+                val statusBgColor = when (order.status) {
                     "Chờ xác nhận" -> Color.Yellow.copy(alpha = 0.2f)
                     "Đang giao" -> Color.Cyan.copy(alpha = 0.2f)
                     "Đã giao" -> Color.Green.copy(alpha = 0.2f)
                     "Đã hủy" -> Color.Red.copy(alpha = 0.2f)
                     else -> MaterialTheme.colorScheme.surfaceVariant
                 }
-                val statusText = when (order?.status) {
+                val statusText = when (order.status) {
                     "Chờ xác nhận" -> "Cảm ơn bạn đã đặt hàng! Đơn hàng của bạn hiện đang chờ xác nhận."
                     "Đang giao" -> "Đơn hàng đang được giao đến bạn. Vui lòng chú ý điện thoại"
                     "Đã giao" -> "Đơn hàng đã hoàn thành"
                     "Đã hủy" -> "Đã huỷ đơn hàng"
-                    null, "" -> "Trạng thái không xác định"
-                    else -> "Trạng thái: ${order?.status}"
+                    else -> "Trạng thái không xác định"
                 }
                 Row(
                     modifier = Modifier
@@ -264,20 +263,20 @@ fun OrderDetailScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = order?.fullName ?: "Không xác định",
+                                    text = order.fullName,
                                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                                     color = MaterialTheme.colorScheme.onSurface,
                                     maxLines = 1
                                 )
                                 Text(
-                                    text = " " + (order?.phone ?: "Không xác định"),
+                                    text = " " + (order.phone),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     maxLines = 1
                                 )
                             }
                             Text(
-                                text = order?.address ?: "Không xác định",
+                                text = order.address,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -299,7 +298,7 @@ fun OrderDetailScreen(
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    order?.items?.forEach { item ->
+                    order.items.forEach { item ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -403,7 +402,7 @@ fun OrderDetailScreen(
                         color = MaterialTheme.colorScheme.outline
                     )
                     val formattedTotal = NumberFormat.getNumberInstance(Locale("vi", "VN"))
-                        .format(order?.totalPrice ?: 0.0)
+                        .format(order.totalPrice)
 
                     Text(
                         text = buildAnnotatedString {
@@ -438,7 +437,7 @@ fun OrderDetailScreen(
                             textAlign = TextAlign.Start
                         )
                         Text(
-                            text = order?.id ?: "",
+                            text = order.id,
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.weight(1f),
@@ -460,7 +459,7 @@ fun OrderDetailScreen(
                             textAlign = TextAlign.Start
                         )
                         Text(
-                            text = order?.paymentMethod ?: "",
+                            text = order.paymentMethod,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.weight(1f),

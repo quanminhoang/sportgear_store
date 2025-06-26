@@ -73,7 +73,7 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
         ) {
             selectedStatus = restoredStatus
             restoredFlag = true
-            currentBackStackEntry?.savedStateHandle?.remove<String>("order_status_restore")
+            currentBackStackEntry.savedStateHandle.remove<String>("order_status_restore")
         }
     }
     // Khi user click filterchip, reset flag để cho phép chuyển filter bình thường
