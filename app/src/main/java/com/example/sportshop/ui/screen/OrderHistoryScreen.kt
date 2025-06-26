@@ -38,7 +38,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 @Composable
 fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewModel) {
     val orders by orderViewModel.orders.collectAsState()
-    var selectedStatus by rememberSaveable { mutableStateOf("Đã giao") }
+    var selectedStatus by rememberSaveable { mutableStateOf("Chờ xác nhận") }
 
     LaunchedEffect(Unit) {
         orderViewModel.fetchOrders()
