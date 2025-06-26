@@ -32,7 +32,7 @@ fun ProductCard(product: Product, onClick: (String) -> Unit) {
             .padding(8.dp)
     ) {
         AsyncImage(
-            model = product.imageUrl,
+            model = product.imageUrls.firstOrNull() ?: "",
             contentDescription = product.name,
             contentScale = ContentScale.Crop,
             modifier = Modifier

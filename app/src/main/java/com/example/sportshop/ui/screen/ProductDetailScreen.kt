@@ -4,25 +4,21 @@ import Btn_Search
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import com.example.sportshop.model.data.Product
 import com.example.sportshop.ui.components.buttons.Btn_Back
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.LayoutDirection
+import com.example.sportshop.ui.components.ult.ProductImagePager
 import com.example.sportshop.viewmodel.ProductViewModel
-import com.example.sportshop.ui.components.LoadingRecipeShimmer
+import com.example.sportshop.ui.components.ult.LoadingRecipeShimmer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,7 +28,8 @@ fun ProductDetailScreen(
     onAddToCart: (Product) -> Unit,
     productViewModel: ProductViewModel
 ) {
-    var imageError by remember(product.imageUrl) { mutableStateOf(false) }
+    val firstImage = product.imageUrls.firstOrNull()
+    var imageError by remember(firstImage) { mutableStateOf(false) }
     var isRefreshing by remember { mutableStateOf(false) }
     var screenLoading by remember { mutableStateOf(true) }
 
@@ -92,23 +89,15 @@ fun ProductDetailScreen(
                         .padding(bottom = 16.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    AsyncImage(
-                        model = product.imageUrl,
-                        contentDescription = "Hình ảnh sản phẩm",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.FillWidth,
-                        onError = { imageError = true }
-                    )
+                    ProductImagePager(imageUrls = product.imageUrls)
+
                     if (imageError) {
                         Icon(
                             imageVector = Icons.Default.BrokenImage,
-                            contentDescription = "No image available",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(64.dp)
+                            contentDescription = "Image Error",
+                            modifier = Modifier.size(48.dp),
+                            tint = MaterialTheme.colorScheme.error
                         )
-                    }
-                    if (isRefreshing) {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                     }
                 }
 

@@ -26,7 +26,7 @@ fun FeatureProductCard(
         .wrapContentHeight()
         .clickable { onClick(productId) }) {
         AsyncImage(
-            model = product.imageUrl,
+            model = product.imageUrls.firstOrNull(),
             contentDescription = product.name,
             contentScale = ContentScale.Crop,
             modifier = Modifier

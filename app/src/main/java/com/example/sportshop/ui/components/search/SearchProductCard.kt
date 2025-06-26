@@ -28,7 +28,7 @@ fun SearchProductCard(
             .clickable { onClick(product.id ?: "") }
     ) {
         AsyncImage(
-            model = product.imageUrl,
+            model = product.imageUrls.firstOrNull(),
             contentDescription = product.name,
             contentScale = ContentScale.Crop,
             modifier = Modifier

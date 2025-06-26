@@ -140,7 +140,7 @@ fun AppNavigation(
                             id = it.id,
                             name = it.name,
                             price = it.price,
-                            imageUrl = it.imageUrl,
+                            imageUrl = it.imageUrls.firstOrNull() ?: "",
                             quantity = 1
                         )
                         cartViewModel.addToCart(cartItem)

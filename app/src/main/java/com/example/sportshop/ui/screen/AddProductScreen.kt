@@ -26,7 +26,7 @@ fun AddProductScreen(
     var description by remember { mutableStateOf(product.description) }
     var quantity by remember { mutableStateOf(product.quantity.toString()) }
     var category by remember { mutableStateOf(product.category) }
-    var imageUrl by remember { mutableStateOf(product.imageUrl) }
+    var imageUrls by remember { mutableStateOf(product.imageUrls.toMutableList()) }
     var feature by remember { mutableStateOf(product.feature) }
 
     var showError by remember { mutableStateOf(false) }
@@ -66,7 +66,7 @@ fun AddProductScreen(
                                 description = description,
                                 quantity = parsedQuantity,
                                 category = category,
-                                imageUrl = imageUrl,
+                                imageUrls = imageUrls,
                                 feature = feature
                             )
                             onSave(updatedProduct)
@@ -90,8 +90,13 @@ fun AddProductScreen(
                     onQuantityChange = { quantity = it },
                     category = category,
                     onCategoryChange = { category = it },
-                    imageUrl = imageUrl,
-                    onImageUrlChange = { imageUrl = it },
+                    imageUrls = imageUrls,
+                    onAddImage = { url ->
+                        imageUrls = imageUrls.toMutableList().apply { add(url) }
+                    },
+                    onRemoveImage = { index ->
+                        imageUrls = imageUrls.toMutableList().apply { removeAt(index) }
+                    },
                     feature = feature,
                     onFeatureChange = { feature = it },
                     onAddClick = { newProduct ->
@@ -108,25 +113,24 @@ fun AddProductScreen(
                         modifier = Modifier.padding(16.dp)
                     )
                 }
-            }
-
-            if (showSuccessDialog) {
-                AlertDialog(
-                    onDismissRequest = {
-                        showSuccessDialog = false
-                        navcontroller.popBackStack()
-                    },
-                    confirmButton = {
-                        TextButton(onClick = {
+                if (showSuccessDialog) {
+                    AlertDialog(
+                        onDismissRequest = {
                             showSuccessDialog = false
                             navcontroller.popBackStack()
-                        }) {
-                            Text("OK")
-                        }
-                    },
-                    title = { Text("Thành công") },
-                    text = { Text("Sản phẩm đã được lưu thành công.") }
-                )
+                        },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                showSuccessDialog = false
+                                navcontroller.popBackStack()
+                            }) {
+                                Text("OK")
+                            }
+                        },
+                        title = { Text("Thành công") },
+                        text = { Text("Sản phẩm đã được lưu thành công.") }
+                    )
+                }
             }
         }
     )

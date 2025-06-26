@@ -2,8 +2,11 @@ package com.example.sportshop.ui.components.add_product
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +19,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
 import coil.compose.AsyncImage
 import com.example.sportshop.model.data.Product
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.graphics.Color
+
+import java.text.NumberFormat
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,186 +43,321 @@ fun AddProductForm(
     onQuantityChange: (String) -> Unit,
     category: String,
     onCategoryChange: (String) -> Unit,
-    imageUrl: String,
-    onImageUrlChange: (String) -> Unit,
+    imageUrls: List<String>,
+    onAddImage: (String) -> Unit,
+    onRemoveImage: (Int) -> Unit,
     feature: Boolean,
     onFeatureChange: (Boolean) -> Unit,
-    onAddClick: (Product) -> Unit  // Thêm callback này thay vì sử dụng viewModel trực tiếp
+    onAddClick: (Product) -> Unit  // Callback khi thêm sản phẩm
 ) {
     var expandedCategoryMenu by remember { mutableStateOf(false) }
     val categories = listOf("Dụng Cụ Thể Thao", "Giày", "Quần", "Áo")
     val clipboardManager = LocalClipboardManager.current
+    var imageUrlInput by remember { mutableStateOf("") }
+    var imageUrlError by remember { mutableStateOf(false) } // Thêm bi���n báo lỗi
 
-    Column(modifier = Modifier.padding(padding)) {
-        // TextField cho URL ảnh sản phẩm
-        Card(
+    fun isValidImageUrl(url: String): Boolean {
+        val regex =
+            Regex("^https?://.*\\.(jpg|jpeg|png|gif|webp)(\\?.*)?\$", RegexOption.IGNORE_CASE)
+        return regex.matches(url.trim())
+    }
+
+    // Hàm format số tiền: 3000 -> 3.000
+    fun formatCurrencyInput(input: String): String {
+        val clean = input.replace(".", "").replace(",", "")
+        if (clean.isBlank()) return ""
+        return try {
+            val parsed = clean.toLong()
+            NumberFormat.getInstance(Locale("vi", "VN")).format(parsed)
+        } catch (e: Exception) {
+            input
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .padding(padding)
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            OutlinedTextField(
+                value = imageUrlInput,
+                onValueChange = { imageUrlInput = it },
+                label = { Text("Nhập URL ảnh sản phẩm") },
+                isError = imageUrlError,
+                modifier = Modifier.weight(1f),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    errorContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                    errorIndicatorColor = MaterialTheme.colorScheme.error,
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                    errorLabelColor = MaterialTheme.colorScheme.error
+                )
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Button(
+                onClick = {
+                    if (imageUrlInput.isNotBlank() && isValidImageUrl(imageUrlInput)) {
+                        onAddImage(imageUrlInput.trim())
+                        imageUrlInput = ""
+                        imageUrlError = false
+                    } else {
+                        imageUrlError = true
+                    }
+                },
+                modifier = Modifier.height(50.dp)
+            ) {
+                Text("Thêm")
+            }
+        }
+        if (imageUrlError) {
+            Text(
+                text = "URL không hợp lệ. Vui lòng nhập link ảnh hợp lệ (.jpg, .png, ...)",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
-                .background(color = MaterialTheme.colorScheme.surface),// Add padding around the card
-            shape = MaterialTheme.shapes.medium // Customize the card's shape if needed
+                .padding(bottom = 8.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)  // Add padding inside the card for spacing
-            ) {
-                // Image URL section
-                TextField(
-                    value = imageUrl,
-                    onValueChange = onImageUrlChange,
-                    label = { Text("URL ảnh sản phẩm") },
-                    modifier = Modifier.fillMaxWidth(),
-                    maxLines = 1
-                )
-                Button(
-                    onClick = {
-                        clipboardManager.getText()?.let {
-                            onImageUrlChange(it.text)
-                        }
-                    },
-                    modifier = Modifier.padding(start = 8.dp)
+            itemsIndexed(imageUrls) { index, url ->
+                Box(
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(160.dp)
                 ) {
-                    Text("Dán")
-                }
-
-                // Image preview if URL is not empty
-                if (imageUrl.isNotBlank()) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    var imageLoading by remember { mutableStateOf(true) }
-                    var imageError by remember { mutableStateOf(false) }
-                    Box(
-                        modifier = Modifier
-                            .height(150.dp)
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surfaceVariant, shape = MaterialTheme.shapes.medium),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if (!imageError) {
-                            AsyncImage(
-                                model = imageUrl,
-                                contentDescription = "Preview",
-                                modifier = Modifier
-                                    .matchParentSize(),
-                                contentScale = ContentScale.Fit,
-                                onLoading = { imageLoading = true },
-                                onSuccess = {
-                                    imageLoading = false
-                                    imageError = false
-                                },
-                                onError = {
-                                    imageLoading = false
-                                    imageError = true
-                                }
-                            )
-                        }
-                        if (imageLoading) {
-                            CircularProgressIndicator()
-                        }
-                        if (imageError) {
-                            // Hiển thị hình "No image available" (dùng icon mặc định của Material)
-                            Column(
-                                modifier = Modifier.fillMaxSize(),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.BrokenImage,
-                                    contentDescription = "No image available",
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.size(48.dp)
-                                )
-                                Text(
-                                    text = "No image available",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-                    }
-                }
-
-                // Product name, price, category, and description fields
-                TextField(
-                    value = name,
-                    onValueChange = onNameChange,
-                    label = { Text("Tên sản phẩm") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                TextField(
-                    value = price,
-                    onValueChange = onPriceChange,
-                    label = { Text("Giá sản phẩm") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                ExposedDropdownMenuBox(
-                    expanded = expandedCategoryMenu,
-                    onExpandedChange = { expandedCategoryMenu = it }
-                ) {
-                    OutlinedTextField(
-                        value = category,
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text("Danh mục") },
-                        trailingIcon = {
-                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCategoryMenu)
-                        },
-                        modifier = Modifier
-                            .menuAnchor()
-                            .fillMaxWidth(),
-                        isError = category.isBlank()
-                    )
-                    ExposedDropdownMenu(
-                        expanded = expandedCategoryMenu,
-                        onDismissRequest = { expandedCategoryMenu = false }
-                    ) {
-                        categories.forEach { categoryOption ->
-                            DropdownMenuItem(
-                                text = { Text(categoryOption) },
-                                onClick = {
-                                    onCategoryChange(categoryOption)
-                                    expandedCategoryMenu = false
-                                }
+                    var imageLoadError by remember(url) { mutableStateOf(false) }
+                    if (!imageLoadError) {
+                        AsyncImage(
+                            model = url,
+                            contentDescription = "Ảnh sản phẩm $index",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(4.dp)
+                                .background(MaterialTheme.colorScheme.surfaceVariant),
+                            contentScale = ContentScale.Crop,
+                            onError = { imageLoadError = true }
+                        )
+                        IconButton(
+                            onClick = { onRemoveImage(index) },
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(4.dp) // Khoảng cách với mép
+                                .background(Color.Black.copy(alpha = 0.5f), shape = CircleShape)
+                                .size(24.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Xóa",
+                                tint = Color.White
                             )
                         }
                     }
-                }
-
-                TextField(
-                    value = quantity,
-                    onValueChange = onQuantityChange,
-                    label = { Text("Số lượng") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                TextField(
-                    value = description,
-                    onValueChange = onDescriptionChange,
-                    label = { Text("Mô tả sản phẩm") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                // Featured checkbox
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Checkbox(
-                        checked = feature,
-                        onCheckedChange = onFeatureChange,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Text(
-                        text = "Sản phẩm nổi bật",
-                        modifier = Modifier.align(Alignment.CenterVertically)
-                    )
+                    if (imageLoadError) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.surfaceVariant),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.BrokenImage,
+                                contentDescription = "Không thể tải ảnh"
+                            )
+                        }
+                        // Thêm nút xoá cho ảnh lỗi
+                        IconButton(
+                            onClick = { onRemoveImage(index) },
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .size(24.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Xoá ảnh"
+                            )
+                        }
+                    }
                 }
             }
+        }
+
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.onBackground,
+            thickness = 1.dp,
+            modifier = Modifier.padding(vertical = 12.dp)
+        )
+
+        OutlinedTextField(
+            value = name,
+            onValueChange = onNameChange,
+            label = { Text("Tên sản phẩm") },
+            isError = name.isBlank(),
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                errorContainerColor = MaterialTheme.colorScheme.surface,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                errorIndicatorColor = MaterialTheme.colorScheme.error,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                errorLabelColor = MaterialTheme.colorScheme.error
+            )
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = price,
+            onValueChange = {
+                // Chỉ cho phép nhập số, tự động format kiểu Việt Nam (dùng dấu . cho hàng nghìn)
+                val clean = it.replace(".", "").replace(",", "")
+                if (clean.all { c -> c.isDigit() } || clean.isBlank()) {
+                    val formatted = try {
+                        if (clean.isNotBlank()) {
+                            NumberFormat.getNumberInstance(Locale("vi", "VN"))
+                                .format(clean.toLong())
+                        } else ""
+                    } catch (e: Exception) {
+                        clean
+                    }
+                    onPriceChange(formatted)
+                }
+            },
+            label = { Text("Giá sản phẩm") },
+            isError = price.isBlank() || price.replace(".", "").replace(",", "")
+                .toDoubleOrNull() == null,
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                errorContainerColor = MaterialTheme.colorScheme.surface,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                errorIndicatorColor = MaterialTheme.colorScheme.error,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                errorLabelColor = MaterialTheme.colorScheme.error
+            ),
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        ExposedDropdownMenuBox(
+            expanded = expandedCategoryMenu,
+            onExpandedChange = { expandedCategoryMenu = it }
+        ) {
+            OutlinedTextField(
+                value = category,
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Danh mục") },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCategoryMenu)
+                },
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth(),
+                isError = category.isBlank(),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    errorContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                    errorIndicatorColor = MaterialTheme.colorScheme.error,
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                    errorLabelColor = MaterialTheme.colorScheme.error
+                )
+            )
+            ExposedDropdownMenu(
+                expanded = expandedCategoryMenu,
+                onDismissRequest = { expandedCategoryMenu = false }
+            ) {
+                categories.forEach { categoryOption ->
+                    DropdownMenuItem(text = { Text(categoryOption) }, onClick = {
+                        onCategoryChange(categoryOption)
+                        expandedCategoryMenu = false
+                    })
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+            value = quantity,
+            onValueChange = onQuantityChange,
+            label = { Text("Số lượng sản phẩm") },
+            isError = quantity.isBlank() || quantity.toIntOrNull() == null,
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                errorContainerColor = MaterialTheme.colorScheme.surface,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                errorIndicatorColor = MaterialTheme.colorScheme.error,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                errorLabelColor = MaterialTheme.colorScheme.error
+            )
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = description,
+            onValueChange = onDescriptionChange,
+            label = { Text("Mô tả sản phẩm") },
+            isError = description.isBlank(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(72.dp),
+            maxLines = 5,
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                errorContainerColor = MaterialTheme.colorScheme.surface,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                errorIndicatorColor = MaterialTheme.colorScheme.error,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                errorLabelColor = MaterialTheme.colorScheme.error
+            )
+        )
+
+        // Featured checkbox
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = feature,
+                onCheckedChange = onFeatureChange,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Text(
+                text = "Sản phẩm nổi bật", modifier = Modifier.align(Alignment.CenterVertically)
+            )
         }
     }
 }
