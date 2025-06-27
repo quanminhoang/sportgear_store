@@ -3,6 +3,8 @@ package com.example.sportshop.navigation
 import MainScreen
 import UserViewModel
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,19 +14,13 @@ import com.example.sportshop.model.data.CartItem
 import com.example.sportshop.model.data.Product
 import com.example.sportshop.ui.components.profile.MainProfileMenu
 import com.example.sportshop.ui.components.screen.AllProductsScreen
-import com.example.sportshop.ui.screen.AddProductScreen
-import com.example.sportshop.ui.screen.AdminScreen
-import com.example.sportshop.ui.screen.CheckoutScreen
-import com.example.sportshop.ui.screen.EditProfileScreen
-import com.example.sportshop.ui.screen.ProductDetailScreen
 import com.example.sportshop.ui.screen.*
 import com.example.sportshop.ui.components.search.SearchScreen
-import com.example.sportshop.ui.screen.SplashScreen
-import com.example.sportshop.ui.screen.WelcomeScreen
 import com.example.sportshop.ui.theme.ThemeManager
 import com.example.sportshop.viewmodel.AdminViewModel
 import com.example.sportshop.viewmodel.CartViewModel
 import com.example.sportshop.viewmodel.OrderViewModel
+import com.example.sportshop.viewmodel.OrderViewModelFactory
 import com.example.sportshop.viewmodel.ProductViewModel
 
 @Composable
@@ -34,10 +30,10 @@ fun AppNavigation(
     adminViewModel: AdminViewModel,
     productViewModel: ProductViewModel,
     userViewModel: UserViewModel,
+    orderViewModel: OrderViewModel, // Add parameter
     reloadApp: () -> Unit
 ) {
     val navController = rememberNavController()
-    val orderViewModel = OrderViewModel()
 
     NavHost(
         navController = navController,
@@ -52,13 +48,13 @@ fun AppNavigation(
         composable("home") {
             MainScreen(
                 navController = navController,
-                cartViewModel = cartViewModel
+                cartViewModel = cartViewModel,
+                orderViewModel = orderViewModel
             )
         }
         composable("all_products/{category}?featured={featured}") { backStackEntry ->
             val category = backStackEntry.arguments?.getString("category") ?: "default_category"
             val featured = backStackEntry.arguments?.getString("featured")?.toBoolean() ?: false
-
             AllProductsScreen(
                 productViewModel = productViewModel,
                 navController = navController,
@@ -87,14 +83,6 @@ fun AppNavigation(
                 productViewModel = productViewModel
             )
         }
-        composable("checkout") {
-            CheckoutScreen(
-                navController = navController,
-                cartViewModel = cartViewModel,
-                userViewModel = userViewModel
-            )
-        }
-
         composable("add_product") {
             AddProductScreen(
                 navcontroller = navController,
@@ -104,7 +92,6 @@ fun AppNavigation(
                 }
             )
         }
-
         composable(
             route = "add_product/{productId}",
             arguments = listOf(navArgument("productId") {
@@ -115,7 +102,6 @@ fun AppNavigation(
         ) { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
             val product = adminViewModel.products.find { it.id == productId } ?: Product()
-
             AddProductScreen(
                 navcontroller = navController,
                 product = product,
@@ -124,13 +110,10 @@ fun AppNavigation(
                 }
             )
         }
-
         composable("product_detail/{productId}") { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
-            // Lấy lại product mới nhất từ adminViewModel nếu có, nếu không thì từ productViewModel
             val product = adminViewModel.products.find { it.id == productId }
                 ?: productViewModel.getProductById(productId)
-
             if (product != null) {
                 ProductDetailScreen(
                     product = product,
@@ -149,7 +132,6 @@ fun AppNavigation(
                 )
             }
         }
-
         composable(
             route = "all_products?featured={featured}",
             arguments = listOf(
@@ -160,7 +142,6 @@ fun AppNavigation(
             )
         ) { backStackEntry ->
             val featured = backStackEntry.arguments?.getBoolean("featured") ?: false
-
             AllProductsScreen(
                 productViewModel = productViewModel,
                 navController = navController,
@@ -170,11 +151,16 @@ fun AppNavigation(
         }
 
         composable("order_history") {
-            OrderHistoryScreen(navController = navController, orderViewModel = orderViewModel)
+            val factory = remember { OrderViewModelFactory(productViewModel) }
+            val orderViewModel: OrderViewModel = viewModel(factory = factory)
+            OrderHistoryScreen(
+                navController = navController,
+                orderViewModel = orderViewModel,
+                productViewModel = productViewModel
+            )
         }
 
         composable("order_detail/{id}") { backStackEntry ->
-            // Lấy userId hiện tại từ FirebaseAuth để đảm bảo CartViewModel có userId khi mua lại
             val userId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
             if (userId != null) {
                 cartViewModel.setUser(userId)
@@ -183,7 +169,8 @@ fun AppNavigation(
                 backStackEntry = backStackEntry,
                 orderViewModel = orderViewModel,
                 navController = navController,
-                cartViewModel = cartViewModel
+                cartViewModel = cartViewModel,
+                productViewModel = productViewModel // Add for stock display
             )
         }
     }

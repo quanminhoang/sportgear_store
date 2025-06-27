@@ -20,7 +20,8 @@ private val DarkColorScheme = darkColorScheme(
     outline = Color(0xFF3A3A3C),           // Subtle outline
     tertiary = Color(0xFF64D2FF),          // Light blue accent
     surfaceContainer = Color(0xFF242426),  // Card background
-    onSurfaceVariant = Color(0xFFB0B0B0)   // Muted gray for secondary text
+    onSurfaceVariant = Color(0xFFB0B0B0), // Muted gray for secondary text
+
 )
 
 // Màu sắc tùy chỉnh cho Light Theme (Apple style: trắng, nhấn xanh dương, xám, text đen)

@@ -1,64 +1,76 @@
 package com.example.sportshop.ui.components.cart
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.sportshop.model.data.CartItem
 import com.example.sportshop.util.FormatAsVnd
+import com.example.sportshop.util.QuantityEditor
 import com.example.sportshop.viewmodel.CartViewModel
+import com.example.sportshop.viewmodel.ProductViewModel
 
 @Composable
-fun CartItemRow(cartItem: CartItem, cartViewModel: CartViewModel) {
+fun CartItemRow(
+    cartItem: CartItem, cartViewModel: CartViewModel, productViewModel: ProductViewModel
+) {
+
+    val product by productViewModel.products.collectAsState()
+    val productStock = product.find { it.id == cartItem.id }?.quantity ?: 99
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp)
-            .background(MaterialTheme.colorScheme.surface),
-        verticalAlignment = Alignment.CenterVertically
+            .size(160.dp),
     ) {
-
         AsyncImage(
             model = cartItem.imageUrl,
             contentDescription = cartItem.name,
-            modifier = Modifier
-                .size(80.dp)
-                .clip(RoundedCornerShape(8.dp)),
-            contentScale = ContentScale.Crop
+            modifier = Modifier.size(160.dp),
+            contentScale = ContentScale.Crop,
         )
-
         Spacer(modifier = Modifier.width(12.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
+        Column(
+            modifier = Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
             Text(
                 text = cartItem.name,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
-            Text(
-                text = "${FormatAsVnd.format(cartItem.price)}",
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-            )
-            Text(
-                text = "Số lượng: ${cartItem.quantity}",
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
 
-        IconButton(
-            onClick = {
-                cartItem.id?.let { cartViewModel.removeItem(it) }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = FormatAsVnd.format(cartItem.price * cartItem.quantity),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                QuantityEditor(
+                    quantity = cartItem.quantity, onQuantityChange = { newQuantity ->
+                        cartItem.id?.let { id ->
+                            cartViewModel.updateQuantity(id, newQuantity)
+                        }
+                    }, min = 1, max = productStock // Cho phep ton kho la max
+                )
             }
-        ) {
+        }
+        IconButton(onClick = {
+            cartItem.id?.let { cartViewModel.removeItem(it) }
+        }) {
             Icon(
                 imageVector = Icons.Default.Clear,
                 contentDescription = "Xoá",
@@ -66,5 +78,10 @@ fun CartItemRow(cartItem: CartItem, cartViewModel: CartViewModel) {
             )
         }
     }
-}
 
+    HorizontalDivider(
+        modifier = Modifier.padding(vertical = 24.dp, horizontal = 12.dp),
+        thickness = 1.dp,
+        color = MaterialTheme.colorScheme.outline
+    )
+}

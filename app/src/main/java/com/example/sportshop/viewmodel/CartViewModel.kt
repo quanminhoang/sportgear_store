@@ -11,7 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class CartViewModel(application: Application) : AndroidViewModel(application) {
+class CartViewModel(application: Application, private val productViewModel: ProductViewModel) :
+    AndroidViewModel(application) {
 
     private val cartDataStore = CartDataStore(application.applicationContext)
 
@@ -30,21 +31,42 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
 
     fun addToCart(item: CartItem) {
         val userId = currentUserId ?: return
-
+        val product = productViewModel.getProductById(item.id ?: return)
+            ?: return // Exit if product not found
+        val maxQuantity = product.quantity // Get product stock
         val currentItems = _cartItems.value.toMutableList()
         val existingItem = currentItems.find { it.id == item.id }
-
         if (existingItem != null) {
-            val updatedItem = existingItem.copy(quantity = existingItem.quantity + item.quantity)
-            currentItems[currentItems.indexOf(existingItem)] = updatedItem
+            val updatedQuantity = (existingItem.quantity + item.quantity).coerceIn(1, 99)
+            currentItems[currentItems.indexOf(existingItem)] =
+                existingItem.copy(quantity = updatedQuantity)
         } else {
-            currentItems.add(item)
+            val clampedQuantity = item.quantity.coerceIn(1, 99)
+            currentItems.add(item.copy(quantity = clampedQuantity))
         }
-
         _cartItems.value = currentItems
-
         viewModelScope.launch {
             cartDataStore.saveCartItems(userId, currentItems)
+        }
+    }
+
+    fun updateQuantity(itemId: String, newQuantity: Int) {
+        val userId = currentUserId ?: return
+        val product = productViewModel.getProductById(itemId) ?: return // Exit if product not found
+        val maxQuantity = product.quantity // Get product stock
+        val currentItems = _cartItems.value.toMutableList()
+        val index = currentItems.indexOfFirst { it.id == itemId }
+
+        if (index != -1) {
+            val item = currentItems[index]
+            val updatedQuantity = newQuantity.coerceIn(1, 99)
+
+            currentItems[index] = item.copy(quantity = updatedQuantity)
+            _cartItems.value = currentItems
+
+            viewModelScope.launch {
+                cartDataStore.saveCartItems(userId, currentItems)
+            }
         }
     }
 
@@ -74,7 +96,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
         phone: String,
         address: String,
         paymentMethod: String,
-        onSuccess: () -> Unit,
+        onSuccess: (List<Pair<String, Int>>) -> Unit,
         onFailure: (Throwable) -> Unit
     ) {
         val userId = currentUserId ?: return
@@ -82,8 +104,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val firestore = FirebaseFirestore.getInstance()
             Log.i("CartViewModel", "Placing order for user: ${cartItems.value}")
-            val order = Order(
-                uid = userId,
+            val order = Order(uid = userId,
                 fullName = fullName,
                 phone = phone,
                 address = address,
@@ -98,18 +119,51 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
                         price = it.price,
                         quantity = it.quantity
                     )
-                }
-            )
+                })
 
-            firestore.collection("orders")
-                .add(order)
-                .addOnSuccessListener {
-                    clearCart()
-                    onSuccess()
+            // Kiểm tra số lượng hàng trong kho
+            val stockUpdates = mutableListOf<Pair<String, Int>>()
+            for (cartItem in cartItems.value) {
+                val product = productViewModel.getProductById(cartItem.id ?: continue) ?: continue
+                val newStock = product.quantity - cartItem.quantity
+                if (newStock < 0) {
+                    onFailure(Exception("Insufficient stock for ${cartItem.name}: ${product.quantity} available"))
+                    return@launch
                 }
-                .addOnFailureListener { e ->
+                stockUpdates.add(Pair(cartItem.id, newStock))
+            }
+
+            val updateErrors = mutableListOf<Throwable>()
+            stockUpdates.forEach { (productId, newStock) ->
+                firestore.collection("products").document(productId).update("quantity", newStock)
+                    .addOnSuccessListener {
+                        productViewModel.reloadProductById(productId)
+                    }.addOnFailureListener { e ->
+                        updateErrors.add(e)
+                        return@addOnFailureListener // Fixed: Only exit the failure listener
+                    }
+            }
+
+            // Update stock in Firestore
+            stockUpdates.forEach { (productId, newStock) ->
+                firestore.collection("products").document(productId).update("quantity", newStock)
+                    .addOnSuccessListener {
+                        productViewModel.reloadProductById(productId)
+                    }.addOnFailureListener { e ->
+                        onFailure(e)
+                        return@addOnFailureListener // Fixed: Only exit the failure listener                    }
+                    }
+
+                // Place order
+                firestore.collection("orders").add(order).addOnSuccessListener { docRef ->
+                    // Set the order ID
+                    docRef.update("id", docRef.id)
+                    clearCart()
+                    onSuccess(stockUpdates) // Return stock updates
+                }.addOnFailureListener { e ->
                     onFailure(e)
                 }
+            }
         }
     }
 }

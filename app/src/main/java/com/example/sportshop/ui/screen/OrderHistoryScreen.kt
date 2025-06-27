@@ -34,10 +34,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.sportshop.util.FormatAsVnd
+import com.example.sportshop.viewmodel.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewModel) {
+fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewModel, productViewModel: ProductViewModel) {
     val orders by orderViewModel.orders.collectAsState()
     var selectedStatus by rememberSaveable { mutableStateOf("Chờ xác nhận") }
 

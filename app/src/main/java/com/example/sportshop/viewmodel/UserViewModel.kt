@@ -1,8 +1,13 @@
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.sportshop.model.data.getUserForm
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 
 class UserViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
@@ -46,4 +51,16 @@ class UserViewModel : ViewModel() {
         _phone.value = phone
         _address.value = address
     }
+
+    // Kết hợp các trường để tạo thành form người dùng
+    val getUserForm = combine(_fullName, _phone, _address) { full, phone, addr ->
+        getUserForm(full, phone, addr)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), getUserForm("", "", ""))
+    fun isValidUserForm(): Boolean {
+        return getUserForm.value.isValid() // Kiểm tra tính hợp lệ của form người dùn
+    }
+    fun getUserFormError(): String? {
+        return getUserForm.value.getErrorMessage() // Trả về lỗi đầu tiên hoặc null nếu hợp lệ
+    }
+
 }

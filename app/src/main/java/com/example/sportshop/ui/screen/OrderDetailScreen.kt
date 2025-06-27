@@ -38,6 +38,7 @@ import java.util.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.platform.LocalContext
 import com.example.sportshop.util.FormatAsVnd
+import com.example.sportshop.viewmodel.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +46,8 @@ fun OrderDetailScreen(
     navController: NavController,
     backStackEntry: NavBackStackEntry,
     orderViewModel: OrderViewModel,
-    cartViewModel: CartViewModel
+    cartViewModel: CartViewModel,
+    productViewModel: ProductViewModel
 ) {
     val orderId = backStackEntry.arguments?.getString("id") ?: ""
     val orders by orderViewModel.orders.collectAsState()
@@ -125,7 +127,7 @@ fun OrderDetailScreen(
                 }
             }
 
-            if (order.status == "Đã hủy") {
+            if (order.status == "Đã hủy" || order.status == "Đã giao") {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -39,6 +38,7 @@ import com.example.sportshop.ui.components.profile.ProfileTopBar
 import com.example.sportshop.ui.theme.ThemeManager
 import com.example.sportshop.viewmodel.AdminViewModel
 import com.example.sportshop.viewmodel.CartViewModel
+import com.example.sportshop.viewmodel.OrderViewModel
 import com.example.sportshop.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 
@@ -47,8 +47,10 @@ fun MainScreen(
     navController: NavController,
     cartViewModel: CartViewModel,
     userViewModel: UserViewModel = viewModel(),
-    productViewModel: ProductViewModel = viewModel()
-) {
+    productViewModel: ProductViewModel = viewModel(),
+    orderViewModel: OrderViewModel = viewModel(),
+
+    ) {
     val pagerState = rememberPagerState(pageCount = { bottomNavigationItems.size })
     val scope = rememberCoroutineScope()
     val isAdmin by userViewModel.isAdmin.collectAsState()
@@ -58,7 +60,8 @@ fun MainScreen(
 
     // Lắng nghe sự kiện chuyển tab từ OrderDetailScreen
     val currentBackStackEntry = navController.currentBackStackEntryAsState().value
-    val switchToCartTab = currentBackStackEntry?.savedStateHandle?.get<Boolean>("switch_to_cart_tab") == true
+    val switchToCartTab =
+        currentBackStackEntry?.savedStateHandle?.get<Boolean>("switch_to_cart_tab") == true
     LaunchedEffect(switchToCartTab) {
         if (switchToCartTab) {
             scope.launch {
@@ -79,16 +82,13 @@ fun MainScreen(
                 2 -> CartTopBar()
                 3 -> ProfileTopBar()
             }
-            HorizontalDivider(
-                color = MaterialTheme.colorScheme.outline, thickness = 1.dp
-            )
         }
     }, bottomBar = {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
-                .background(MaterialTheme.colorScheme.surface),
+                .background(MaterialTheme.colorScheme.background),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -109,7 +109,7 @@ fun MainScreen(
                         else item.unselectedIcon,
                         contentDescription = item.title,
                         tint = if (pagerState.currentPage == index) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f) // màu khi chưa chọn
+                        else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f) // màu khi chưa chọn
                     )
 
                     val isSelected = pagerState.currentPage == index
@@ -117,7 +117,7 @@ fun MainScreen(
                     Text(
                         text = item.title,
                         color = if (isSelected) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                        else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                         style = MaterialTheme.typography.bodySmall.copy(
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                         )
@@ -129,13 +129,22 @@ fun MainScreen(
 
     }) { paddingValues ->
         HorizontalPager(
-            state = pagerState, modifier = Modifier.padding(paddingValues), userScrollEnabled = false
+            state = pagerState,
+            modifier = Modifier.padding(paddingValues),
+            userScrollEnabled = false
         ) { page ->
 
             when (page) {
                 0 -> HomeTabContent(productViewModel, navController)
-                1 -> ProductTabContent(productViewModel,cartViewModel,navController,)
-                2 -> CartTabContent(navController, cartViewModel)
+                1 -> ProductTabContent(productViewModel, cartViewModel, navController)
+                2 -> CartTabContent(
+                    navController,
+                    cartViewModel,
+                    userViewModel,
+                    productViewModel,
+                    orderViewModel
+                )
+
                 3 -> ProfileTabContent(
                     navController = navController,
                     themeManager = themeManager,

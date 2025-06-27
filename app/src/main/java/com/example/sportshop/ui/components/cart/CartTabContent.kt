@@ -1,5 +1,6 @@
 package com.example.sportshop.ui.components.cart
 
+import UserViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,23 +13,41 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.sportshop.util.FormatAsVnd
 import com.example.sportshop.viewmodel.CartViewModel
+import com.example.sportshop.viewmodel.OrderViewModel
+import com.example.sportshop.viewmodel.ProductViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
-    // Lấy userId từ Firebase
+fun CartTabContent(
+    navController: NavController,
+    cartViewModel: CartViewModel,
+    userViewModel: UserViewModel,
+    productViewModel: ProductViewModel,
+    orderViewModel: OrderViewModel
+) {
     val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-    // Gọi setUser một lần để load cart của user
     LaunchedEffect(userId) {
         cartViewModel.setUser(userId)
     }
 
     val cartItems by cartViewModel.cartItems.collectAsState()
     val totalPrice = cartItems.sumOf { it.price * it.quantity }
+    var isCheckoutOpen by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    // Nếu giỏ hàng trống
+    if (isCheckoutOpen && cartItems.isNotEmpty()) {
+        CheckoutBottomSheet(
+            onDismiss = { isCheckoutOpen = false },
+            navController = navController,
+            cartViewModel = cartViewModel,
+            userViewModel = userViewModel,
+            productViewModel = productViewModel,
+            orderViewModel = orderViewModel
+        )
+    }
+
     if (cartItems.isEmpty()) {
         Box(
             modifier = Modifier
@@ -43,32 +62,35 @@ fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
             ) {
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text("Tổng tiền")
                         Text(
-                            "${FormatAsVnd.format(totalPrice)}",
-                            style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSurface)
+                            FormatAsVnd.format(totalPrice),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
                         )
                     }
 
                     Spacer(Modifier.height(8.dp))
 
                     Button(
-                        onClick = {
-                            navController.navigate("checkout")
-                        },
+                        onClick = { isCheckoutOpen = true },
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.medium,
                         colors = ButtonDefaults.buttonColors(
@@ -82,25 +104,21 @@ fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
             }
         }
     ) { paddingValues ->
-
         LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(bottom = 6.dp)
-        ) {
-            item { Spacer(modifier = Modifier.height(5.dp)) }
-
+                .padding(horizontal = 12.dp, vertical = 0.dp)){
             items(cartItems) { item ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .background(MaterialTheme.colorScheme.outline)
-                ) {
-                    CartItemRow(cartItem = item, cartViewModel = cartViewModel)  // Sửa lại từ cartItems = item thành cartItem = item
+                if (item.quantity > 0) {
+                    CartItemRow(
+                        cartItem = item,
+                        cartViewModel = cartViewModel,
+                        productViewModel = productViewModel // Pass ProductViewModel
+                    )
                 }
             }
         }
     }
 }
+
 

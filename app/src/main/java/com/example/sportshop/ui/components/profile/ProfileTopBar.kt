@@ -17,8 +17,8 @@ fun ProfileTopBar() {
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
         )
     }, navigationIcon = {}, actions = {}, colors = TopAppBarDefaults.topAppBarColors(
-        containerColor = MaterialTheme.colorScheme.surface,
-        scrolledContainerColor = MaterialTheme.colorScheme.onSurface,
+        containerColor = MaterialTheme.colorScheme.background,
+        scrolledContainerColor = MaterialTheme.colorScheme.onBackground,
     )
     )
 }
