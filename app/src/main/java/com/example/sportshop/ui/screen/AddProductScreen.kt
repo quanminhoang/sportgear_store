@@ -1,6 +1,8 @@
 package com.example.sportshop.ui.screen
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -77,9 +79,14 @@ fun AddProductScreen(
             )
         },
         content = { padding ->
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(padding)
+            ) {
                 AddProductForm(
-                    padding = padding,
+                    padding = PaddingValues(0.dp),
                     name = name,
                     onNameChange = { name = it },
                     price = price,

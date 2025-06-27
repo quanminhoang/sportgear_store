@@ -33,6 +33,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.sportshop.util.FormatAsVnd
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,7 +77,6 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
             currentBackStackEntry.savedStateHandle.remove<String>("order_status_restore")
         }
     }
-    // Khi user click filterchip, reset flag để cho phép chuyển filter bình thường
     fun onFilterChipClick(status: String) {
         selectedStatus = status
         restoredFlag = false
@@ -107,13 +107,22 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
     }) { padding ->
         Column(modifier = Modifier.padding(padding)) {
             Row(
-                Modifier.padding(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 listOf("Chờ xác nhận", "Đang giao", "Đã giao", "Đã hủy").forEach { status ->
                     FilterChip(
                         selected = selectedStatus == status,
                         onClick = { onFilterChipClick(status) },
-                        label = { Text(status) }
+                        label = { Text(status) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            labelColor = MaterialTheme.colorScheme.onSurface
+
+                        )
                     )
                 }
             }
@@ -229,10 +238,7 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
 
                                         Spacer(modifier = Modifier.weight(1f))
                                         Text(
-                                            text = "₫${
-                                                NumberFormat.getNumberInstance(Locale("vi", "VN"))
-                                                    .format(firstItem.price)
-                                            }",
+                                            text = "${FormatAsVnd.format(firstItem.price)}",
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = MaterialTheme.colorScheme.onSurface,
                                             textAlign = TextAlign.End,
@@ -266,7 +272,7 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
                                 text = buildAnnotatedString {
                                     append("Tổng số tiền ($totalQuantity sản phẩm): ")
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        append("₫$formattedTotal")
+                                        append("${FormatAsVnd.format(order.totalPrice)}")
                                     }
                                 },
                                 style = MaterialTheme.typography.bodyMedium,

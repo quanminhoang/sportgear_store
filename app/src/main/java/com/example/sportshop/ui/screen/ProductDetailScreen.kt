@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.BrokenImage
 import com.example.sportshop.ui.components.ult.ProductImagePager
 import com.example.sportshop.viewmodel.ProductViewModel
 import com.example.sportshop.ui.components.ult.LoadingRecipeShimmer
+import com.example.sportshop.util.FormatAsVnd
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -136,7 +137,7 @@ fun ProductDetailScreen(
                     )
 
                     Text(
-                        text = "đ ${product.price}",
+                        text = FormatAsVnd.format(product.price),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.fillMaxWidth()

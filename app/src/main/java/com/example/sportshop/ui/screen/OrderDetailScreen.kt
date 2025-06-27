@@ -33,11 +33,11 @@ import coil.compose.AsyncImage
 import com.example.sportshop.viewmodel.OrderViewModel
 import com.example.sportshop.ui.components.buttons.Btn_Back
 import com.example.sportshop.viewmodel.CartViewModel
-import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.platform.LocalContext
+import com.example.sportshop.util.FormatAsVnd
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -382,10 +382,7 @@ fun OrderDetailScreen(
 
                                 Spacer(modifier = Modifier.weight(1f))
                                 Text(
-                                    text = "₫${
-                                        NumberFormat.getNumberInstance(Locale("vi", "VN"))
-                                            .format(item.price)
-                                    }",
+                                    text = "${FormatAsVnd.format(item.price)}",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     textAlign = TextAlign.End,
@@ -401,14 +398,12 @@ fun OrderDetailScreen(
                             .padding(vertical = 12.dp),
                         color = MaterialTheme.colorScheme.outline
                     )
-                    val formattedTotal = NumberFormat.getNumberInstance(Locale("vi", "VN"))
-                        .format(order.totalPrice)
 
                     Text(
                         text = buildAnnotatedString {
                             append("Thành tiền: ")
                             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append("₫$formattedTotal")
+                                append("${FormatAsVnd.format(order.totalPrice)}")
                             }
                         },
                         style = MaterialTheme.typography.bodyLarge,

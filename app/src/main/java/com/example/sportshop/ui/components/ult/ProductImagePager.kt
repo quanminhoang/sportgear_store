@@ -24,7 +24,7 @@ fun ProductImagePager(imageUrls: List<String>) {
             .fillMaxWidth()
             .height(500.dp)
             .padding(bottom = 16.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.BottomCenter
     ){
         HorizontalPager(
             count = imageUrls.size,
@@ -41,7 +41,8 @@ fun ProductImagePager(imageUrls: List<String>) {
         HorizontalPagerIndicator(
             pagerState = pagerState,
             modifier = Modifier
-                .padding(top = 8.dp)
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp)
         )
     }
 }

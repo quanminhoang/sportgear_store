@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.sportshop.util.FormatAsVnd
 import com.example.sportshop.viewmodel.CartViewModel
 import com.google.firebase.auth.FirebaseAuth
 
@@ -57,7 +58,7 @@ fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
                     ) {
                         Text("Tổng tiền")
                         Text(
-                            "₫${"%,.0f".format(totalPrice)}",
+                            "${FormatAsVnd.format(totalPrice)}",
                             style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onSurface)
                         )
                     }
@@ -82,7 +83,6 @@ fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
         }
     ) { paddingValues ->
 
-        // Hiển thị danh sách các sản phẩm trong giỏ hàng
         LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
@@ -90,7 +90,6 @@ fun CartTabContent(navController: NavController, cartViewModel: CartViewModel) {
         ) {
             item { Spacer(modifier = Modifier.height(5.dp)) }
 
-            // Duyệt qua các sản phẩm trong giỏ hàng và hiển thị chúng
             items(cartItems) { item ->
                 Column(
                     modifier = Modifier

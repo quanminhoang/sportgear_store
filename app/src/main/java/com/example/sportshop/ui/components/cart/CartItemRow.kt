@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.sportshop.model.data.CartItem
+import com.example.sportshop.util.FormatAsVnd
 import com.example.sportshop.viewmodel.CartViewModel
 
 @Composable
@@ -26,7 +27,7 @@ fun CartItemRow(cartItem: CartItem, cartViewModel: CartViewModel) {
             .background(MaterialTheme.colorScheme.surface),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Hiển thị ảnh sản phẩm
+
         AsyncImage(
             model = cartItem.imageUrl,
             contentDescription = cartItem.name,
@@ -44,7 +45,7 @@ fun CartItemRow(cartItem: CartItem, cartViewModel: CartViewModel) {
                 style = MaterialTheme.typography.bodyLarge
             )
             Text(
-                text = "₫${cartItem.price}",
+                text = "${FormatAsVnd.format(cartItem.price)}",
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
             )
             Text(
@@ -53,7 +54,6 @@ fun CartItemRow(cartItem: CartItem, cartViewModel: CartViewModel) {
             )
         }
 
-        // ✅ Nút xoá sản phẩm
         IconButton(
             onClick = {
                 cartItem.id?.let { cartViewModel.removeItem(it) }
