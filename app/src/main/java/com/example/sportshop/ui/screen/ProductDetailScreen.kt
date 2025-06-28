@@ -20,19 +20,22 @@ import com.example.sportshop.ui.components.ult.ProductImagePager
 import com.example.sportshop.viewmodel.ProductViewModel
 import com.example.sportshop.ui.components.ult.LoadingRecipeShimmer
 import com.example.sportshop.util.FormatAsVnd
+import com.example.sportshop.util.QuantityEditor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
     product: Product,
     navController: NavController,
-    onAddToCart: (Product) -> Unit,
+    onAddToCart: (Product, Int) -> Unit,
     productViewModel: ProductViewModel
 ) {
     val firstImage = product.imageUrls.firstOrNull()
     var imageError by remember(firstImage) { mutableStateOf(false) }
     var isRefreshing by remember { mutableStateOf(false) }
     var screenLoading by remember { mutableStateOf(true) }
+    var selectedQuantity by remember { mutableStateOf(1) }
+
 
     LaunchedEffect(product.id, isRefreshing) {
         screenLoading = true
@@ -120,11 +123,17 @@ fun ProductDetailScreen(
                                 .weight(1f)
                                 .padding(end = 16.dp, top = 8.dp)
                         )
-                        Text(
-                            text = "Còn ${product.quantity} sp",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+
+
+                        QuantityEditor(
+                            quantity = selectedQuantity,
+                            onQuantityChange = { newQty ->
+                                selectedQuantity = newQty
+                            },
+                            min = 1,
+                            max = product.quantity
                         )
+
                     }
 
                     Text(
@@ -164,7 +173,7 @@ fun ProductDetailScreen(
                 }
 
                 Button(
-                    onClick = { onAddToCart(product) },
+                    onClick = { onAddToCart(product, selectedQuantity)},
                     shape = MaterialTheme.shapes.large,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,

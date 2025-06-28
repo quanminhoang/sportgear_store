@@ -118,17 +118,17 @@ fun AppNavigation(
                 ProductDetailScreen(
                     product = product,
                     navController = navController,
-                    onAddToCart = {
+                    productViewModel = productViewModel,
+                    onAddToCart = { product, quantity ->
                         val cartItem = CartItem(
-                            id = it.id,
-                            name = it.name,
-                            price = it.price,
-                            imageUrl = it.imageUrls.firstOrNull() ?: "",
-                            quantity = 1
+                            id = product.id,
+                            name = product.name,
+                            price = product.price,
+                            imageUrl = product.imageUrls.firstOrNull() ?: "",
+                            quantity = quantity
                         )
                         cartViewModel.addToCart(cartItem)
-                    },
-                    productViewModel = productViewModel
+                    }
                 )
             }
         }

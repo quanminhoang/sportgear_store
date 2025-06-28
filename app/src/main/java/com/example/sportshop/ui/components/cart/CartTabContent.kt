@@ -40,11 +40,10 @@ fun CartTabContent(
     if (isCheckoutOpen && cartItems.isNotEmpty()) {
         CheckoutBottomSheet(
             onDismiss = { isCheckoutOpen = false },
+            onSuccess = {},
             navController = navController,
             cartViewModel = cartViewModel,
             userViewModel = userViewModel,
-            productViewModel = productViewModel,
-            orderViewModel = orderViewModel
         )
     }
 
@@ -107,7 +106,7 @@ fun CartTabContent(
         LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(horizontal = 12.dp, vertical = 0.dp)){
+        ) {
             items(cartItems) { item ->
                 if (item.quantity > 0) {
                     CartItemRow(
@@ -115,6 +114,8 @@ fun CartTabContent(
                         cartViewModel = cartViewModel,
                         productViewModel = productViewModel // Pass ProductViewModel
                     )
+
+                    Spacer(Modifier.padding(bottom = 16.dp))
                 }
             }
         }

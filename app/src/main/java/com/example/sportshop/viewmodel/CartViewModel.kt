@@ -31,20 +31,23 @@ class CartViewModel(application: Application, private val productViewModel: Prod
 
     fun addToCart(item: CartItem) {
         val userId = currentUserId ?: return
-        val product = productViewModel.getProductById(item.id ?: return)
-            ?: return // Exit if product not found
-        val maxQuantity = product.quantity // Get product stock
+        val product = productViewModel.getProductById(item.id ?: return) ?: return
+        val maxQuantity = product.quantity
+
         val currentItems = _cartItems.value.toMutableList()
         val existingItem = currentItems.find { it.id == item.id }
+
         if (existingItem != null) {
-            val updatedQuantity = (existingItem.quantity + item.quantity).coerceIn(1, 99)
+            val updatedQuantity = (existingItem.quantity + item.quantity).coerceIn(1, maxQuantity)
             currentItems[currentItems.indexOf(existingItem)] =
                 existingItem.copy(quantity = updatedQuantity)
         } else {
-            val clampedQuantity = item.quantity.coerceIn(1, 99)
+            val clampedQuantity = item.quantity.coerceIn(1, maxQuantity)
             currentItems.add(item.copy(quantity = clampedQuantity))
         }
+
         _cartItems.value = currentItems
+
         viewModelScope.launch {
             cartDataStore.saveCartItems(userId, currentItems)
         }
@@ -59,7 +62,7 @@ class CartViewModel(application: Application, private val productViewModel: Prod
 
         if (index != -1) {
             val item = currentItems[index]
-            val updatedQuantity = newQuantity.coerceIn(1, 99)
+            val updatedQuantity = newQuantity.coerceIn(1, maxQuantity)
 
             currentItems[index] = item.copy(quantity = updatedQuantity)
             _cartItems.value = currentItems

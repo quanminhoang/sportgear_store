@@ -51,11 +51,29 @@ fun OrderDetailScreen(
 ) {
     val orderId = backStackEntry.arguments?.getString("id") ?: ""
     val orders by orderViewModel.orders.collectAsState()
+    val isLoading = orders.isEmpty()
     val order = orders.find { it.id == orderId }
     var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    if (order == null) {
+
+    LaunchedEffect(Unit) {
+        if (orders.isEmpty()) {
+            orderViewModel.fetchOrders()
+        }
+    }
+
+    if (isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+        return
+    } else if (order == null) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
