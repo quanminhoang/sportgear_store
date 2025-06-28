@@ -23,7 +23,7 @@ fun FeatureProductCard(
     val productId = product.id ?: UUID.randomUUID().toString()
 
     Column(modifier = Modifier
-        .padding(4.dp)
+        .padding(8.dp)
         .wrapContentHeight()
         .clickable { onClick(productId) }) {
         AsyncImage(
@@ -31,8 +31,8 @@ fun FeatureProductCard(
             contentDescription = product.name,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .width(175.dp)
-                .height(215.dp)
+                .width(160.dp)
+                .height(200.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(MaterialTheme.colorScheme.surface)
         )

@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.sportshop.components.products.ProductTabContent
 import com.example.sportshop.components.profile.ProfileTabContent
 import com.example.sportshop.navigation.bottomNavigationItems
 import com.example.sportshop.ui.components.cart.CartTabContent

@@ -170,7 +170,7 @@ fun OrderHistoryScreen(navController: NavController, orderViewModel: OrderViewMo
                                     }
                                     Box(
                                         modifier = Modifier
-                                            .size(80.dp)
+                                            .size(100.dp)
                                             .background(Color.LightGray, shape = RoundedCornerShape(12.dp))
                                             .border(
                                                 width = 1.dp,
