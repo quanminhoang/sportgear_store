@@ -19,8 +19,8 @@ private val DarkColorScheme = darkColorScheme(
     onError = Color(0xFFFFFFFF),
     outline = Color(0xFF3A3A3C),           // Subtle outline
     tertiary = Color(0xFF64D2FF),          // Light blue accent
-    surfaceContainer = Color(0xFF242426),  // Card background
-    onSurfaceVariant = Color(0xFFB0B0B0), // Muted gray for secondary text
+    surfaceContainer = Color(0xFF242426),
+    onSurfaceVariant = Color(0xFFB0B0B0) // Muted gray for secondary text
 
 )
 

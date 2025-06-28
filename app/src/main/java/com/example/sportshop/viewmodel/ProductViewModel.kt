@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sportshop.model.data.Product
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -52,6 +53,30 @@ class ProductViewModel : ViewModel() {
                 }
         }
     }
+
+    private var listenerRegistration: ListenerRegistration? = null
+
+    init {
+        listenerRegistration?.remove()
+        listenerRegistration = Firebase.firestore.collection("products")
+            .addSnapshotListener { snapshot, _ ->
+                snapshot?.let {
+                    val fetchedProducts = it.documents.mapNotNull { doc ->
+                        doc.toObject(Product::class.java)?.copy(id = doc.id)
+                    }
+
+                    _products.value = fetchedProducts
+                    _allProducts.value = fetchedProducts
+                    _featuredProducts.value = fetchedProducts.filter { it.feature }
+
+                    val grouped = fetchedProducts.groupBy { it.category.orEmpty() }
+                    grouped.forEach { (category, productList) ->
+                        _productsByCategory.getOrPut(category) { MutableStateFlow(emptyList()) }.value = productList
+                    }
+                }
+            }
+    }
+
 
     fun addProduct(product: Product) {
         viewModelScope.launch {
@@ -105,4 +130,10 @@ class ProductViewModel : ViewModel() {
                 }
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        listenerRegistration?.remove()
+    }
+
 }

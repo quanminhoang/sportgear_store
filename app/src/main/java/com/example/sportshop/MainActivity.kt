@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sportshop.model.data.CartViewModelFactory
 import com.example.sportshop.navigation.AppNavigation
@@ -35,7 +36,6 @@ class MainActivity : ComponentActivity() {
 
             val factory = remember { OrderViewModelFactory(productViewModel) }
             val orderViewModel: OrderViewModel = viewModel(factory = factory)
-
 
             val currentTheme by themeManager.themeFlow.collectAsState()
 

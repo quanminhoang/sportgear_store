@@ -48,6 +48,17 @@ fun CartItemRow(
                 overflow = TextOverflow.Ellipsis
             )
 
+            IconButton(
+                onClick = { cartItem.id?.let { cartViewModel.removeItem(it) } },
+                modifier = Modifier.size(40.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Clear,
+                    contentDescription = "Xoá",
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
