@@ -64,7 +64,7 @@ fun Btn_GoogleSignIn(
             horizontalArrangement = Arrangement.Center
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.icon_google),
+                painter = painterResource(id = R.drawable.icon_google_new),
                 contentDescription = "Google Logo",
                 modifier = Modifier.size(32.dp),
                 tint = Color.Unspecified

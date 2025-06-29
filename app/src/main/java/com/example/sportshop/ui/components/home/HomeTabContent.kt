@@ -105,7 +105,7 @@ fun HomeTabContent(
                     .animateContentSize()
             ) {
                 Text(
-                    text = "Bộ sưu tập đặc biệt",
+                    text = "Thương hiệu",
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(vertical = 16.dp)
@@ -125,10 +125,10 @@ fun HomeTabContent(
                 ) {
                     Column {
                         val collectionImages = mapOf(
-                            "Blazer" to R.drawable.banner_pegasus,
-                            "Jordan" to R.drawable.banner_jordan,
-                            "Air Max" to R.drawable.banner_airmax,
-                            "Vomero" to R.drawable.banner_vomero
+                            "Nike" to R.drawable.banner_pegasus,
+                            "Adidas" to R.drawable.adidas,
+                            "Puma" to R.drawable.banner_puma,
+                            "New Balance" to R.drawable.newbalance
                         )
 
                         val collections = listOf("Nike", "Adidas", "Puma", "New Balance")

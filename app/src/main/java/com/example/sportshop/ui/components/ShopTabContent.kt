@@ -1,20 +1,26 @@
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.DrawerDefaults.shape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -32,7 +38,7 @@ fun ShopTabContent(
     val tabTitles = listOf("Tất cả", "Chạy", "Áo", "Quần")
     val pagerState = rememberPagerState(pageCount = { tabTitles.size })
     val coroutineScope = rememberCoroutineScope()
-
+    val indicatorColor = MaterialTheme.colorScheme.primary
     Column(modifier = modifier.fillMaxSize()) {
 
         TabRow(
@@ -40,9 +46,17 @@ fun ShopTabContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Transparent),
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    modifier = Modifier
+                        .tabIndicatorOffset(tabPositions[pagerState.currentPage])
+                        .padding(horizontal = 4.dp),
+                    color = indicatorColor,
+                    height = 2.dp
+                )
+            },
             containerColor = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.onBackground,
-            indicator = {}
         ) {
             tabTitles.forEachIndexed { index, title ->
                 Tab(
@@ -52,6 +66,9 @@ fun ShopTabContent(
                             pagerState.animateScrollToPage(index)
                         }
                     },
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .clip(shape),
                     text = {
                         Text(
                             text = title,
