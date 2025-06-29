@@ -58,10 +58,8 @@ fun SearchScreen(navController: NavController, cartViewModel: CartViewModel,    
                 )
             }
         }, navigationIcon = {
-            navController.navigate("home") {
-                popUpTo(0) // Xóa toàn bộ back stack
-                launchSingleTop = true
-            }        }, colors = TopAppBarDefaults.topAppBarColors(
+            Btn_Back(navController)
+        }, colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.surface,
             scrolledContainerColor = MaterialTheme.colorScheme.error,
             navigationIconContentColor = MaterialTheme.colorScheme.onSurface,

@@ -50,8 +50,8 @@ fun AddProductForm(
     isLoading: Boolean = false      // Thêm biến trạng thái loading
 ) {
     var expandedCategoryMenu by remember { mutableStateOf(false) }
-    val categories = listOf("Dụng Cụ Thể Thao", "Giày", "Quần", "Áo")
-    val collections = listOf("Vomero", "Air Max", "Jordan", "Blazer")
+    val categories = listOf( "Giày", "Quần", "Áo")
+    val collections = listOf("Nike", "Adidas", "Puma", "New Balance")
     val clipboardManager = LocalClipboardManager.current
     var imageUrlInput by remember { mutableStateOf("") }
     var imageUrlError by remember { mutableStateOf(false) } // Thêm bi���n báo lỗi

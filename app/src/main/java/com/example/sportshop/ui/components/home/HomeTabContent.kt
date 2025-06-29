@@ -41,7 +41,7 @@ fun HomeTabContent(
     modifier: Modifier = Modifier
 ) {
     val featuredProducts by productViewModel.featuredProducts.collectAsState()
-    val categories = listOf("Giày", "Áo", "Quần", "Dụng Cụ Thể Thao")
+    val categories = listOf("Giày", "Áo", "Quần")
     val featured = true
     val lastName by userViewModel.lastName.collectAsState()
     var expanded by remember { mutableStateOf(false) }
@@ -131,7 +131,7 @@ fun HomeTabContent(
                             "Vomero" to R.drawable.banner_vomero
                         )
 
-                        val collections = listOf("Blazer", "Jordan", "Air Max", "Vomero")
+                        val collections = listOf("Nike", "Adidas", "Puma", "New Balance")
 
                         collections.forEach { collection ->
                             CollectionImageCard(

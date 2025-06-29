@@ -28,8 +28,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.sportshop.components.profile.ProfileTabContent
 import com.example.sportshop.navigation.bottomNavigationItems
-import com.example.sportshop.ui.components.ShopTabContent
-import com.example.sportshop.ui.components.ShopTopBar
 import com.example.sportshop.ui.components.cart.CartTabContent
 import com.example.sportshop.ui.components.cart.CartTopBar
 import com.example.sportshop.ui.components.home.HomeTabContent
@@ -69,7 +67,9 @@ fun MainScreen(
                         isAdmin, navController, modifier = Modifier, userViewModel, adminViewModel
                     )
 
-                    1 -> ShopTopBar()
+                    1 -> ShopTopBar(
+                        isAdmin, navController, modifier = Modifier, userViewModel, adminViewModel
+                    )
                     3 -> CartTopBar()
                     2 -> ProfileTopBar()
                 }
@@ -127,7 +127,7 @@ fun MainScreen(
             ) {
                 when (page) {
                     0 -> HomeTabContent(userViewModel,productViewModel, navController)
-                    1 -> ShopTabContent()
+                    1 -> ShopTabContent(productViewModel, navController)
                     2 -> CartTabContent(
                         navController,
                         cartViewModel,
