@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.sportshop.model.data.Product
+import com.example.sportshop.util.FormatAsVnd
 
 @Composable
 fun SearchProductCard(
@@ -57,7 +58,7 @@ fun SearchProductCard(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = "₫${product.price}",
+                text = FormatAsVnd.format(product.price),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.primary,
                 maxLines = 1

@@ -51,7 +51,7 @@ fun AddProductForm(
 ) {
     var expandedCategoryMenu by remember { mutableStateOf(false) }
     val categories = listOf("Dụng Cụ Thể Thao", "Giày", "Quần", "Áo")
-    val collections = listOf("Vomero", "Air Max", "Jordan", "Pegasus", "Phantom")
+    val collections = listOf("Vomero", "Air Max", "Jordan", "Blazer")
     val clipboardManager = LocalClipboardManager.current
     var imageUrlInput by remember { mutableStateOf("") }
     var imageUrlError by remember { mutableStateOf(false) } // Thêm bi���n báo lỗi
@@ -354,14 +354,13 @@ fun AddProductForm(
                     value = collection,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text(text = "Dòng giày") },
+                    label = { Text(text = "Dòng giày (có thể bỏ trống)") },
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCollectionMenu)
                     },
                     modifier = Modifier
                         .menuAnchor()
                         .fillMaxWidth(),
-                    isError = collection.isBlank(),
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.surface,
                         unfocusedContainerColor = MaterialTheme.colorScheme.surface,

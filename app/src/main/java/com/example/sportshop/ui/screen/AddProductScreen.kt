@@ -62,7 +62,7 @@ fun AddProductScreen(
             val parsedQuantity = quantity.toIntOrNull()
 
             when {
-                name.isBlank() || description.isBlank() || category.isBlank() || collection.isBlank() -> {
+                name.isBlank() || description.isBlank() || category.isBlank() {
                     errorMessage = "Vui lòng nhập đầy đủ thông tin"
                     showError = true
                 }
@@ -82,7 +82,7 @@ fun AddProductScreen(
                     showError = true
                 }
 
-                parsedPrice > 1000 -> {
+                parsedPrice < 1000 -> {
                     errorMessage = "Giá phải ít nhất 1.000"
                     showError = true
                 }

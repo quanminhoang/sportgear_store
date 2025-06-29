@@ -125,13 +125,13 @@ fun HomeTabContent(
                 ) {
                     Column {
                         val collectionImages = mapOf(
-                            "Pegasus" to R.drawable.banner_pegasus,
+                            "Blazer" to R.drawable.banner_pegasus,
                             "Jordan" to R.drawable.banner_jordan,
                             "Air Max" to R.drawable.banner_airmax,
                             "Vomero" to R.drawable.banner_vomero
                         )
 
-                        val collections = listOf("Pegasus", "Jordan", "Air Max", "Vomero")
+                        val collections = listOf("Blazer", "Jordan", "Air Max", "Vomero")
 
                         collections.forEach { collection ->
                             CollectionImageCard(
