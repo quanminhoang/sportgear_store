@@ -37,6 +37,7 @@ fun HomeTabContent(
         modifier = modifier
             .fillMaxSize()
             .padding(bottom = 16.dp)
+            .background(MaterialTheme.colorScheme.background)
     ) {
 
         item {
