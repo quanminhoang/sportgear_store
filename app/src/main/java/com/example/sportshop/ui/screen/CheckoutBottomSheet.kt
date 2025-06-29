@@ -202,7 +202,7 @@ fun CheckoutBottomSheet(
                     )
                 }
             }
-                    Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             SnackbarHost(
                 hostState = snackbarHostState, modifier = Modifier.padding(16.dp)

@@ -1,6 +1,7 @@
 package com.example.sportshop.ui.components.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -54,7 +55,11 @@ fun ProfileCard(
         }
 
         ProfileMenuItem(Icons.Default.Person, "Thông tin cá nhân", onProfileClick)
-        ProfileMenuItem(Icons.Default.Settings, "Cài đặt", onSettingsClick)
+        if (isSystemInDarkTheme()) {
+            ProfileMenuItem(Icons.Default.DarkMode, "Chế độ sáng", onSettingsClick)
+        } else {
+            ProfileMenuItem(Icons.Default.LightMode, "Chế độ tối", onSettingsClick)
+        }
         ProfileMenuItem(Icons.Default.History, "Lịch sử đơn hàng", onOrderHistoryClick)
         ProfileMenuItem(Icons.Default.Logout, "Đăng xuất", onLogout)
 

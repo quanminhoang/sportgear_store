@@ -26,38 +26,17 @@ fun MainProfileMenu(
     val name by userViewModel.fullName.collectAsState()
     val photoUrl = user?.photoUrl?.toString()
 
-    val context = LocalContext.current
-    val sharedPreferences = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE)
-    val currentLanguage = sharedPreferences.getString("language", "Eng") ?: "Eng"
-    var showSettingsSheet: Boolean by remember { mutableStateOf(false) }
-    var theme by remember { mutableStateOf(themeManager.currentTheme) }
-    var language by remember { mutableStateOf(currentLanguage) }
-
-    val onSaveSettings: () -> Unit = {
-        val themeChanged = theme != themeManager.currentTheme
-        themeManager.setTheme(theme)
-        sharedPreferences.edit().apply {
-            putString("language", language)
-            apply()
-        }
-        if (language != currentLanguage) {
-            val locale = if (language == "Eng") Locale("en") else Locale("vi")
-            val config = context.resources.configuration
-            config.setLocale(locale)
-            context.resources.updateConfiguration(config, context.resources.displayMetrics)
-            context.getActivity()?.recreate()
-        }
-        if (themeChanged) {
-            reloadApp()
-        }
-    }
-
     ProfileCard(
         name = name,
         email = email,
         photoUrl = photoUrl,
         onProfileClick = { navController.navigate("edit_profile") },
-        onSettingsClick = { showSettingsSheet = true },
+        onSettingsClick = {
+            // 👉 Đổi theme ngay khi click
+            val newTheme = if (themeManager.currentTheme == "Light") "Dark" else "Light"
+            themeManager.setTheme(newTheme)
+            reloadApp()
+        },
         onLogout = {
             FirebaseAuth.getInstance().signOut()
             navController.navigate("welcome") {
@@ -68,24 +47,4 @@ fun MainProfileMenu(
             navController.navigate("order_history")
         }
     )
-
-    if (showSettingsSheet) {
-        // Truyền themeManager.currentTheme để giữ giao diện bottom sheet theo theme hiện tại của app
-        SettingsBottomSheet(
-            theme = theme,
-            language = language,
-            onThemeChange = { theme = it }, // chỉ cập nhật biến tạm, chưa lưu
-            onLanguageChange = { language = it }, // chỉ cập nhật biến tạm, chưa lưu
-            onSave = {
-                onSaveSettings()
-                showSettingsSheet = false
-            },
-            onDismiss = {
-                theme = themeManager.currentTheme
-                language = currentLanguage
-                showSettingsSheet = false
-            },
-            reloadApp = {},
-        )
-    }
 }

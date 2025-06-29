@@ -1,6 +1,5 @@
 package com.example.sportshop.ui.screen
 
-import SavingBottomSheet
 import UserInfoFields
 import UserViewModel
 import android.widget.Toast
@@ -149,10 +148,6 @@ fun EditProfileScreen(navController: NavController, userViewModel: UserViewModel
                 onPhoneChange = { phone = it },
                 onAddressChange = { address = it }
             )
-        }
-
-        if (showSheet) {
-            SavingBottomSheet(sheetState = sheetState)
         }
     }
 }
