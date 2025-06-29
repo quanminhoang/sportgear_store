@@ -2,8 +2,15 @@ package com.example.sportshop.navigation
 
 import MainScreen
 import UserViewModel
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -23,6 +30,7 @@ import com.example.sportshop.viewmodel.OrderViewModel
 import com.example.sportshop.viewmodel.OrderViewModelFactory
 import com.example.sportshop.viewmodel.ProductViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation(
     themeManager: ThemeManager,
@@ -52,16 +60,38 @@ fun AppNavigation(
                 orderViewModel = orderViewModel
             )
         }
-        composable("all_products/{category}?featured={featured}") { backStackEntry ->
-            val category = backStackEntry.arguments?.getString("category") ?: "default_category"
-            val featured = backStackEntry.arguments?.getString("featured")?.toBoolean() ?: false
+        composable(
+            route = "all_products?featured={featured}&category={category}&collection={collection}",
+            arguments = listOf(
+                navArgument("featured") {
+                    type = NavType.BoolType
+                    defaultValue = false
+                },
+                navArgument("category") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                },
+                navArgument("collection") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { backStackEntry ->
+            val featured = backStackEntry.arguments?.getBoolean("featured") ?: false
+            val category = backStackEntry.arguments?.getString("category")
+            val collection = backStackEntry.arguments?.getString("collection")
+
             AllProductsScreen(
                 productViewModel = productViewModel,
                 navController = navController,
+                featured = featured,
                 category = category,
-                featured = featured
+                collection = collection
             )
         }
+
         composable("main_profile") {
             MainProfileMenu(
                 navController = navController,
@@ -83,15 +113,17 @@ fun AppNavigation(
                 productViewModel = productViewModel
             )
         }
+
         composable("add_product") {
             AddProductScreen(
                 navcontroller = navController,
                 product = Product(),
-                onSave = { updatedProduct ->
-                    adminViewModel.saveProduct(updatedProduct)
-                }
+                onSave = { updatedProduct, callback ->
+                    adminViewModel.saveProduct(updatedProduct, callback)
+                },
             )
         }
+
         composable(
             route = "add_product/{productId}",
             arguments = listOf(navArgument("productId") {
@@ -102,14 +134,16 @@ fun AppNavigation(
         ) { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
             val product = adminViewModel.products.find { it.id == productId } ?: Product()
+
             AddProductScreen(
                 navcontroller = navController,
                 product = product,
-                onSave = { updatedProduct ->
-                    adminViewModel.saveProduct(updatedProduct)
-                }
+                onSave = { updatedProduct, callback ->
+                    adminViewModel.saveProduct(updatedProduct, callback)
+                },
             )
         }
+
         composable("product_detail/{productId}") { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
             val product = adminViewModel.products.find { it.id == productId }

@@ -28,17 +28,12 @@ fun HomeTopBar(
     userViewModel: UserViewModel = viewModel(),
     adminViewModel: AdminViewModel
 ) {
-    val lastName by userViewModel.lastName.collectAsState()
     val isRefreshing by adminViewModel.isRefreshing.collectAsState()
 
     SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing),
         onRefresh = { adminViewModel.fetchProducts() }) {
         TopAppBar(modifier = modifier, title = {
-            Text(
-                text = "XIN CHÀO, ${lastName.uppercase()}",
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.onSurface,
-            )
+
         }, actions = {
             IconButton(
                 onClick = { navController.navigate("search_screen") },

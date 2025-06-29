@@ -126,7 +126,7 @@ fun MainScreen(
                     ) // Apply padding only where needed
             ) {
                 when (page) {
-                    0 -> HomeTabContent(productViewModel, navController)
+                    0 -> HomeTabContent(userViewModel,productViewModel, navController)
                     1 -> ShopTabContent()
                     2 -> CartTabContent(
                         navController,

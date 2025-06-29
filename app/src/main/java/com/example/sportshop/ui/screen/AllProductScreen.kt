@@ -25,17 +25,26 @@ fun AllProductsScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     featured: Boolean = false,
-    category: String? = null
+    category: String? = null,
+    collection: String? = null
 ) {
     val products by productViewModel.allProducts.collectAsState()
 
+    // Clean parameters
+    val validCategory = category?.takeIf { it.isNotBlank() }
+    val validCollection = collection?.takeIf { it.isNotBlank() }
+
     val displayProducts = products.filter { product ->
-        (!featured || product.feature) && (category == null || product.category.equals(category, ignoreCase = true))
+        (!featured || product.feature) &&
+                (validCategory == null || product.category.equals(validCategory, ignoreCase = true)) &&
+                (validCollection == null || product.collection.equals(validCollection, ignoreCase = true))
     }
+
     val dynamicTitle = when {
-        category != null -> "${category.replaceFirstChar { it.uppercase() }}"
-        featured -> "Tất cả sản phẩm"
-        else -> ""
+        validCategory != null -> validCategory.replaceFirstChar { it.uppercase() }
+        featured -> "Nổi bật"
+        validCollection != null -> validCollection.replaceFirstChar { it.uppercase() }
+        else -> "Sản phẩm"
     }
 
     Scaffold(

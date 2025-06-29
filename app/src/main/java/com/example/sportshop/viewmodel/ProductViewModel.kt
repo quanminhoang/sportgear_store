@@ -21,6 +21,10 @@ class ProductViewModel : ViewModel() {
     private val _featuredProducts = MutableStateFlow<List<Product>>(emptyList())
     val featuredProducts: StateFlow<List<Product>> = _featuredProducts
 
+    private val _productsByCollection = mutableMapOf<String, MutableStateFlow<List<Product>>>()
+    fun getProductsByCollection(collection: String): StateFlow<List<Product>> {
+        return _productsByCollection.getOrPut(collection) { MutableStateFlow(emptyList()) }
+    }
     private val _productsByCategory = mutableMapOf<String, MutableStateFlow<List<Product>>>()
     fun getProductsByCategory(category: String): StateFlow<List<Product>> {
         return _productsByCategory.getOrPut(category) { MutableStateFlow(emptyList()) }
@@ -47,6 +51,11 @@ class ProductViewModel : ViewModel() {
                     grouped.forEach { (category, productList) ->
                         _productsByCategory.getOrPut(category) { MutableStateFlow(emptyList()) }.value = productList
                     }
+
+                    val groupedByCollection = fetchedProducts.groupBy { it.collection.orEmpty() }
+                    groupedByCollection.forEach { (collection, productList) ->
+                        _productsByCollection.getOrPut(collection) { MutableStateFlow(emptyList()) }.value = productList
+                    }
                 }
                 .addOnFailureListener {
                     // Xử lý lỗi
@@ -72,6 +81,11 @@ class ProductViewModel : ViewModel() {
                     val grouped = fetchedProducts.groupBy { it.category.orEmpty() }
                     grouped.forEach { (category, productList) ->
                         _productsByCategory.getOrPut(category) { MutableStateFlow(emptyList()) }.value = productList
+                    }
+
+                    val groupedByCollection = fetchedProducts.groupBy { it.collection.orEmpty() }
+                    groupedByCollection.forEach { (collection, productList) ->
+                        _productsByCollection.getOrPut(collection) { MutableStateFlow(emptyList()) }.value = productList
                     }
                 }
             }
@@ -117,10 +131,17 @@ class ProductViewModel : ViewModel() {
                         }
                         _products.value = updatedList
                         _allProducts.value = updatedList
-                        // Cập nhật lại các nhóm category nếu cần
+
+                        // Cập nhật lại các nhóm category
                         val grouped = updatedList.groupBy { it.category.orEmpty() }
                         grouped.forEach { (category, productList) ->
                             _productsByCategory.getOrPut(category) { MutableStateFlow(emptyList()) }.value = productList
+                        }
+
+                        // Cập nhật lại các nhóm collection
+                        val groupedByCollection = updatedList.groupBy { it.collection.orEmpty() }
+                        groupedByCollection.forEach { (collection, productList) ->
+                            _productsByCollection.getOrPut(collection) { MutableStateFlow(emptyList()) }.value = productList
                         }
                     }
                     onDone()
@@ -130,7 +151,6 @@ class ProductViewModel : ViewModel() {
                 }
         }
     }
-
     override fun onCleared() {
         super.onCleared()
         listenerRegistration?.remove()

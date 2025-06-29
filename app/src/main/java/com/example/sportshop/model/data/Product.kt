@@ -8,5 +8,6 @@ data class Product(
     val description: String = "",
     val quantity: Int = 0,
     val category: String = "",
+    val collection: String = "",
     val feature: Boolean = false
 )

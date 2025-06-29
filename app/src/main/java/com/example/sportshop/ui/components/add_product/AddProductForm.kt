@@ -39,6 +39,8 @@ fun AddProductForm(
     onQuantityChange: (String) -> Unit,
     category: String,
     onCategoryChange: (String) -> Unit,
+    collection: String,
+    onCollectionChange: (String) -> Unit,
     imageUrls: List<String>,
     onAddImage: (String) -> Unit,
     onRemoveImage: (Int) -> Unit,
@@ -49,6 +51,7 @@ fun AddProductForm(
 ) {
     var expandedCategoryMenu by remember { mutableStateOf(false) }
     val categories = listOf("Dụng Cụ Thể Thao", "Giày", "Quần", "Áo")
+    val collections = listOf("Vomero", "Air Max", "Jordan", "Pegasus", "Phantom")
     val clipboardManager = LocalClipboardManager.current
     var imageUrlInput by remember { mutableStateOf("") }
     var imageUrlError by remember { mutableStateOf(false) } // Thêm bi���n báo lỗi
@@ -305,9 +308,7 @@ fun AddProductForm(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            ExposedDropdownMenuBox(
-                expanded = expandedCategoryMenu,
+            ExposedDropdownMenuBox(expanded = expandedCategoryMenu,
                 onExpandedChange = { expandedCategoryMenu = it }) {
                 OutlinedTextField(value = category,
                     onValueChange = {},
@@ -338,6 +339,48 @@ fun AddProductForm(
                         DropdownMenuItem(text = { Text(categoryOption) }, onClick = {
                             onCategoryChange(categoryOption)
                             expandedCategoryMenu = false
+                        })
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            var expandedCollectionMenu by remember { mutableStateOf(false) }
+
+            ExposedDropdownMenuBox(expanded = expandedCollectionMenu,
+                onExpandedChange = { expandedCollectionMenu = it }) {
+                OutlinedTextField(
+                    value = collection,
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text(text = "Dòng giày") },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCollectionMenu)
+                    },
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth(),
+                    isError = collection.isBlank(),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                        errorContainerColor = MaterialTheme.colorScheme.surface,
+                        focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                        unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
+                        errorIndicatorColor = MaterialTheme.colorScheme.error,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                        errorLabelColor = MaterialTheme.colorScheme.error
+                    )
+                )
+
+                ExposedDropdownMenu(expanded = expandedCollectionMenu,
+                    onDismissRequest = { expandedCollectionMenu = false }) {
+                    collections.forEach { collectionOption ->
+                        DropdownMenuItem(text = { Text(collectionOption) }, onClick = {
+                            onCollectionChange(collectionOption)
+                            expandedCollectionMenu = false
                         })
                     }
                 }
